@@ -2,7 +2,7 @@ import { equal } from "../util/index.js";
 
 export default class Node {
     #elm;
-    isStatic = true;
+    isStatic = false;
     children = new Array(0);
     mountStaticProps() {}
 

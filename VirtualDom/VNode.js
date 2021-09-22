@@ -1,5 +1,5 @@
 import { Node, updateProps } from "./index.js";
-import { diffProps } from "../util/index.js";
+import { diffProps, isNull } from "../util/index.js";
 import { ViewRender } from "../Mustache/index.js";
 
 export default class VNode extends Node {
@@ -18,6 +18,7 @@ export default class VNode extends Node {
     isShow = true;
     isMount = true;
     diff = { same: Boolean, deleteProps: {}, updateProps: {} };
+
     constructor(tagName, props, children) {
         super();
         this.tagName = tagName;
@@ -77,6 +78,7 @@ export default class VNode extends Node {
             ...this.compile(this.#props.dynamicAttrs, context),
         };
     }
+
     updateData(context) {
         const props = this.getProps(context);
         this.diff = diffProps(this.oldProps, props);
@@ -85,16 +87,27 @@ export default class VNode extends Node {
             this.isShow = ViewRender(context._data, this.hookShow);
         }
     }
+
     mountStaticProps() {
+        if (this.isStatic) return;
         const diff = diffProps({}, this.#props.attrs);
         updateProps(this.elm, diff);
     }
+
     mountProps(context) {
         if (!this.diff.same) {
             updateProps(this.elm, this.diff);
         }
     }
+
+    loadStatic() {
+        this.isStatic =
+            Object.keys(this.#props.dynamicAttrs).length === 0 &&
+            isNull(this.#props.type);
+    }
+
     update(context) {
+        if (this.isStatic) return;
         this.mountProps(context);
         if (this.parentDom === null && this.elm !== undefined) {
             this.parentDom = this.elm.parentElement;

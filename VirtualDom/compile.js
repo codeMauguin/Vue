@@ -1,5 +1,5 @@
-import { createElement, createText, h, VNode } from "./index.js";
-import { isNotNull } from "../util/index.js";
+import {createElement, createText, h, VNode} from "./index.js";
+import {isNotNull} from "../util/index.js";
 
 /**
  * 编译子节点
@@ -14,10 +14,10 @@ function* compileChildren(elements, collect) {
             if (c["props"].type) {
                 collect.push({
                     prefix: c["props"].type.prefix
-                        ? { node: c, template: c["props"].type.prefix }
+                        ? {node: c, template: c["props"].type.prefix}
                         : null,
                     suffix: isNotNull(c["props"].type.suffix)
-                        ? { node: c }
+                        ? {node: c}
                         : null,
                 });
             }
@@ -42,50 +42,45 @@ export function compileProps(attrs) {
         type: null,
         dynamicEven: Object.create(null),
     });
-    for (const [_, { name, value }] of Object.entries(attrs)) {
+    for (const [_, {name, value}] of Object.entries(attrs)) {
         let _name = name;
         switch (true) {
-            case /@click|@value|v-model:/gi.test(name):
-                {
-                    Reflect.set(
-                        props.dynamicEven,
-                        name,
-                        value,
-                        props.dynamicEven,
-                    );
-                }
+            case /@click|@value|v-model:/gi.test(name): {
+                Reflect.set(
+                    props.dynamicEven,
+                    name,
+                    value,
+                    props.dynamicEven,
+                );
+            }
                 break;
-            case /v-bind:/gi.test(name):
-                {
-                    _name = name.replace(/v-bind:/, "");
-                    Reflect.set(
-                        props.dynamicAttrs,
-                        _name,
-                        value,
-                        props.dynamicAttrs,
-                    );
-                }
+            case /v-bind:/gi.test(name): {
+                _name = name.replace(/v-bind:/, "");
+                Reflect.set(
+                    props.dynamicAttrs,
+                    _name,
+                    value,
+                    props.dynamicAttrs,
+                );
+            }
                 break;
-            case /@id|@class/gi.test(name):
-                {
-                    _name = name.slice(1, name.length);
-                    Reflect.set(
-                        props.dynamicAttrs,
-                        _name,
-                        value,
-                        props.dynamicAttrs,
-                    );
-                }
+            case /@id|@class/gi.test(name): {
+                _name = name.slice(1, name.length);
+                Reflect.set(
+                    props.dynamicAttrs,
+                    _name,
+                    value,
+                    props.dynamicAttrs,
+                );
+            }
                 break;
-            case /v-if/gi.test(name):
-                {
-                    Reflect.set(props, "type", { prefix: value }, props);
-                }
+            case /v-if/gi.test(name): {
+                Reflect.set(props, "type", {prefix: value}, props);
+            }
                 break;
-            case /v-else/gi.test(name):
-                {
-                    Reflect.set(props, "type", { suffix: value }, props);
-                }
+            case /v-else/gi.test(name): {
+                Reflect.set(props, "type", {suffix: value}, props);
+            }
                 break;
             default: {
                 Reflect.set(props.attrs, name, value, props.attrs);
@@ -124,6 +119,7 @@ export default function compile(element) {
             return collect.splice(findIndex, 1)[0];
         } else return -1;
     }
+
     do {
         const prefix = get();
         if (!prefix) {
@@ -139,8 +135,8 @@ export default function compile(element) {
         } else {
             //将节点从子节点中移除
             console.log(suffix);
-            const a=  children.splice(
-              children.findIndex(child => child.equal(suffix.suffix.node)),
+            const a = children.splice(
+                children.findIndex(child => child.equal(suffix.suffix.node)),
                 1,
             );
             console.log(a);
@@ -159,6 +155,7 @@ export function loadNode(node) {
     node.elm = node instanceof VNode ? createElement(node) : createText(node);
     //初始化节点静态属性
     node.mountStaticProps();
+    node.loadStatic();
     node.children.forEach(childNode => {
         node.elm.appendChild(loadNode(childNode));
     });
