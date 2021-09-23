@@ -1,7 +1,7 @@
 import { isFunction, isNotString, isNull } from "../util/index.js";
 import { createProxy } from "../proxy/index.js";
 import { compile, loadNode } from "../VirtualDom/index.js";
-
+import { readonly,deepReadOnly } from "../proxy/index.js";
 function ƒ(virtualDom, context, name) {
     virtualDom[name](context);
     for (const children of virtualDom.children) {
@@ -20,6 +20,8 @@ function mount(properties) {
     properties.reactive = function (target) {
         return createProxy(target, this);
     };
+    properties.readonly = readonly;
+    properties.deepReadOnly=deepReadOnly;
     /**
      * 初始化Options属性
      * @param {Object} Options

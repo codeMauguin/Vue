@@ -78,7 +78,6 @@ export default class VNode extends Node {
             ...this.compile(this.#props.dynamicAttrs, context),
         };
     }
-
     updateData(context) {
         const props = this.getProps(context);
         this.diff = diffProps(this.oldProps, props);

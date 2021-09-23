@@ -1,4 +1,4 @@
-import {isNotObject, isObject} from "../util/index.js";
+import { isNotObject, isObject } from "../util/index.js";
 
 function ƒ(target, context) {
     return new Proxy(target, {
@@ -30,3 +30,11 @@ export default function createProxy(target, context) {
     }
     return ƒ(target, context);
 }
+export function readonly(target) {
+    if (isNotObject(target)) {
+        console.warn(`${target} is not a Object!`);
+        return undefined;
+    }
+    
+}
+
