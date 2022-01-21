@@ -8,7 +8,7 @@
   - `@click`
   - `@if`
   - `@else-if`(可以中间多个else-if)
-  - `else`
+  - `@else`
   - `@show`改为显示时优先使用原本的display而不是直接覆盖
 
 - [ ] 组件式开发
