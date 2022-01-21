@@ -1,5 +1,5 @@
 import { Node, updateProps } from "./index.js";
-import { diffProps, isNull } from "../util/index.js";
+import { diffProps, isNull } from "../util";
 import { ViewRender } from "../Mustache/index.js";
 
 export default class VNode extends Node {

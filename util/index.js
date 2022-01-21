@@ -1,5 +1,6 @@
 export {default as equal, diffProps} from "./equal.js";
-export {
+export
+{
     isFunction,
     isNotFunction,
     isObject,
@@ -10,4 +11,6 @@ export {
     isNotString,
     isNull,
     isNotNull,
+    isMustache
 } from "./Type.js";
+export {default as clone} from "./clone.js";

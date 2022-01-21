@@ -50,7 +50,7 @@ export function compileProps(attrs) {
                     props.dynamicEven,
                     name,
                     value,
-                    props.dynamicEven,
+                    props.dynamicEven
                 );
             }
                 break;
@@ -134,12 +134,10 @@ export default function compile(element) {
             };
         } else {
             //将节点从子节点中移除
-            console.log(suffix);
             const a = children.splice(
                 children.findIndex(child => child.equal(suffix.suffix.node)),
                 1,
             );
-            console.log(a);
         }
         prefix.prefix.node.hookNode = suffix.suffix.node;
         prefix.prefix.node.hookShow = prefix.prefix.template;

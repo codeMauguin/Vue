@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="module">
+        import Vue from "../Vue/Vue.js";
+        import { createProxy } from "../proxy/index.js";
+        import { init } from "../VirtualDom2/render.js";
+        console.log( document.querySelector( '#app1' ).outerHTML )
+        const node = init( document.querySelector( '#app1' ).outerHTML );
+        console.log( node );
+        window.a = new Vue( {
+            el: "#app1",
+            data()
+            {
+                return createProxy( {
+                    id: 10,
+                    isShow: true,
+                    array: [ [ { id: 1 } ], [ { id: 3 }, { id: 4 }, { id: 9 } ]
+                        , [ { id: 6 }, { id: 7 }, { id: 8 } ] ]
+                } );
+            },
+            methods: {
+                add( var1 )
+                {
+                    this.id++;
+                    this.array[ 0 ].reverse();
+                    this.array[ 1 ].reverse();
+                    this.array.reverse();
+                    this.isShow = !this.isShow
+                },
+                del()
+                {
+                    this.id--;
+                }
+            }
+        } );
+        node.initProps( {
+            id: 10,
+            isShow: true,
+            array: [ [ { id: 1 } ], [ { id: 3 }, { id: 4 }, { id: 9 } ]
+                , [ { id: 6 }, { id: 7 }, { id: 8 } ] ],
+            add( var1 )
+            {
+            }
+        } );
+        import { create } from "../VirtualDom2/index.js";
+        document.querySelector( "#app3" ).parentElement.insertBefore( create( node ), document.querySelector( "#app3" ) );
+
+        // new Vue( {
+        //     el: "#app2",
+        //     data()
+        //     {
+        //         return createProxy( { id: 1 } );
+        //     },
+        //     methods: {
+        //         add()
+        //         {
+        //             for ( let i = 0; i < 1000; i++ )
+        //             {
+        //                 Promise.resolve().then( r =>
+        //                 {
+        //                     this.id++;
+        //                 } )
+        //             }
+        //         },
+        //         del()
+        //         {
+        //             this.id--;
+        //         }
+        //     }
+        // } );
+    </script>
+    <style>
+        .p {
+            transition: all 2s;
+            animation: linear 1s;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app1">
+        <div :key="item.id" @for="(item,index) in array">
+            <div @for="(item,index) in item">
+                <p class="p">{{item.id}}-{{index}}ss</p>
+            </div>
+        </div>
+        <button @click="add(id)">添加</button>
+        <div @if="{{isShow?false:true}}">wo是True</div>
+    </div>
+    <!-- <div id="app2">
+{{id}}
+<p>2</p>
+</div> -->
+    <div id="app3">选择</div>
+</body>
+
+</html>

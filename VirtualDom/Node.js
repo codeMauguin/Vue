@@ -1,10 +1,9 @@
-import { equal } from "../util/index.js";
+import {equal} from "../util/index.js";
 
 export default class Node {
     #elm;
     isStatic = false;
     children = new Array(0);
-    mountStaticProps() {}
 
     /**
      * @returns {HTMLElement}
@@ -20,7 +19,8 @@ export default class Node {
         this.#elm = value;
     }
 
-    mountEven(context) {}
+    mountStaticProps() {
+    }
 
     /**
      * 比较节点不同，排除子节点

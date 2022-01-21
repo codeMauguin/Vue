@@ -1,2 +1,2 @@
-export { default as ViewRender } from "./ViewRender.js";
-export { default as mustache } from "./mustache.js";
+export {default as mustache, ProcessingText} from "./mustache.js";
+export {default as render} from "./ViewRender.js";

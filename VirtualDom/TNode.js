@@ -23,8 +23,7 @@ export default class TNode extends Node {
     updateData(context) {
         if (this.isStatic) return;
         this.oldTemplate = this.textContent;
-        const newText = mustache(this.template, context);
-        this.textContent = newText;
+        this.textContent = mustache(this.template, context);
     }
 
     update(context) {
