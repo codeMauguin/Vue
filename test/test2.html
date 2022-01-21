@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Document</title>
+    <script src="./ts.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <p v-show="isShow" style="display: flexbox;">{{message}}</p>
+        <button @click="add(    )">sd</button>
+    </div>
+    <script>
+        var app = new Vue( {
+            el: '#app',
+            data()
+            {
+                return { message: "Hello Vue!", isShow: true }
+            },
+            methods: {
+                add()
+                {
+                    this.isShow = !this.isShow;
+                }
+            }
+        } );
+        console.log( app );
+    </script>
+</body>
+
+</html>

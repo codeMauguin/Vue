@@ -1,0 +1,1 @@
+export {default as dept}  from "./dept.js"

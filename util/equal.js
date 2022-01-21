@@ -7,14 +7,13 @@ function* ƒ ( keys, target, source )
         yield equal( target[ key ], source[ key ] );
     }
 }
-
 export default function equal ( target, source )
 {
     return (
-        target === source ||
+        Object.is( target, source ) ||
         ( typeof target === typeof source
             ? isObject( target )
-                ? target.__proto__ === source.__proto__
+                ? Object.is( target.__proto__, source.__proto__ )
                     ? ( function ()
                     {
                         const targetKeys = Object.keys( target );

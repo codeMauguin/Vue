@@ -3,11 +3,13 @@
  * @date 2022-01-16 20:22:42
  * @slogan: Talk is cheap. Show me the code.
  * @Last Modified by: 陈浩
- * @Last Modified time: 2022-01-21 14:28:49
+ * @Last Modified time: 2022-01-22 00:09:17
  */
 import { Node } from "./index.js";
 import { mustache as h } from "../Mustache/index.js";
+// @ts-ignore
 import { clone as deepClone, isNotNull, isNull } from "../util/index.js";
+import { TNode } from "../VirtualDom/index.js";
 
 const forRegExp = /(?<head>\(.*\)|\w+)\s+(?<body>in|of)\s+(?<target>.*)/;
 const aliasExp = /(?<=[(|,]).*?(?=[,|)])/gi;
@@ -26,9 +28,7 @@ export default class ENode extends Node
      * @type {string}
      */
     sel;
-    nextHook; //替换节点
     attributes = {};
-    dynamicNode = null;
     props = {
         attributes: {},
         method: {},
@@ -64,42 +64,44 @@ export default class ENode extends Node
      */
     set setAttributes ( attr )
     {
-        if ( attr instanceof NamedNodeMap )
+        for ( const [ name, value ] of Object.entries( attr ) )
         {
-            for ( const [ , { name, value } ] of Object.entries( attr ) )
+            switch ( true )
             {
-                switch ( true )
-                {
-                    case /v-bind:/gi.test( name ): {
-                        Reflect.set(
-                            this.#props.attributes,
-                            name.slice( 7 ),
-                            value.trim(),
-                            this.#props.attributes,
-                        );
-                    }
-                        break;
-                    case /@click/gi.test( name ): {
-                        Reflect.set(
-                            this.#props.method,
-                            "click",
-                            value.trim(),
-                            this.#props.method,
-                        );
-                    }
-                        break;
-                    case /@for/gi.test( name ): {
-                        this.dynamicTemplate = forAt( value );
-                    }
-                        break;
-                    case /@if|@else|@show|:key/gi.test( name ):
-                        this.#props.attributes[ name.slice( 1 ) ] = value.trim();
-                        break;
-                    default:
-                        Reflect.set( this.attributes, name, value.trim(), this.attributes );
+                case /v-bind:/gi.test( name ): {
+                    Reflect.set(
+                        this.#props.attributes,
+                        name.slice( 7 ),
+                        // @ts-ignore
+                        value.trim(),
+                        this.#props.attributes,
+                    );
                 }
+                    break;
+                case /@click/gi.test( name ): {
+                    Reflect.set(
+                        this.#props.method,
+                        "click",
+                        // @ts-ignore
+                        value.trim(),
+                        this.#props.method,
+                    );
+                }
+                    break;
+                case /@for/gi.test( name ): {
+                    // @ts-ignore
+                    this.dynamicTemplate = value;
+                }
+                    break;
+                case /@if|@else|@show|:key|@else-if/gi.test( name ):
+                    // @ts-ignore
+                    this.#props.attributes[ name.slice( 1 ) ] = value.trim();
+                    break;
+                default:
+                    // @ts-ignore
+                    Reflect.set( this.attributes, name, value.trim(), this.attributes );
             }
-        } else this.attributes = attr;
+        }
     }
 
     /**
@@ -112,9 +114,7 @@ export default class ENode extends Node
             switch ( key )
             {
                 case "show": {
-                    const isShow = h( value, {
-                        ...context, ...context._data
-                    } );
+                    const isShow = h( value, context._data );
                     if ( isShow === false || isShow === "false" || isShow === "0" )
                     {
                         /**
@@ -148,10 +148,7 @@ export default class ENode extends Node
                     break;
                 case "else": {
                     let condition = this.#props.attributes.else;
-                    let valuer = h( condition, {
-                        ...context,
-                        ...context._data
-                    } );
+                    let valuer = h( condition, context._data );
                     if ( valuer === true || valuer === "true" || valuer === "1" )
                     {
                         // @ts-ignore
@@ -162,26 +159,9 @@ export default class ENode extends Node
                     }
                     break;
                 }
-                case "if": {
-                    let condition = this.#props.attributes.if;
-                    let valuer = h( condition, { ...context, ...context._data } );
-                    console.log( typeof valuer )
-                    if ( valuer === false || valuer === "0" )
-                    {
-                        // @ts-ignore
-                        let number = this.parent.children.findIndex( ENode => ENode === this );
-                        this.nextHook.render( context );
-                        // @ts-ignore
-                        this.parent.children.splice( number, 1, this.nextHook );
-                    }
-                    break
-                }
                 default: {
                     this.props.attributes[ key ] = h( value,
-                        {
-                            ...context,
-                            ...context._data,
-                        }
+                        context._data
                     );
                 }
             }
@@ -211,10 +191,7 @@ export default class ENode extends Node
             } while ( ( result = methodRegExp.exec( value ) ) !== null );
             const fun = h(
                 name,
-                {
-                    ...context,
-                    ...context._methods,
-                }
+                context._methods
             );
             this.props.method[ key ] = () =>
             {
@@ -233,92 +210,7 @@ export default class ENode extends Node
                 fun.apply( context, _args );
             };
         }
-        if ( isNotNull( this.dynamicTemplate ) )
-        {
-            //编译生成多个子节点
-            // @ts-ignore
-            const target = h( this.dynamicTemplate[ "target" ],
-                {
-                    ...context,
-                    ...context._data,
-                }
-                // @ts-ignore
-
-            );
-            let key = this.#props.attributes[ "key" ];
-            const child = [];
-            // @ts-ignore
-            if ( this.dynamicTemplate[ "type" ] === Array )
-            {
-                Array.from( target ).forEach( ( value, index ) =>
-                {
-                    const childContext = {
-                        // @ts-ignore
-                        [ this.dynamicTemplate[ "itemKey" ] ]: value,
-                        // @ts-ignore
-                        [ this.dynamicTemplate[ "indexKey" ] ]: index,
-                    };
-                    let privateKey;
-                    // @ts-ignore
-                    if ( this.dynamicTemplate[ "indexKey" ] === key )
-                    {
-                        privateKey = index;
-                    } else
-                    {
-                        if ( isNull( value[ key ] ) )
-                        {
-                            privateKey = h( key, childContext, );
-                        } else
-                        {
-                            privateKey = value[ key ];
-                        }
-                    }
-                    // @ts-ignore
-                    this.dynamicNode.forEach(
-                        // @ts-ignore
-                        (/** @type {{ clone: () => ENode|TNode; }} */ ch ) =>
-                        {
-                            const clone = ch.clone();
-                            clone.key = privateKey;
-                            clone.render( childContext );
-                            child.push( clone );
-                        },
-                    );
-                    /**
-                     * [1,2,3,4],[1,2,3,4],[1,2,3,4]
-                     */
-                } );
-            } else
-            {
-                const keys = Reflect.ownKeys( target );
-                Array.from( keys ).forEach( ( key, index ) =>
-                {
-                    const childContext = {
-                        // @ts-ignore
-                        [ this.dynamicTemplate[ "itemKey" ] ]: Reflect.get( target, key, target ),
-                        // @ts-ignore
-                        [ this.dynamicTemplate[ "nameKey" ] ]: key,
-                        // @ts-ignore
-                        [ this.dynamicTemplate[ "indexKey" ] ]: index,
-                    };
-                    // @ts-ignore
-                    this.dynamicNode.forEach(
-                        (/** @type {{ clone: () => any; }} */ ch ) =>
-                        {
-                            const clone = ch.clone();
-                            clone.render( childContext );
-                            child.push( clone );
-                        },
-                    );
-                } );
-            }
-            //将动态节点挂载
-            this.children = child;
-        } else
-        {
-            // @ts-ignore
-            this.children.forEach( ( c ) => c.render( context ) );
-        }
+        // @ts-ignore
     }
 
     init ()
@@ -360,21 +252,19 @@ export default class ENode extends Node
     clone ()
     {
         const cloneChild = [];
-        if ( isNull( this.dynamicTemplate ) )
-            this.children.forEach( ( e ) =>
-            {
-                cloneChild.push( e.clone() );
-            } );
-        let clone = new ENode( this.sel, this.attributes, cloneChild );
+        this.children.forEach( ( e ) =>
+        {
+            cloneChild.push( e.clone() );
+        } );
+        let clone = new ENode( this.sel, {}, cloneChild );
         clone.children.forEach( child => child.parent = clone );
         clone.static = this.static;
+        clone.attributes = this.attributes;
         //防止脏数据深度克隆
         clone.props = deepClone( this.props );
         clone.#props = this.#props;
         clone.key = this.key;
-        clone.dynamicNode = this.dynamicNode;
         clone.dynamicTemplate = this.dynamicTemplate;
-        clone.nextHook = this.nextHook;
         return clone;
     }
 }

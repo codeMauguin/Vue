@@ -2,22 +2,8 @@ import { isFunction, isNotString, isNull } from "../util/index.js";
 import { createProxy } from "../proxy/index.js";
 import { deepReadOnly, readonly } from "../proxy/index.js";
 import { dept } from "../watcher/index.js";
-import { h, patchNode as patch, checkStatic } from "../VirtualDom2/index.js"
-
-function ƒ ( virtualDom, context, name )
-{
-    virtualDom[ name ]( context );
-    for ( const children of virtualDom.children )
-    {
-        ƒ( children, context, name );
-    }
-}
-
-function mountEven ( virtualDom, context )
-{
-    ƒ( virtualDom, context, "mountEven" );
-}
-
+import { h, patchNode as patch, compile, ENode, TNode } from "../VirtualDom2/index.js"
+const emptyObject = Object.freeze( {} );
 function mount ( properties )
 {
     properties.ref = function ( target )
@@ -73,7 +59,7 @@ function mount ( properties )
      * @param {string} el 节点信息
      * @param context
      */
-    properties.mount = function ( el, context )
+    properties.mount = function ( el, /**@type{ProxyHandler<Vue>}*/context )
     {
         if ( isNotString( el ) )
         {
@@ -87,11 +73,9 @@ function mount ( properties )
         }
         // console.log(dom.outerHTML)
         // htmlReader(dom.outerHTML)
-        // @ts-ignore
-        console.log( JSON.stringify( dom ) );
-        const virtualDom = h( dom.tagName, dom.attributes, dom.childNodes );
-        checkStatic( virtualDom );
-        virtualDom.render( context );
+        this[ AST ] = new Function( "target", `with(target){return ${ h( dom.tagName, dom.attributes, dom.childNodes ) }}` )
+        const virtualDom = this[ AST ]( context );
+        compile( virtualDom, context );
         dom.parentElement?.replaceChild( virtualDom.init(), dom );
         this.virtualDom = virtualDom;
         // @ts-ignore
@@ -119,14 +103,12 @@ function mount ( properties )
         console.log( "更新" );
         // @ts-ignore
         this.task.length = 0;
+        // @ts-ignore
         const oldNode = this.virtualDom;
         // @ts-ignore
-        this.virtualDom = this.virtualDom.clone();
-        this.virtualDom.render( this );
-        // @ts-ignore
+        this.virtualDom = this[ AST ]( this );
+        compile( this.virtualDom, this );
         patch( oldNode, this.virtualDom );
-        // @ts-ignore
-        this.virtualDom.elm;
         // @ts-ignore
         if ( this.task.length > 0 )
         {
@@ -136,19 +118,28 @@ function mount ( properties )
             this.useTask = false;
         }
     }
+    properties._c = function ( sel, attributes, children ) { return new ENode( sel, attributes, children ) }
+    properties._t = function ( text )
+    {
+        return new TNode( text );
+    }
 }
 
 /**
  * create:视图未更新时调用
  * mounted:视图已经加载完毕使用，建议初始化数据在create中使用
  */
+const AST = Symbol( "AST" );
 class Vue
 {
-    _data = {};
-    _methods = {};
-    _create = null;
-    _mounted = null;
-
+    [ AST ];
+    _data = emptyObject;
+    _methods = emptyObject;
+    _create = undefined;
+    _mounted = undefined;
+    static dept;
+    static id;
+    uid;
     constructor ( options )
     {
         //读取属性
@@ -186,12 +177,11 @@ class Vue
         // @ts-ignore
         this._mounted?.call( context );
         Vue.dept.add( context );
-        this.vid = Vue.id++;
+        this.uid = Vue.id++;
         return context;
     }
 }
 
 mount( Vue.prototype );
-Vue.id = 0;
 Vue.dept = dept;
 export default Vue;

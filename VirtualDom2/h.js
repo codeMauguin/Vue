@@ -1,10 +1,8 @@
-import { ENode, TNode } from "./index.js";
-
 export default function h ( tagName, attributes, children )
 {
     if ( attributes === null && children === null )
     {
-        return new TNode( tagName );
+        return `_t(${ JSON.stringify( tagName ) })`;
     }
     const childrenNodes = new Array( 0 );
     for ( const child of children )
@@ -21,5 +19,15 @@ export default function h ( tagName, attributes, children )
             childrenNodes.push( h( child.textContent, null, null ) );
         }
     }
-    return new ENode( tagName, attributes, childrenNodes );
+    return `_c(${ JSON.stringify( tagName ) },${ stringify( attributes ) }, [ ${ childrenNodes } ] )`
 }
+function stringify ( attributes )
+{
+    const attr = {};
+    for ( const [ _, { name, value } ] of Object.entries( attributes ) )
+    {
+        attr[ name ] = value;
+    };
+    return JSON.stringify( attr );
+}
+
