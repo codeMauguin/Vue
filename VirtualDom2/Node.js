@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ENode, TNode } from "./index.js";
 
 export default class Node
@@ -15,10 +16,6 @@ export default class Node
      */
     elm;
 
-    constructor ()
-    {
-    }
-
     get static ()
     {
         return this.isStatic;
@@ -31,7 +28,7 @@ export default class Node
 
     init ()
     {
-        throw new Error( "Method not implemented." );
+        return document.createElement( "" );
     }
 
     /**
@@ -47,6 +44,9 @@ export default class Node
 
     /**
      * 复制本身
+     */
+    /**
+     * @returns{ENode|TNode}
      */
     clone ()
     {

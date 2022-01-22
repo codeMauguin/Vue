@@ -87,17 +87,19 @@ export function diff ( parenElm, oldNode, newNode )
     }
     if ( oldStartIndex > oldEndIndex )
     {
+        var fam = document.createDocumentFragment();
         for ( let i = newStartIndex; i <= newEndIndex; i++ )
         {
-            insertBefore( parenElm, newNode[ i ].init(), newNode[ i - 1 ].elm.nextSibling )
+            fam.appendChild( newNode[ i ].init() );
         }
+        insertBefore( parenElm, fam, newNode[ newStartIndex - 1 ].elm.nextSibling );
 
     } else
     {
-        console.log( 7 );
         for ( let i = oldStartIndex; i <= oldEndIndex; i++ )
         {
-            parenElm.removeChild( oldNode[ i ].elm );
+            if ( oldNode[ i ] )
+                parenElm.removeChild( oldNode[ i ].elm );
         }
     }
 }
@@ -128,7 +130,7 @@ export function patchNode ( oldNode, newNode )
                         {
                             let attribute = oldAttr.attributes[ key ];
                             elm.classList.remove( attribute.split( " " ) );
-                            elm.classList.add( value.split( " " ) );
+                            setAttribute( elm, key, value )
                         } else
                             setAttribute( elm, key, value );
                     Reflect.deleteProperty( oldAttr.attributes, key );
@@ -149,11 +151,13 @@ export function patchNode ( oldNode, newNode )
                 diff( elm, oldNode.children, newNode.children );
             else
             {
+                const fam = document.createDocumentFragment();
                 newNode.children.forEach( child =>
                 {
                     //@ts-ignore
-                    elm.appendChild( child.init() );
-                } )
+                    fam.appendChild( child.init() );
+                } );
+                elm.appendChild( fam );
             }
         //@ts-ignore
         else if ( oldNode.children.length > 0 )

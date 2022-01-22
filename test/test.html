@@ -6,76 +6,41 @@
     <title>Title</title>
     <script type="module">
         import Vue from "../Vue/Vue.js";
-        import { createProxy } from "../proxy/index.js";
-        import { init } from "../VirtualDom2/render.js";
-        const node = init( document.querySelector( '#app1' ).outerHTML );
-        console.log( node );
-        window.a = new Vue( {
+
+        window.a = new Vue({
             el: "#app1",
-            data()
-            {
-                return createProxy( {
+            create() {
+                this.array.reverse();
+            },
+
+            data({ref, reactive}) {
+                return reactive({
                     id: 10,
                     isShow: true,
-                    array: [ [ { id: 1 } ], [ { id: 3 }, { id: 4 }, { id: 9 } ]
-                        , [ { id: 6 }, { id: 7 }, { id: 8 } ] ],
+                    array: [[{id: 1}], [{id: 3}, {id: 4}, {id: 9}]
+                        , [{id: 6}, {id: 7}, {id: 8}]],
                     hobby: {
                         game: "游戏",
                         name: "PUBG",
                         age: "22"
                     }
-                } );
+                });
             },
             methods: {
-                add( var1 )
-                {
-                    this.id++;
-                    this.array[ 0 ].reverse();
-                    this.array[ 1 ].reverse();
-                    this.array.reverse();
+                add(id) {
                     this.isShow = !this.isShow
+                    console.log("d", this);
+                    this.hobby.age = id;
+                    this.id++
+                    this.array[0].reverse();
+                    this.array[1].reverse();
+                    this.array.reverse();
                 },
-                del()
-                {
+                del() {
                     this.id--;
                 }
             }
-        } );
-        node.initProps( {
-            id: 10,
-            isShow: true,
-            array: [ [ { id: 1 } ], [ { id: 3 }, { id: 4 }, { id: 9 } ]
-                , [ { id: 6 }, { id: 7 }, { id: 8 } ] ],
-            add( var1 )
-            {
-            }
-        } );
-        import { create } from "../VirtualDom2/index.js";
-        document.querySelector( "#app3" ).parentElement.insertBefore( create( node ), document.querySelector( "#app3" ) );
-
-        // new Vue( {
-        //     el: "#app2",
-        //     data()
-        //     {
-        //         return createProxy( { id: 1 } );
-        //     },
-        //     methods: {
-        //         add()
-        //         {
-        //             for ( let i = 0; i < 1000; i++ )
-        //             {
-        //                 Promise.resolve().then( r =>
-        //                 {
-        //                     this.id++;
-        //                 } )
-        //             }
-        //         },
-        //         del()
-        //         {
-        //             this.id--;
-        //         }
-        //     }
-        // } );
+        });
     </script>
     <style>
         .p {
@@ -86,26 +51,27 @@
 </head>
 
 <body>
-    <div id="app1">
-        <div @for="(item,index) in array">
-            <div :key="item.id" @for="(item,index) in item">
-                <p class="p">{{item.id}}-{{index}}ss</p>
-            </div>
+<div id="app1">
+    s{{ id }}s
+    <div @for="(item,index) in array">
+        <div :key="item.id" @for="(item,index) in item">
+            <p class="p">{{global.isShow}}-{{index}}ss</p>
         </div>
-        <div @for="(item,name,index) in hobby">
-            <p>{{item}}-{{name}}-${index}</p>
-        </div>
-        <button @click="add(id)">添加</button>
-        <div @if="{{isShow?false:true}}">wo是True</div>
-        <div @else-if="{{isShow?false:false}}">wo是else-if</div>
-        <div @else-if="{{isShow?true:false}}">wo是else-2-if</div>
-        <div @else>wo是False</div>
     </div>
-    <!-- <div id="app2">
+    <div @for="(item,name,index) in hobby" @if="{{isShow}}">
+        <p>{{item}}-${name}-${index}</p>
+    </div>
+    <button @click="add(id)">添加</button>
+    <div @else-if="{{isShow?false:true}}">wo是True</div>
+    <div @else-if="{{isShow?false:false}}">wo是else-if</div>
+    <div @else-if="{{isShow?true:false}}">wo是else-2-if</div>
+    <div @else>wo是False</div>
+</div>
+<!-- <div id="app2">
 {{id}}
 <p>2</p>
 </div> -->
-    <div id="app3">选择</div>
+<div id="app3">选择</div>
 </body>
 
 </html>

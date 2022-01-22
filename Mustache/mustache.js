@@ -1,63 +1,64 @@
-import ViewRender from "./ViewRender.js";
-
 //Todo 类型会被转换为string 使用模版解析时
+import {render} from "./index.js";
+import {isMustache} from "../util/index.js";
+
 /**
  * @param {string} stencil
  * @param {{ [x: string]: any; }} view
  */
-export default function mustache ( stencil, view )
-{
-    return h.call( { ...view, _v: h.bind( view ) }, ProcessingText( stencil ) );
+export default function mustache(stencil, view) {
+    let text = ProcessingText(stencil);
+    let first = text.shift();
+    return text.reduce((previousValue, currentValue) => {
+        return previousValue + extracted(currentValue, view);
+    }, extracted(first, view));
 }
 
-export function ProcessingText ( text )
-{
+export function propsMustache(stencil, view) {
+    return isMustache(stencil) ? mustache(stencil, view) : render(stencil, view);
+}
+
+function extracted(template, view) {
+    if (template.h) {
+        return render(template.stencil, view);
+    } else {
+        return template.stencil;
+    }
+}
+
+
+export function ProcessingText(text) {
     const stencilRegexp = /{{(.+?)}}|\${(.+?)}/g;
     let match;
-    let stencil = "";
+    let stencil = [];
     let index = 0;
-    if ( ( match = stencilRegexp.exec( text ) ) !== null )
-    {
-        do
-        {
+    if ((match = stencilRegexp.exec(text)) !== null) {
+        do {
             // s l
-            let str;
             let lastIndex = stencilRegexp.lastIndex;
-            if ( ( str = match[ 1 ] ) === undefined )
-            {
-                str = match[ 2 ];
+            if (match.index > index) {
+                stencil.push({
+                    h: false, stencil: text.slice(index, match.index)
+                });
+                stencil.push({
+                    h: true, stencil: match[1] ?? match[2]
+                });
+            } else {
+                stencil.push({
+                    h: true, stencil: match[1] ?? match[2]
+                })
             }
-            if ( match.index > index )
-            {
-                stencil += `"${ text.slice( index, match.index ) }"+` + `_v(${ str })`
-            } else
-            {
-                stencil += `_v(${ str })`
-            }
-            if ( ( match = stencilRegexp.exec( text ) ) !== null )
-            {
-                stencil += "+";
+            if ((match = stencilRegexp.exec(text)) !== null) {
                 index = lastIndex;
-            } else if ( lastIndex < text.length )
-            {
-                stencil += `+ "${ text.slice( lastIndex, text.length ) }"`
+            } else if (lastIndex < text.length) {
+                stencil.push({
+                    h: false, stencil: text.slice(lastIndex, text.length)
+                })
                 break;
-            } else
-            {
+            } else {
                 break;
             }
-        } while ( true )
-    } else return `${ text }`;
-    // console.log( stencil );
+        } while (true)
+    } else return [{h: false, stencil: text}];
     return stencil;
-}
-
-/**
- * 将模版解析
- * @param {string} stencil
- * @returns object
- */
-function h ( stencil )
-{
-    return ViewRender( stencil, this );
 }
