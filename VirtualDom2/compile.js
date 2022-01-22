@@ -150,7 +150,6 @@ class Observer {
             this.message.unshift(msg);
         } else {
             const res = propsMustache(msg?.attr["if"], context);
-            console.log(context)
             if (res) {
                 this.$destroy(node, 0);
                 return;

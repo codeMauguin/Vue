@@ -7,16 +7,15 @@ import {isMustache} from "../util/index.js";
  * @param {{ [x: string]: any; }} view
  */
 export default function mustache(stencil, view) {
-    let text = ProcessingText(stencil);
-    let first = text.shift();
-    return text.reduce((previousValue, currentValue) => {
-        return previousValue + extracted(currentValue, view);
-    }, extracted(first, view));
+
+    return render(ProcessingText(stencil), view);
+
 }
 
 export function propsMustache(stencil, view) {
     return isMustache(stencil) ? mustache(stencil, view) : render(stencil, view);
 }
+
 
 function extracted(template, view) {
     if (template.h) {
@@ -30,35 +29,27 @@ function extracted(template, view) {
 export function ProcessingText(text) {
     const stencilRegexp = /{{(.+?)}}|\${(.+?)}/g;
     let match;
-    let stencil = [];
+    let stencil = "";
     let index = 0;
     if ((match = stencilRegexp.exec(text)) !== null) {
         do {
             // s l
             let lastIndex = stencilRegexp.lastIndex;
             if (match.index > index) {
-                stencil.push({
-                    h: false, stencil: text.slice(index, match.index)
-                });
-                stencil.push({
-                    h: true, stencil: match[1] ?? match[2]
-                });
+                stencil += `\`${text.slice(index, match.index)}\`+${match[1] ?? match[2]}`
             } else {
-                stencil.push({
-                    h: true, stencil: match[1] ?? match[2]
-                })
+                stencil += `${match[1] ?? match[2]}`;
             }
             if ((match = stencilRegexp.exec(text)) !== null) {
+                stencil += "+";
                 index = lastIndex;
             } else if (lastIndex < text.length) {
-                stencil.push({
-                    h: false, stencil: text.slice(lastIndex, text.length)
-                })
+                stencil += `+\`${text.slice(lastIndex, text.length)}\``;
                 break;
             } else {
                 break;
             }
         } while (true)
-    } else return [{h: false, stencil: text}];
+    } else return stencil;
     return stencil;
 }

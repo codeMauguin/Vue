@@ -83,7 +83,6 @@ function mount(properties) {
     };
 
     function callback() {
-        console.log("更新");
         // @ts-ignore
         this.task.length = 0;
         // @ts-ignore
