@@ -4,7 +4,7 @@ import {isMustache} from "../util/index.js";
 
 /**
  * @param {string} stencil
- * @param {{ [x: string]: any; }} view
+ * @param {any} view
  */
 export default function mustache(stencil, view) {
     return render(ProcessingText(stencil), view);
@@ -14,7 +14,6 @@ export default function mustache(stencil, view) {
 export function propsMustache(stencil, view) {
     return isMustache(stencil) ? mustache(stencil, view) : render(stencil, view);
 }
-
 
 export function ProcessingText(text) {
     const stencilRegexp = /{{(.+?)}}|\${(.+?)}/g;
