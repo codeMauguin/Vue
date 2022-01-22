@@ -169,6 +169,12 @@ class Observer {
                     node.children.splice(res.index + index--, 1);
                 }
             } else if (isNotNull(res?.attr["else"])) {
+                if (index === 0) {
+                    console.warn("Else tag should not be in the first place, if it is in the" +
+                        " first place it will never show!");
+                    node.children.splice(res.index + index--, 1);
+                    continue;
+                }
                 if (this.message.length !== 0) {
                     console.warn("Else tag is not last or multiple");
                     // Wipe the user's ass

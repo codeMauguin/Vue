@@ -52,7 +52,7 @@
 
 <body>
 <div id="app1">
-    s{{ id }}s
+    s{{ isShow?true:false }}s
     <div @for="(item,index) in array">
         <div :key="item.id" @for="(item,index) in item">
             <p class="p">{{global.isShow}}-{{index}}ss</p>
