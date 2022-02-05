@@ -1,6 +1,9 @@
 import {isNotObject, isObject} from "../util/index.js";
 import Vue from "../Vue/Vue.js";
 
+/**
+ * @param {any} target
+ */
 function ƒ(target) {
     return new Proxy(target, {
         set(target, key, value, receiver) {
@@ -8,7 +11,7 @@ function ƒ(target) {
                 return true;
             } else {
                 const result = Reflect.set(target, key, value, receiver);
-                Vue.dept.notify();
+                Vue.dept.notifyAll();
                 return result;
             }
         }

@@ -23,5 +23,30 @@
 ## 最近修复
 
 1. `mustache`模版解析，多种情况的失败情况
-
 2. `if、else-if、else`等标签在`dom`元素显示
+
+# 算法学习
+
+## 动态生成括号
+
+```javascript
+var generateParenthesis = function (n) {
+    let result = [];
+    dfs("", n, n, result);
+    return result;
+
+    function dfs(arg0, left, right, result) {
+        if (left === 0 && right === 0) {
+            result.push(arg0);
+            return;
+        }
+        if (left > right) {
+            return;
+        }
+        if (left > 0)
+            dfs(`${arg0}(`, left - 1, right, result)
+        if (right > 0)
+            dfs(`${arg0})`, left, right - 1, result)
+    }
+}
+```

@@ -1,4 +1,4 @@
-export { default as equal, diffProps } from "./equal.js";
+export {default as equal} from "./equal.js";
 export
 {
     isFunction,
@@ -14,4 +14,5 @@ export
     isMustache,
     cloneClass
 } from "./Type.js";
-export { default as clone } from "./clone.js";
+export {default as clone} from "./clone.js";
+export {default as timer} from "./Logger.js";

@@ -1,304 +1,314 @@
-class lexer
-{
-    #buffer;
-    pos = 0;
-    limit;
-
-    /**
-     *
-     * @param{String} buffer
-     */
-    constructor ( buffer )
-    {
-        this.#buffer = buffer;
-        this.limit = buffer.length;
-    }
-
-    position ()
-    {
-        return this.pos;
-    }
-
-    /**
-     * 读取当前指针${pos}的数值
-     * @returns {string}
-     */
-    peek ()
-    {
-        return this.#buffer.charAt( Math.max( 0, Math.min( this.pos, this.limit ) ) );
-    }
-
-    /**
-     * 返回当前指针，指针后移
-     * @returns {number|string}
-     */
-    read ()
-    {
-        return ( this.pos >= this.limit ) ? -1 : this.#buffer.charAt( this.pos++ );
-    }
-
-    back ()
-    {
-        this.pos = Math.max( 0, this.pos - 1 );
-    }
+const elementFrameWork = {
+    tag: String,
+    type: Number,
+    normalProps: /**@type {Array<string>}*/ Array,
+    dynamicProps: Array,
+    children: Array
 }
-
-
-const competence = {
-    '<': 1 << 0, '>': 1 << 1, ':': 1 << 2, ' ': 1 << 3, '</': 1 << 4, '\'': 1 << 5, '"': 1 << 6
+const Token = {
+    pos: 0,
+    buffer: String || Array,
+    limit: Number,
+    peek: String || Number,
+    next: String
 }
-const tree = {
-    tagName: "", attributes: [], children: [], parent: null
-}
-
-class HTMLTree
-{
-    tagName = "";
-    /**
-     * @type {any[]}
-     */
-    attributes = [];
-    /**
-     * @type {(string | HTMLTree)[]}
-     */
-    children = [];
-    parent = null;
-}
-
-class HTMLError extends Error
-{
-    /**
-     * @param {string | undefined} err
-     */
-    constructor ( err )
-    {
-        super( err );
-    }
-}
-
-const openStart = /^<((?:[a-zA-Z_][\-\.0-9_a-zA-Za-zA-Z\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]*\:)?[a-zA-Z_][\-\.0-9_a-zA-Za-zA-Z\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]*)/;
-
-class StringBuffer
-{
-    #value = [];
-
-    /**
-     * @param {any} str
-     */
-    append ( str )
-    {
-        this.#value.push( str );
-    }
-
-    toString ()
-    {
-        return this.#value.join( '' );
-    }
-
-    clear ()
-    {
-        this.#value.length = 0;
-    }
-
-    length ()
-    {
-        return this.#value.length;
-    }
-}
-
-const attribute = {
-    key: "", value: ""
-}
-
 /**
- * @param {lexer} exe
+ *
+ * @param {string} buffer
+ * @returns
  */
-function parse ( exe )
-{
-    let expectToken = competence[ '<' ];
-    let parent = new HTMLTree();
-    let mode = 0;
-    const buffer = new StringBuffer();
-    P1: while ( true )
-    {
-        let read = exe.read();
-        switch ( read )
-        {
-            case -1:
-                throw new HTMLError( "html text is unclosed" )
-            case '<': {
-                //先判断 是新的开始还是子节点匹配
-                if ( mode === 0 )
-                {
-                    if ( ( competence[ '<' ] & expectToken ) === 0 )
-                    {
-                        throw new HTMLError( `bad match < at ${ exe.position() - 1 } position` );
-                    }
-                    //删除<权限
-                    expectToken = ( expectToken & ~competence[ '<' ] );
-                } else if ( mode === 1 )
-                {
-                    if ( buffer.length() > 0 )
-                    {
-                        parent.children.push( buffer.toString() );
-                        buffer.clear();
-                    }
-                    if ( exe.peek() === '/' )
-                    {
-                        exe.read();
-                        mode++;
-                    } else
-                    {
-                        if ( buffer.length() > 0 )
-                        {
-                            parent.children.push( buffer.toString() );
-                            buffer.clear();
-                        }
-                        exe.back();
-                        let p = parse( exe );
-                        p.parent = parent;
-                        parent.children.push( p );
-                    }
-                } else
-                {
-                    throw new HTMLError( "错误的<" )
-                }
-
-            }
-                break;
-            case '>': {
-                if ( mode + 1 === 3 )
-                {
-                    if ( !parent.tagName === buffer.toString() )
-                    {
-                        throw new HTMLError( "标签前后闭合不一致" );
-                    }
-                    break P1;
-                }
-                if ( mode === 0 )
-                {
-
-                    if ( buffer.length() > 0 )
-                    {
-                        if ( parent.tagName === '' )
-                        {
-                            parent.tagName = buffer.toString();
-                        } else
-                        {
-                            let att = Object.create( attribute );
-                            att.key = buffer.toString();
-                            parent.attributes.push( att );
-                        }
-                    }
-                }
-                buffer.clear();
-                expectToken = ( expectToken & ~competence[ '>' ] ) | competence[ '<' ];
-                mode++;
-            }
-                break;
-            case ' ': {
-                if ( mode === 0 )
-                {
-                    if ( parent.tagName === '' )
-                    {
-                        parent.tagName = buffer.toString();
-                        buffer.clear();
-                    } else if ( buffer.length() > 0 )
-                    {
-                        let attr = Object.create( attribute );
-                        attr.key = buffer.toString();
-                        parent.attributes.push( attr );
-                        buffer.clear();
-                    }
-                    break;
-                }
-            }
-            case '=': {
-                if ( mode === 0 )
-                {
-                    const key = buffer.toString();
-                    let attr = Object.create( attribute );
-                    attr.key = key;
-                    parent.attributes.push( attr )
-                    buffer.clear();
-                    expectToken = competence[ '\'' ] | competence[ '"' ];
-                    break;
-                }
-            }
-            case '\'': {
-                if ( mode === 0 )
-                {
-                    if ( ( expectToken & competence[ '\'' ] ) !== 0 )
-                    {
-                        if ( expectToken !== competence[ '\'' ] )
-                        {
-                            expectToken = competence[ '\'' ];
-                        } else
-                        {
-                            parent.attributes[ parent.attributes.length - 1 ].value = buffer.toString();
-                            buffer.clear();
-                        }
-                        break;
-                    }
-                    throw new HTMLError( "错误匹配 ' 在下标 " + exe.position() );
-                }
-
-            }
-            case '"': {
-                if ( mode === 0 )
-                {
-                    if ( ( expectToken & competence[ '"' ] ) !== 0 )
-                    {
-                        if ( expectToken !== competence[ '"' ] )
-                        {
-                            expectToken = competence[ '"' ];
-                        } else
-                        {
-                            parent.attributes[ parent.attributes.length - 1 ].value = buffer.toString();
-                            buffer.clear();
-                        }
-                        break;
-                    }
-                    throw new HTMLError( "错误匹配 ' 在下标 " + exe.position() );
-                }
-            }
-            case '/': {
-                if ( mode === 0 )
-                {
-                    if ( exe.peek() === '>' )
-                    {
-                        if ( buffer.length() > 0 )
-                        {
-                            if ( parent.tagName === '' )
-                            {
-                                parent.tagName = buffer.length();
-                            } else
-                            {
-                                let attr = Object.create( attribute );
-                                attr.key = buffer.toString();
-                                parent.attributes.push( attr );
-                            }
-                        }
-                        break P1;
-                    }
-
-                }
-            }
-            default:
-                buffer.append( read );
+const createToken = buffer => Object.create(Token, {
+    buffer: {
+        value: buffer,
+        enumerable: false,
+        writable: false,
+        configurable: false
+    },
+    next: {
+        value: function () {
+            return this.pos === this.limit ? -1 : this.buffer[this.pos++];
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
+    limit: {
+        writable: false,
+        enumerable: false,
+        configurable: false,
+        value: buffer.length
+    },
+    pos: {
+        value: 0,
+        writable: true,
+        enumerable: false,
+        configurable: false
+    },
+    peek: {
+        value: function () {
+            return this.pos === this.limit ? -1 : this.buffer[this.pos];
+        },
+        writable: false,
+        enumerable: false,
+        configurable: false
+    },
+    nextPeek: {
+        writable: false,
+        enumerable: false,
+        configurable: false,
+        value: function () {
+            return (this.pos + 1) === this.limit ? -1 : this.buffer[this.pos + 1];
         }
     }
-    console.log( 'buffer:' + buffer.toString() )
-    console.log( parent )
-    return parent;
+});
+
+const StringBuilder = {
+    content: new Array(0),
+    get length() {
+        return this.content.length
+    },
+    /**
+     * @param {string} c
+     */
+    append(c) {
+        this.content.push(c);
+    },
+    eliminate() {
+        this.content.length = 0;
+    },
+    toString() {
+        return this.content.join(``);
+    }
 }
 
 /**
- * @param {string} htmlText
+ * @param {string} template
  */
-export default function ( htmlText )
-{
-    console.log( openStart.exec( htmlText ) );
-    console.log( openStart.lastIndex );
-    return parse( new lexer( htmlText ) )
+function $compile(template) {
+    let token;
+    if (typeof template === "string")
+        token = createToken(template);
+    else
+        token = template;
+    ;
+    const stringboard = Object.create(StringBuilder);
+    let tag, normalProps = [],
+        dynamicProps = [],
+        children = [];
+    let mode = -1;
+    if (mode === -1) {
+        let level = readTagName(token, stringboard);
+        if (level === undefined || level === -1) return;
+        tag = stringboard.toString();
+        stringboard.eliminate();
+        if (level === 0) {
+            stringboard.eliminate();
+            if (readProps(token, stringboard, normalProps, dynamicProps) === 1) {
+                return Object.create({
+                    __proto__: elementFrameWork,
+                    tag: stringboard.toString(),
+                    normalProps: normalProps,
+                    dynamicProps: dynamicProps,
+                    children: null
+                });
+            } else {
+                mode++
+            }
+        } else if (level === 1) {
+            //将/> 挤出栈
+            token.next();
+            token.next();
+            return Object.create({
+                __proto__: elementFrameWork,
+                tag: tag,
+                normalProps: null,
+                dynamicProps: null,
+                children: null
+            });
+        } else {
+            mode++;
+        }
+    }
+    if (mode === 0) {
+        readContent(token, children, stringboard);
+        mode++;
+    }
+    //消耗 </
+    token.next();
+    token.next();
+    for (let i = 0; i < tag.length; i++) {
+        token.next();
+    }
+    if (token.next() !== ">")
+        console.warn("Incorrect element closure label");
+    return Object.create({
+        __proto__: elementFrameWork,
+        tag: tag,
+        normalProps: normalProps,
+        dynamicProps: dynamicProps,
+        children: children
+    });
+};
+
+/**
+ * @param {string} warnText
+ */
+function warn(warnText) {
+    console.warn(warnText);
 }
+
+/**
+ * @param {Token} token
+ * @param {StringBuilder} stringboard
+ */
+function readTagName(token, stringboard) {
+    let read;
+    if ((read = token.next()) === "<") {
+        // <div>
+        //<!--
+        //<br/>
+        for (; ;) {
+            read = token.peek();
+            //@ts-ignore
+            if (read === -1) {
+                warn(`Wrong end`);
+                return -1;
+            } else if (read === " ") {
+                return 0;
+            } else if (read === "/") {
+                return 1;
+            } else if (read === ">") {
+                token.next();
+                return 2;
+            } else {
+                stringboard.append(read);
+                token.next();
+            }
+        }
+    } else {
+        warn(`Element starts with the wrong word ${read}`);
+    }
+}
+
+/**
+ *
+ * @param {*} token
+ * @param {StringBuilder} stringboard
+ * @param {*} normalProps
+ * @param {*} dynamicProps
+ * @returns
+ */
+function readProps(token, stringboard, normalProps, dynamicProps) {
+    token.next();
+    let next = token.peek();
+    while (next !== -1) {
+        if (next === ">") {
+            token.next();
+            return 0;
+        }
+        if (
+            next === " "
+        ) {
+            token.next();
+            next = token.peek();
+            continue;
+        }
+        if (next === "/") {
+            next = token.next();
+            if (next.next() !== ">") {
+                console.warn("Illegal character" + "/");
+            } else {
+                return 1;
+            }
+        }
+
+        function readKey() {
+            stringboard.append(next);
+            token.next();
+            next = token.peek();
+            while (next !== "=") {
+                stringboard.append(next);
+                token.next();
+                next = token.peek();
+            }
+            return stringboard.toString();
+        }
+
+        function readValue() {
+            next = token.peek();
+            while (next !== " " && next !== ">" && next !== "/") {
+                stringboard.append(next);
+                token.next();
+                next = token.peek();
+            }
+            return stringboard.toString();
+        }
+
+        let key = readKey();
+        token.next();
+        stringboard.eliminate();
+        let value = readValue();
+        stringboard.eliminate();
+        if (/:|@/.test(key)) {
+            dynamicProps.push({
+                name: key,
+                value
+            });
+        } else {
+            normalProps.push({
+                name: key,
+                value
+            })
+        }
+        if (next === "/") {
+            next = token.next();
+            if (next.next() !== ">") {
+                console.warn("Illegal character" + "/");
+            } else {
+                return 1;
+            }
+        }
+    }
+    console.warn("Element missing");
+}
+
+/**
+ *
+ * @param {*} token
+ * @param {Array<any>} children
+ * @param {StringBuilder}
+    stringboard
+ */
+function readContent(token, children, stringboard) {
+    let next = token.peek();
+    while (next !== "<") {
+        stringboard.append(next);
+        token.next();
+        next = token.peek();
+    }
+    if (stringboard.length > 0)
+        children.push(stringboard.toString());
+    stringboard.eliminate();
+    //判断是子元素还是闭合标签
+    if (token.nextPeek() === "/") {
+        return;
+    }
+    children.push($compile(token));
+    readContent(token, children, stringboard);
+}
+
+const a = $compile(`<div id="app">
+        <div @click="sliderLeft" class="slider-left" :class="left"><span>&lt;</span></div>
+        <div class="container" :style="containerStyle">
+            <div class="data-container" :style="dataStyle">
+                <div class="slider-active" :style="sliderActive">
+                </div>
+                <div class="slider block" :ref="(el)=>item.el=el" v-for="(item, index) in pages" key="item.index"
+                    @click="Page(item)">
+                    <span>{{item.index}}</span>
+                </div>
+            </div>
+        </div>
+        <div :class="right" @click="sliderRight" class="slider-right"><span>&gt;</span></div>
+    </div>`);
+console.log(JSON.stringify(a));

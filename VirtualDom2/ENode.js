@@ -3,11 +3,11 @@
  * @date 2022-01-16 20:22:42
  * @slogan: Talk is cheap. Show me the code.
  * @Last Modified by: 陈浩
- * @Last Modified time: 2022-01-22 14:07:53
+ * @Last Modified time: 2022-01-29 07:04:52
  */
-import {dispatchEvent, Node, setAttribute} from "./index.js";
 import {propsMustache as h} from "../Mustache/index.js";
 import {clone as deepClone, isNotNull, isNull} from "../util/index.js";
+import {dispatchEvent, Node, setAttribute} from "./index.js";
 
 export default class ENode extends Node {
     /**
@@ -82,7 +82,7 @@ export default class ENode extends Node {
                     this.dynamicTemplate = value;
                 }
                     break;
-                case /@if|@else|@show|:key|@else-if/gi.test(name):
+                case /@if|@else|@show|:key|@else-if|@/gi.test(name):
                     // @ts-ignore
                     this.$props.attributes[name.slice(1)] = value.trim();
                     break;
@@ -101,7 +101,7 @@ export default class ENode extends Node {
             switch (key) {
                 case "show": {
                     const isShow = h(value, context._data);
-                    if (isShow === false || isShow === "false" || isShow === "0") {
+                    if (isShow === false || isShow === "0") {
                         /**
                          * 含有某些属性，开启缓存,且用户本身含有属性
                          */
@@ -153,7 +153,10 @@ export default class ENode extends Node {
             } while ((result = methodRegExp.exec(value)) !== null);
             const fun = h(
                 name,
-                context._methods
+                {
+                    ...context
+                    , ...context._methods
+                }
             );
             this.props.method[key] = () => {
                 const _args = [];
@@ -175,20 +178,15 @@ export default class ENode extends Node {
 
     init() {
         let dom = document.createElement(this.sel);
-        for (const [key, value] of Object.entries(this.attributes)) {
-            setAttribute(dom, key, value);
-        }
-        for (const [key, value] of Object.entries(this.props.attributes)) {
+        for (const [key, value] of Object.entries(Object.assign(this.attributes, this.props.attributes))) {
             setAttribute(dom, key, value);
         }
         for (const [/**@type{HTMLElementEventMap}*/key, value] of Object.entries(this.props.method)) {
-            dispatchEvent(dom, key, value)
-            dom.addEventListener(key,
-                value);
+            dispatchEvent(dom, key, value);
         }
         // @ts-ignore
         const fam = document.createDocumentFragment();
-        this.children.forEach((child) => fam.appendChild(child.init()));
+        this.children.forEach(child => fam.appendChild(child.init()));
         dom.appendChild(fam);
         this.elm = dom;
         return dom;
@@ -214,7 +212,7 @@ export default class ENode extends Node {
         });
         const clone = Object.create({
             __proto__: ENode.prototype,
-            "sel": this.sel,
+            sel: this.sel,
             children: cloneChild,
             $props: this.$props,
             props: deepClone(this.props),

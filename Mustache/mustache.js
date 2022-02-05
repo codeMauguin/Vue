@@ -11,34 +11,37 @@ export default function mustache(stencil, view) {
 
 }
 
+/**
+ * @param {string} stencil
+ * @param {any} view
+ * @returns {string|boolean|Function|object}
+ */
 export function propsMustache(stencil, view) {
     return isMustache(stencil) ? mustache(stencil, view) : render(stencil, view);
 }
 
+/**
+ * @param {string} text
+ * @returns {string}
+ */
 export function ProcessingText(text) {
-    const stencilRegexp = /{{(.+?)}}|\${(.+?)}/g;
+    const stencilRegexp = /{{([\w\W]+)}}|\${([\w\W]+)}/g;
     let match;
-    let stencil = "";
+    let stencil = [];
     let index = 0;
     if ((match = stencilRegexp.exec(text)) !== null) {
         do {
             // s l
             let lastIndex = stencilRegexp.lastIndex;
             if (match.index > index) {
-                stencil += `\`${text.slice(index, match.index)}\`+(${match[1] ?? match[2]})`
-            } else {
-                stencil += `(${match[1] ?? match[2]})`;
+                stencil.push(`\`${text.slice(index, match.index)}\``);
             }
-            if ((match = stencilRegexp.exec(text)) !== null) {
-                stencil += "+";
-                index = lastIndex;
-            } else if (lastIndex < text.length) {
-                stencil += `+\`${text.slice(lastIndex, text.length)}\``;
-                break;
-            } else {
-                break;
-            }
-        } while (true)
-    } else return stencil;
-    return stencil;
+            stencil.push(`(${match[1] ?? match[2]})`)
+            index = lastIndex;
+        } while ((match = stencilRegexp.exec(text)) !== null);
+        if (index < text.length) {
+            stencil.push(`\`${text.slice(index, text.length)}\``);
+        }
+        return stencil.join("+");
+    } else return text;
 }

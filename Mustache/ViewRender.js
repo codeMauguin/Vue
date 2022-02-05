@@ -9,8 +9,6 @@ const render = ( /** @type {string} */ stencil, target) => {
         }
         return parseResults;
     } catch (e) {
-        console.error(e
-            , target);
         return stencil;
     }
 };

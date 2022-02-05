@@ -1,23 +1,38 @@
-import {isFunction, isNotString, isNull} from "../util/index.js";
+/**
+ * @author 陈浩
+ * @date 2022-01-22 21:55:18
+ * @slogan: Talk is cheap. Show me the code.
+ * @Last Modified by: 陈浩
+ * @Last Modified time: 2022-01-27 08:17:59
+ */
+import {isFunction, isNotString, isNull, timer} from "../util/index.js";
 import {createProxy, deepReadOnly, readonly} from "../proxy/index.js";
-import {dept} from "../watcher/index.js";
-import {compile, ENode, h, patchNode as patch, TNode} from "../VirtualDom2/index.js"
+import dept from "../watcher/Dept.js";
+import {compile, ENode, h, patchNode as patch, TNode} from "../VirtualDom2/index.js";
 
 const emptyObject = Object.freeze({});
 
+/**
+ * @param {Vue} properties
+ */
 function mount(properties) {
-    properties.reactive = function (target) {
+    // @ts-ignore
+    properties.reactive = function ( /** @type {any} */ target) {
         return createProxy(target);
     };
-    properties.ref = function (target) {
+    // @ts-ignore
+    properties.ref = function ( /** @type {any} */ target) {
         return createProxy(target);
     };
+    // @ts-ignore
     properties.readonly = readonly;
+    // @ts-ignore
     properties.deepReadOnly = deepReadOnly;
     /**
      * 初始化Options属性
      * @param {Object} Options
      */
+    // @ts-ignore
     properties.initialization = function (Options) {
         const keys = Object.keys(Options);
         for (const key of keys) {
@@ -51,6 +66,7 @@ function mount(properties) {
      * @param {string} el 节点信息
      * @param context
      */
+    // @ts-ignore
     properties.mount = function (el, /**@type{ProxyHandler<Vue>}*/context) {
         if (isNotString(el)) {
             console.warn("el is not specification");
@@ -70,15 +86,18 @@ function mount(properties) {
     /**
      * 收集更新信息，进行更新
      */
+    // @ts-ignore
     properties.useTask = false;
+    // @ts-ignore
     properties.task = [];
+    // @ts-ignore
     properties.update = function () {
         // @ts-ignore
         this.task.push(this);
         if (this.useTask === false) {
             //@ts-ignore
             this.useTask = true;
-            Promise.resolve().then(callback.bind(this));
+            Promise.resolve().then(timer.bind(null, callback.bind(this), "View update time"));
         }
     };
 
@@ -89,7 +108,9 @@ function mount(properties) {
         const oldNode = this.virtualDom;
         // @ts-ignore
         this.virtualDom = this[AST](this);
+        // @ts-ignore
         compile(this.virtualDom, this);
+        // @ts-ignore
         patch(oldNode, this.virtualDom);
         // @ts-ignore
         if (this.task.length > 0) {
@@ -99,10 +120,12 @@ function mount(properties) {
         }
     }
 
-    properties._c = function (sel, attributes, children) {
+    // @ts-ignore
+    properties._c = function ( /** @type {string} */ sel, /** @type {any} */ attributes, /** @type {import("../VirtualDom2/Node.js").default[]} */ children) {
         return new ENode(sel, attributes, children)
     }
-    properties._t = function (text) {
+    // @ts-ignore
+    properties._t = function ( /** @type {any} */ text) {
         return new TNode(text);
     }
 }
@@ -116,6 +139,9 @@ const AST = Symbol("AST");
 class Vue {
     static dept = dept;
     static id = 0;
+    /**
+     *@type{Function}
+     */
     [AST];
     _data = emptyObject;
     _methods = emptyObject;
@@ -123,6 +149,9 @@ class Vue {
     _mounted = undefined;
     uid;
 
+    /**
+     * @param {{ el: any; }} options
+     */
     constructor(options) {
         this.uid = Vue.id++;
         //读取属性
@@ -150,10 +179,10 @@ class Vue {
         }
         //挂载虚拟dom
         // @ts-ignore
-        this.mount(options.el, context);
+        timer(this.mount.bind(this, options.el, context), "View mount time");
         // create中更新数据，不刷新视图，mounted中数据会刷新视图
         // mounted中是视图挂载
-        Vue.dept.add(context);
+        Vue.dept.$emit(context);
         // @ts-ignore
         this._mounted?.call(context);
         return context;

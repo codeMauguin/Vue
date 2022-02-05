@@ -1,9 +1,13 @@
-import { ENode, setAttribute } from "./index.js";
-import { isNotNull, isNull } from "../util/index.js"
+import {ENode, removeAttribute, setAttribute} from "./index.js";
+import {isNotNull, isNull} from "../util/index.js"
 
-function insertBefore ( elm, newElm, oldElm )
-{
-    elm.insertBefore( newElm, oldElm );
+/**
+ * @param {HTMLElement} elm
+ * @param {DocumentFragment} newElm
+ * @param {HTMLElement} oldElm
+ */
+function insertBefore(elm, newElm, oldElm) {
+    elm.insertBefore(newElm, oldElm);
 }
 
 /**
@@ -51,12 +55,14 @@ export function diff ( parenElm, oldNode, newNode )
         } else if ( same( oldStart, newEnd ) )
         {
             patchNode( oldStart, newEnd );
+            // @ts-ignore
             insertBefore( parenElm, oldStart.elm, oldEnd.elm.nextSibling );
             oldStart = oldNode[ ++oldStartIndex ];
             newEnd = newNode[ --newEndIndex ];
         } else if ( same( oldEnd, newStart ) )
         {
             patchNode( oldEnd, newStart );
+            // @ts-ignore
             insertBefore( parenElm, oldEnd.elm, oldStart.elm );
             oldEnd = oldNode[ --oldEndIndex ];
             newStart = newNode[ ++newStartIndex ];
@@ -75,11 +81,14 @@ export function diff ( parenElm, oldNode, newNode )
             {
                 //创建
                 const elm = newStart.init();
+                // @ts-ignore
                 insertBefore( parenElm, elm, oldStart.elm )
             } else
             {
                 patchNode( oldNode[ os ], newStart );
+                // @ts-ignore
                 insertBefore( parenElm, newStart.elm, oldStart.elm )
+                // @ts-ignore
                 oldNode[ os ] = undefined;
             }
             newStart = newNode[ ++newStartIndex ];
@@ -117,30 +126,25 @@ export function patchNode ( oldNode, newNode )
         if ( newNode.static )
         {
             //nothing to do
-        } else
-        {
-            let oldAttr = oldNode.props;
-            //比较更新props
-            for ( const [ key, value ] of Object.entries( newNode.props.attributes ) )
-            {
-                if ( Reflect.has( oldAttr.attributes, key ) )
-                {
-                    if ( oldAttr.attributes[ key ] !== value )
-                        if ( key === "class" )
-                        {
-                            let attribute = oldAttr.attributes[ key ];
-                            elm.classList.remove( attribute.split( " " ) );
-                            setAttribute( elm, key, value )
-                        } else
-                            setAttribute( elm, key, value );
-                    Reflect.deleteProperty( oldAttr.attributes, key );
-                } else
-                {
-                    setAttribute( elm, key, value );
+        } else {
+            // @ts-ignore
+            const {attributes: oldAttr} = oldNode.props;
+            const {attributes: newAttr} = newNode.props;
+            const oldKeys = Object.keys(oldAttr);
+            const newKeys = Object.keys(newAttr);
+            //去交集更新+新数组差集
+            oldKeys.filter(ok => newKeys.includes(ok)).concat(
+                ...newKeys.filter(nK => !oldKeys.includes(nK))
+            ).forEach(uk => {
+                setAttribute(elm, uk, newAttr[uk], oldAttr[uk]);
+            });
+            //去差集删除
+            oldKeys.filter(fk => !newKeys.includes(fk)).forEach(
+                dk => {
+                    removeAttribute(elm, oldAttr[dk]);
                 }
-            }
-            Object.keys( oldAttr.attributes ).forEach( r => elm.removeAttribute( String( r ) ) );
-            //更新children
+            );
+            // 更新完毕
         }
         //@ts-ignore
         //更新children
@@ -160,16 +164,16 @@ export function patchNode ( oldNode, newNode )
                 elm.appendChild( fam );
             }
         //@ts-ignore
-        else if ( oldNode.children.length > 0 )
-        {
-            //@ts-ignore
-            /** @type {{children:Array<ENode>}}*/oldNode.children.forEach( (/** @type {{ elm: HTMLElement; }} */ ch ) => elm.removeChild( ch.elm ) );
+        else if ( oldNode.children.length > 0 ) {
+            // @ts-ignore
+            elm.innerHTML = "";
         }
     } else
     {
         // @ts-ignore
         if ( oldNode.text !== newNode.text )
         {
+            // @ts-ignore
             elm.innerText = newNode.text;
         }
     }

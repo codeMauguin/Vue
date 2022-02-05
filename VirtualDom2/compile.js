@@ -5,14 +5,17 @@ import Vue from "../Vue/Vue.js";
 
 const forRegExp = /(?<head>\(.*\)|\w+)\s+(?<body>in|of)\s+(?<target>.*)/;
 const aliasExp = /(?<=[(|,]).*?(?=[,|)])/gi;
-
 /**
- * @param {any} context
- * @param {ENode} node
- * @param {string} attrElement
- * @param {string} attrElement2
+ *
+ * @param {Object} arg0 视图数据
+ * @returns 动态子节点
  */
-const forProcessor = ({context, node, attrElement, attrElement2}) => {
+const forDynamicGeneration = ({
+                                  context,
+                                  node: {children: templateChildren},
+                                  attrElement,
+                                  attrElement2
+                              }) => {
     const forModel = {};
     const foredeck = forRegExp.exec(attrElement);
     // @ts-ignore
@@ -50,7 +53,6 @@ const forProcessor = ({context, node, attrElement, attrElement2}) => {
             forModel["indexKey"] = headers[2];
         }
     }
-    const templateChildren = node.children;
     const newChildren = [];
     let index = 0;
     if (isArray(target)) {
@@ -88,20 +90,20 @@ const forProcessor = ({context, node, attrElement, attrElement2}) => {
 
 
 /**
- * @param {ENode|TNode} node
- * @param context
+ * @param {ENode | TNode} node
+ * @param {any } context
  * @param index
  */
 export function compile(node, context, index = 1) {
     if (node instanceof ENode) {
         // @ts-ignore
-        node.static = !(Reflect.hasOwnProperty(node.prop.attributes) || Reflect.hasOwnProperty(node.prop.method));
+        node.static = !(Reflect.ownKeys(node.prop.attributes).length > 0 || Reflect.ownKeys(node.prop.method).length > 0);
         //通过节点属性生成key +index
         //设置flag 当是for 信息时，子节点不需要递归编译
         let flag = true;
         if (isNotNull(node.dynamicTemplate)) {
             // @ts-ignore
-            node.children = forProcessor({
+            node.children = forDynamicGeneration({
                 context: context,
                 node: node,
                 attrElement: node.dynamicTemplate,
@@ -109,7 +111,8 @@ export function compile(node, context, index = 1) {
             });
             flag = false;
         }
-        if (node.key === undefined) node.key = (index << 5) + ((Object.keys(node?.attributes ?? {}).length + 9) << 2) + ((Object.keys(node.prop.attributes).length + 8) << 3) + ((Object.keys(node.prop.method).length + 9) << 4);
+        node.key = node.key ?? calculateCode(node, index);
+        //更新视图内容
         node.render(context);
         //处理子节点的if-else-if -else
         const watcher = ifProcessor(node.children);
@@ -117,7 +120,7 @@ export function compile(node, context, index = 1) {
          * 取出消息
          */
         if (!watcher.$empty()) {
-            watcher.$on(node, context._data);
+            watcher.$on(node, context["_data"]);
         }
         if (flag) {
             // @ts-ignore
@@ -129,6 +132,15 @@ export function compile(node, context, index = 1) {
         node["static"] = !isMustache(tem);
         if (!(node["static"] = !isMustache(tem))) node.render(context);
     }
+}
+
+
+/**
+ * @param {ENode} node
+ * @param {number} index
+ */
+function calculateCode(node, index) {
+    return (index << 5) + ((Object.keys(node?.attributes ?? {}).length + 9) << 2) + ((Object.keys(node.prop.attributes).length + 8) << 3) + ((Object.keys(node.prop.method).length + 9) << 4);
 }
 
 class Observer {
@@ -170,8 +182,7 @@ class Observer {
                 }
             } else if (isNotNull(res?.attr["else"])) {
                 if (index === 0) {
-                    console.warn("Else tag should not be in the first place, if it is in the" +
-                        " first place it will never show!");
+                    console.warn("Else tag should not be in the first place, if it is in the first place it will never show!");
                     node.children.splice(res.index + index--, 1);
                     continue;
                 }
@@ -216,6 +227,9 @@ class Observer {
 
 const watcher = new Observer();
 
+/**
+ * @param {string | any[]} children
+ */
 function ifProcessor(children) {
     for (let index = 0; index < children.length; index++) {
         const child = children[index];

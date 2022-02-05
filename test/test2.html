@@ -2,34 +2,136 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Document</title>
-    <script src="./ts.js"></script>
 </head>
 
 <body>
-    <div id="app">
-        <p v-if="isShow" style="display: flexbox;">{{message}}</p>
-        <button @click="add(    )">sd</button>
+<div id="app">
+    <div :class="left" @click="sliderLeft" class="slider-left"><span>&lt;</span></div>
+    <div :style="containerStyle" class="container">
+        <div :style="dataStyle" class="data-container">
+            <div :style="sliderActive" class="slider-active">
+            </div>
+            <div :ref="(el)=>item.el=el" @click="Page(item)" class="slider block" key="item.index"
+                 v-for="(item, index) in pages">
+                <span>{{item.index}}</span>
+            </div>
+        </div>
     </div>
-    <script>
-        var app = new Vue( {
-            el: '#app',
-            data()
-            {
-                return { message: "Hello Vue!", isShow: true }
-            },
-            methods: {
-                add()
+    <div :class="right" @click="sliderRight" class="slider-right"><span>&gt;</span></div>
+</div>
+</body>
+<script src="./ts.js"></script>
+<script>
+    Vue.createApp({
+        setup() {
+            const pages = Vue.reactive([]);
+            const pageSum = 90;
+            const pageSize = 5;
+            const spaceLength = 20;
+            let page = 1;
+            let activeIndex = Vue.ref(1);
+            Vue.watch(activeIndex, (newValue) => {
+                let $_o;
+                if (activeIndex.value % pageSize === 0) {
+                    $_o = pageSize - 1;
+                } else
+                    $_o = (activeIndex.value % pageSize) - 1;
+                sliderActive['left'] = `${($_o) * (offset + spaceLength)}px`
+                console.log(111);
+            });
+            const left = Vue.ref("");
+            const right = Vue.ref(pageSize > pageSum ? "" : "block");
+            const offset = 50;// px
+            const sliderActive = Vue.reactive({
+                "left": 0 + "px"
+            });
+            console.log(sliderActive);
+            let currentOffset = 0;
+            //计算总长度，包括空格 单位 px
+            let dataLength = offset * pageSum + (pageSum - 1) */*空格长度*/spaceLength;
+            let dataStyle = Vue.reactive({
+                width: dataLength + "px",
+                "margin-left": "0px"
+            });
+            const containerStyle = Vue.reactive(
                 {
-                    this.isShow = !this.isShow;
+                    width: `${offset * pageSize + spaceLength * (pageSize - 1)}` + "px"
+                }
+            )
+
+            const sliderLeft = function () {
+                if (activeIndex.value <= pageSize) {
+                    left.value = "";
+                } else {
+                    if (activeIndex.value % pageSize === 1) {
+                        currentOffset = currentOffset + (pageSize * (offset + spaceLength));
+                        dataStyle["margin-left"] =
+                            `${currentOffset}px`;
+                    }
+                }
+                if (activeIndex.value < pageSum) {
+                    right.value = "block"
+                }
+                activeIndex.value = activeIndex.value > 1 ? activeIndex.value - 1 : 1;
+                page = Math.ceil(activeIndex.value / pageSize);
+
+            }
+            const sliderRight = function () {
+                if (activeIndex.value >= pageSize) {
+                    left.value = "block";
+                }
+                activeIndex.value = activeIndex.value < pageSum ? activeIndex.value + 1 : pageSum;
+                page = Math.ceil(activeIndex.value / pageSize);
+                if (activeIndex.value === (Math.ceil(pageSum / pageSize) - 1) * pageSize + 1)
+                    right.value = "";
+                //控制翻页
+                if (activeIndex.value % pageSize === 1) {
+                    if (page <= Math.ceil(pageSum / pageSize))
+                        currentOffset = currentOffset - (pageSize * (offset + spaceLength));
+                    dataStyle["margin-left"] =
+                        `${currentOffset}px`;
                 }
             }
-        } );
-        console.log( app );
-    </script>
-</body>
+            const arrayForEach = function (array, fn) {
+                if (Array.isArray(array))
+                    for (let i = 0; i < array.length; i++) {
+                        fn(array[i], i, array);
+                    }
+                else if (typeof array === "number") {
+                    for (let i = 1; i <= array; i++) {
+                        fn(i, array);
+                    }
+                } else {
+                    console.warn(`arg0 is not a Array or Number -${array}`);
+                }
+            }
+
+            const Page = (index) => {
+                activeIndex.value = index.index
+            }
+            const initPages = function () {
+                arrayForEach(pageSum, index => pages.push({index}));
+            }
+            //初始化页面总数
+            initPages();
+            return {
+                pages,
+                left,
+                right,
+                sliderLeft,
+                sliderRight,
+                dataStyle,
+                containerStyle,
+                sliderActive,
+                Page
+            }
+        }
+    }).mount("#app");
+</script>
+<link href="html2.css" rel="stylesheet">
 
 </html>

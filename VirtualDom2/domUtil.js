@@ -4,10 +4,27 @@ export function setAttribute(elm, name, value) {
     if (styleKeys.includes(name)) {
         elm.style[name] = value;
     } else if (name === "class") {
-        elm.classList.add(value.split(" "));
-    } else if (name === "if" || name === "else-if" || name === "else") {
+        if (arguments[3] !== undefined) {
+            let oldV = arguments[3].split(" ");
+            const newValues = value.split(" ");
+            const newAdd = newValues.filter(r => !oldV.includes(r));
+            elm.classList.remove(...oldV.filter(r => !newValues.includes(r)))
+            elm.classList.add(...newAdd);
+        } else elm.classList.add(...value.split(" "));
+    } else if (name === "if" || name === "else-if" || name === "else" || name === "key") {
     } else {
         elm.setAttribute(name, value);
+    }
+}
+
+export function removeAttribute(elm, name, value) {
+    if (styleKeys.includes(name)) {
+        elm.style[name] = "";
+    } else if (name === "class") {
+        elm.classList.remove(...value.split(" "));
+    } else if (name === "if" || name === "else-if" || name === "else") {
+    } else {
+        elm.removeAttribute(name, value);
     }
 }
 
