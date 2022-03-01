@@ -1,0 +1,9 @@
+ [{
+    "name":"棉花糖",
+    "url":"string",
+    "search-url":"https://api.mianhuatangxs.cn/api/v1/novelsearch?content={{name}}&pageIndex=1&pageSize=20&type=1",
+    "config":{
+
+    }
+  }
+  ]

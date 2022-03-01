@@ -1,78 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Title</title>
     <script defer type="module">
-        import Vue from "../Vue.min.js";
-
-        window.a = new Vue({
-            el: "#app1",
-            create() {
-                this.array.reverse();
+      import Vue from "../Vue/Vue.js";
+      import { toRef } from "../proxy/index.js";
+      import { watcher } from "../watcher/index.js";
+      window.a = new Vue({
+        el: "#app1",
+        create() {
+          this.array.reverse();
+        },
+        data({ reactive }) {
+          let res = reactive({
+            id: 10,
+            isShow: true,
+            array: [
+              [{ id: 1 }],
+              [{ id: 3 }, { id: 4 }, { id: 9 }],
+              [{ id: 6 }, { id: 7 }, { id: 8 }],
+            ],
+            hobby: {
+              game: "游戏",
+              name: "PUBG",
+              age: "22",
             },
-
-            data({ref, reactive}) {
-                return reactive({
-                    id: 10,
-                    isShow: true,
-                    array: [[{id: 1}], [{id: 3}, {id: 4}, {id: 9}]
-                        , [{id: 6}, {id: 7}, {id: 8}]],
-                    hobby: {
-                        game: "游戏",
-                        name: "PUBG",
-                        age: "22"
-                    },
-                    div: "wo ois"
-                });
-            },
-            methods: {
-                add(id) {
-                    this.div = "ds sa"
-                    this.isShow = !this.isShow
-                    this.hobby.age = id;
-                    this.id++
-                    this.array[0].reverse();
-                    this.array[1].reverse();
-                    this.array.reverse();
-                },
-                del() {
-                    this.id--;
-                }
-            }
-        });
+            div: "wo ois",
+          });
+          let state = toRef(90);
+          const unwatcher = watcher(state, (value, old, c) => {
+            console.log(value);
+          });
+          return { ...res, state };
+        },
+        methods: {
+          add(id) {
+            this.state.value += 1;
+            this.div = "ds sa";
+            this.isShow = !this.isShow;
+            this.hobby.age = id;
+            this.id++;
+            this.array[0].reverse();
+            this.array[1].reverse();
+            this.array.reverse();
+          },
+          del() {
+            this.id--;
+          },
+        },
+      });
     </script>
     <style>
-        .p {
-            transition: all 2s;
-            animation: linear 1s;
-        }
+      .p {
+        transition: all 2s;
+        animation: linear 1s;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-<div id="app1">
-    s{{ isShow?true:false }}s
-    <div @for="(item,index) in array">
+  <body>
+    <div id="app1">
+      <p>{{state}}</p>
+      s{{ isShow?true:false }}s
+      <div @for="(item,index) in array">
         <div :key="item.id" @for="(item,index) in item">
-            <p class="p">{{global.isShow}}-{{index}}ss</p>
+          <p class="p">{{global.isShow}}-{{index}}ss</p>
         </div>
-    </div>
-    <div @class="div" @for="(item,name,index) in hobby">
+      </div>
+      <div @class="div" @for="(item,name,index) in hobby">
         <p>{{item}}-${name}-${index}</p>
+      </div>
+      <button @click="add(id)">添加</button>
+      <div @if="{{isShow?false:true}}">wo是True</div>
+      <div @else-if="{{isShow?false:false}}">wo是else-if</div>
+      <div @else-if="{{isShow?true:false}}">wo是else-2-if</div>
+      <div @else>wo是False</div>
     </div>
-    <button @click="add(id)">添加</button>
-    <div @if="{{isShow?false:true}}">wo是True</div>
-    <div @else-if="{{isShow?false:false}}">wo是else-if</div>
-    <div @else-if="{{isShow?true:false}}">wo是else-2-if</div>
-    <div @else>wo是False</div>
-</div>
-<!-- <div id="app2">
+    <!-- <div id="app2">
 {{id}}
 <p>2</p>
 </div> -->
-<div id="app3">选择</div>
-</body>
-
+    <div id="app3">选择</div>
+  </body>
 </html>

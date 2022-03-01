@@ -1,17 +1,17 @@
 class Dept {
-    #value = [];
+  #value = [];
 
-    /**
-     * @param {any} context
-     */
-    $emit(context) {
-        this.#value.push(context);
-    }
+  /**
+   * @param {any} context
+   */
+  $emit(context) {
+    this.#value.push(context);
+  }
 
-    notifyAll() {
-        this.#value.forEach(e => e.update());
-    }
+  notifyAll() {
+    this.#value.forEach((e) => e.update());
+  }
 }
 
 const dept = new Dept();
-export default dept
+export default dept ?? new Dept();
