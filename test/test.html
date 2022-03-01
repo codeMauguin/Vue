@@ -7,41 +7,45 @@
     <script defer type="module">
         import Vue from "../Vue.min.js";
 
-        window.a = new Vue({
+        window.a = new Vue( {
             el: "#app1",
-            create() {
+            create ()
+            {
                 this.array.reverse();
             },
 
-            data({ref, reactive}) {
-                return reactive({
+            data ( { ref, reactive } )
+            {
+                return reactive( {
                     id: 10,
                     isShow: true,
-                    array: [[{id: 1}], [{id: 3}, {id: 4}, {id: 9}]
-                        , [{id: 6}, {id: 7}, {id: 8}]],
+                    array: [ [ { id: 1 } ], [ { id: 3 }, { id: 4 }, { id: 9 } ]
+                        , [ { id: 6 }, { id: 7 }, { id: 8 } ] ],
                     hobby: {
                         game: "游戏",
                         name: "PUBG",
                         age: "22"
                     },
                     div: "wo ois"
-                });
+                } );
             },
             methods: {
-                add(id) {
+                add ( id )
+                {
                     this.div = "ds sa"
                     this.isShow = !this.isShow
                     this.hobby.age = id;
                     this.id++
-                    this.array[0].reverse();
-                    this.array[1].reverse();
+                    this.array[ 0 ].reverse();
+                    this.array[ 1 ].reverse();
                     this.array.reverse();
                 },
-                del() {
+                del ()
+                {
                     this.id--;
                 }
             }
-        });
+        } );
     </script>
     <style>
         .p {
@@ -52,27 +56,27 @@
 </head>
 
 <body>
-<div id="app1">
-    s{{ isShow?true:false }}s
-    <div @for="(item,index) in array">
-        <div :key="item.id" @for="(item,index) in item">
-            <p class="p">{{global.isShow}}-{{index}}ss</p>
+    <div id="app1">
+        s{{ isShow?true:false }}s
+        <div @for="(item,index) in array">
+            <div :key="item.id" @for="(item,index) in item">
+                <p class="p">{{global.isShow}}-{{index}}ss</p>
+            </div>
         </div>
+        <div @class="div" @for="(item,name,index) in hobby">
+            <p>{{item}}-${name}-${index}</p>
+        </div>
+        <button @click="add(id)">添加</button>
+        <div @if="{{isShow?false:true}}">wo是True</div>
+        <div @else-if="{{isShow?false:false}}">wo是else-if</div>
+        <div @else-if="{{isShow?true:false}}">wo是else-2-if</div>
+        <div @else>wo是False</div>
     </div>
-    <div @class="div" @for="(item,name,index) in hobby">
-        <p>{{item}}-${name}-${index}</p>
-    </div>
-    <button @click="add(id)">添加</button>
-    <div @if="{{isShow?false:true}}">wo是True</div>
-    <div @else-if="{{isShow?false:false}}">wo是else-if</div>
-    <div @else-if="{{isShow?true:false}}">wo是else-2-if</div>
-    <div @else>wo是False</div>
-</div>
-<!-- <div id="app2">
+    <!-- <div id="app2">
 {{id}}
 <p>2</p>
 </div> -->
-<div id="app3">选择</div>
+    <div id="app3">选择</div>
 </body>
 
 </html>
