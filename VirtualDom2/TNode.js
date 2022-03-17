@@ -37,7 +37,10 @@ export default class TNode extends Node {
    * @param {any} context
    */
   render(context) {
-    this.text = h(this.text, context instanceof Vue ? context._data : context);
+    this.text = h(
+      this.text,
+      context instanceof Vue ? context["&data"] : context,
+    );
   }
 
   /**

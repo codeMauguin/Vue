@@ -103,7 +103,6 @@ export function patchNode(oldNode, newNode) {
     if (newNode.static) {
       //nothing to do
     } else {
-      // @ts-ignore
       const { attributes: oldAttr } = oldNode.props;
       const { attributes: newAttr } = newNode.props;
       const oldKeys = Object.keys(oldAttr);

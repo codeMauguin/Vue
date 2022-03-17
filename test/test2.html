@@ -33,25 +33,44 @@
   </body>
   <script src="./ts.js"></script>
   <script>
-    Vue.createApp({
-      setup() {
+    let a = Vue.createApp({
+      setup(prop) {
         const pages = Vue.reactive([]);
-        const pageSum = 90;
+        const pageSum = 5;
         const pageSize = 5;
         const spaceLength = 20;
         let page = 1;
         let activeIndex = Vue.ref(1);
-        const state = Vue.reactive({ id: 1 });
+        const left = Vue.ref("prohibit");
+        const right = Vue.ref(pageSize > pageSum ? "prohibit" : "block");
+        const updateStyle = (value) => {
+          if (value === 1) {
+            left.value = "prohibit";
+          } else if (value > pageSize) {
+            left.value = "block";
+          } else {
+            left.value = "first";
+          }
+          let a = pageSum % pageSize;
+          if (value === pageSum) {
+            right.value = "prohibit";
+          } else if (
+            (a === 0 && value > pageSum - pageSize) ||
+            (a !== 0 && value > pageSum - a)
+          ) {
+            right.value = "first";
+          } else {
+            right.value = "block";
+          }
+        };
         Vue.watch(activeIndex, (newValue) => {
+          updateStyle(newValue);
           let $_o;
-          state.id++;
           if (activeIndex.value % pageSize === 0) {
             $_o = pageSize - 1;
           } else $_o = (activeIndex.value % pageSize) - 1;
           sliderActive["left"] = `${$_o * (offset + spaceLength)}px`;
         });
-        const left = Vue.ref("");
-        const right = Vue.ref(pageSize > pageSum ? "" : "block");
         const offset = 50; // px
         const sliderActive = Vue.reactive({
           left: 0 + "px",
@@ -69,36 +88,26 @@
         });
 
         const sliderLeft = function () {
-          if (activeIndex.value <= pageSize) {
-            left.value = "";
-          } else {
-            if (activeIndex.value % pageSize === 1) {
-              currentOffset = currentOffset + pageSize * (offset + spaceLength);
-              dataStyle["margin-left"] = `${currentOffset}px`;
-            }
-          }
-          if (activeIndex.value < pageSum) {
-            right.value = "block";
+          if (
+            activeIndex.value > pageSize &&
+            activeIndex.value % pageSize === 1
+          ) {
+            currentOffset = currentOffset + pageSize * (offset + spaceLength);
+            dataStyle["margin-left"] = `${currentOffset}px`;
           }
           activeIndex.value = activeIndex.value > 1 ? activeIndex.value - 1 : 1;
           page = Math.ceil(activeIndex.value / pageSize);
         };
         const sliderRight = function () {
-          if (activeIndex.value >= pageSize) {
-            left.value = "block";
-          }
           activeIndex.value =
             activeIndex.value < pageSum ? activeIndex.value + 1 : pageSum;
           page = Math.ceil(activeIndex.value / pageSize);
-          if (
-            activeIndex.value ===
-            (Math.ceil(pageSum / pageSize) - 1) * pageSize + 1
-          )
-            right.value = "";
           //控制翻页
-          if (activeIndex.value % pageSize === 1) {
-            if (page <= Math.ceil(pageSum / pageSize))
-              currentOffset = currentOffset - pageSize * (offset + spaceLength);
+          if (
+            activeIndex.value % pageSize === 1 &&
+            page <= Math.ceil(pageSum / pageSize)
+          ) {
+            currentOffset = currentOffset - pageSize * (offset + spaceLength);
             dataStyle["margin-left"] = `${currentOffset}px`;
           }
         };
@@ -115,7 +124,6 @@
             console.warn(`arg0 is not a Array or Number -${array}`);
           }
         };
-
         const Page = (index) => {
           activeIndex.value = index.index;
         };
@@ -137,6 +145,7 @@
         };
       },
     }).mount("#app");
+    console.log(a);
   </script>
   <link href="html2.css" rel="stylesheet" />
 </html>

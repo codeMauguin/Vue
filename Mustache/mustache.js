@@ -7,7 +7,7 @@ import { isMustache } from "../util/index.js";
  * @param {any} view
  */
 export default function mustache(stencil, view) {
-  return render(ProcessingText(stencil), view);
+  return ProcessingText(stencil, view);
 }
 
 /**
@@ -23,7 +23,7 @@ export function propsMustache(stencil, view) {
  * @param {string} text
  * @returns {string}
  */
-export function ProcessingText(text) {
+export function ProcessingText(text, view) {
   const stencilRegexp = /{{(.+?)}}|\${(.+?)}/g;
   let match;
   let stencil = [];
@@ -33,14 +33,14 @@ export function ProcessingText(text) {
       // s l
       let lastIndex = stencilRegexp.lastIndex;
       if (match.index > index) {
-        stencil.push(`\`${text.slice(index, match.index)}\``);
+        stencil.push(`${text.slice(index, match.index)}`);
       }
-      stencil.push(`(${match[1] ?? match[2]})`);
+      stencil.push(render(match[1] ?? match[2], view));
       index = lastIndex;
     } while ((match = stencilRegexp.exec(text)) !== null);
     if (index < text.length) {
-      stencil.push(`\`${text.slice(index, text.length)}\``);
+      stencil.push(`${text.slice(index, text.length)}`);
     }
-    return stencil.join("+");
+    return stencil.reduce((a, b) => a + b);
   } else return text;
 }

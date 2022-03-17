@@ -11,14 +11,13 @@ function ƒ(target) {
       if (target[key] === value) {
         return true;
       } else {
-        if (target instanceof ref) {
-          target["__ob__"]?.(value, value, () =>
-            Reflect.deleteProperty(target, "__ob__"),
-          ); //执行观察 this
-        } else {
+        if (!(target instanceof ref)) {
           target["__ob__"]?.(target, value, () =>
             Reflect.deleteProperty(target, "__ob__"),
           ); //执行观察 this
+        }
+        if (!Reflect.has(target, key) && isObject(value)) {
+          value = createProxy(value);
         }
         const result = Reflect.set(target, key, value, receiver);
         Vue.dept.notifyAll();
