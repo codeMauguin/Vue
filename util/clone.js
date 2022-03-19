@@ -29,6 +29,7 @@ export default function ( target )
                 Reflect.get( target, key, target )
             ), clone );
         } );
+        
         return clone;
     }
 
