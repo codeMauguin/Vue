@@ -56,7 +56,7 @@ export class Parser {
 
     /**
      * Parser a string into a AST
-     * @param {string} String
+     * @param string
      */
     parser(string) {
         this._string = string;
