@@ -39,10 +39,17 @@ export function Vnode(tagName,
 
 export function TNode(text,
                       isStatic) {
+    const that = {context: []};
     return {
         __proto__: TNode.prototype, static: isStatic, value: text, get type() {
             return "TEXTNODE";
         },
+        get context() {
+            return that.context;
+        },
+        set context(context) {
+            that.context.push(context);
+        }
     };
 }
 

@@ -1,7 +1,7 @@
 import {_c_, _t_, _v_, comment, TNode} from './';
 import {isArray, isNotNull, isNotObject, isNull} from '../util';
 import {Observer} from '../observer';
-import {mustache as h, packageValue} from '../Mustache';
+import {packageValue, propsMustache as h} from '../Mustache';
 import {error} from "../log";
 
 const forRegExp = /((?<head>\(.*\))|(?<header>\w+))\s+(?<body>in|of)\s+(?<target>.*)/;
@@ -91,10 +91,11 @@ function build(header,
 function defineFor(temp,
                    dynamic,
                    context) {
-    let regExpExecArray = forRegExp.exec(dynamic);
-    const header = regExpExecArray.groups.header;
-    const head = regExpExecArray.groups.head;
-    let match = head.match(aliasExp);
+    let regExpExecArray = forRegExp.exec(dynamic.value);
+    const header = regExpExecArray?.groups?.header;
+    const head = regExpExecArray?.groups?.head;
+    let match = head?.match(aliasExp);
+
     const target = h(regExpExecArray.groups.target,
                      context);
     if (isNotObject(target)) {
@@ -109,8 +110,8 @@ function defineFor(temp,
                                  index,
                                  target[index]);
             let child = cloneNode(temp);
-            child.context = context;
-            child.context = _context;
+            initContext(child,
+                        _context, ...temp.context)
             result.push(child);
         }
     } else {
@@ -123,12 +124,25 @@ function defineFor(temp,
                                    value,
                                    onKeys[i]);
             let child = cloneNode(temp);
-            child.context = context;
-            child.context = _context;
+            initContext(child,
+                        _context, context)
             result.push(child);
         }
     }
     return result;
+}
+
+function initContext(node,
+                     ...context) {
+    for (let contextElement of context) {
+        node.context = contextElement
+    }
+    if (node.type === "ELEMENT") {
+        for (let child of node.children) {
+            initContext(child,
+                ...context);
+        }
+    }
 }
 
 

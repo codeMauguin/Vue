@@ -1,9 +1,10 @@
-import {mustache as h} from "../Mustache";
+import {propsMustache as h} from "../Mustache";
 
 function mustache(text,
                   node) {
     let result = text;
-    for (let context of node.context) {
+    for (let index=0;index<node.context.length;++index) {
+        const context=node.context[0];
         try {
             result = h(text,
                        context);
@@ -58,10 +59,13 @@ export function render(node) {
         }
         case "TEXTNODE": {
             const {value} = node;
-            let data = value.map(val => val[1] === 1 ? mustache(val[0],
-                                                                node) : val[0])
-                            .reduce((a,
-                                     b) => a + b);
+
+            let data = node.static ? value.map(val => val[0])
+                                          .join('') :
+                value.map(val => val[1] === 1 ? mustache(val[0],
+                                                         node) : val[0])
+                     .reduce((a,
+                              b) => a + b);
             return node.elm = document.createTextNode(data);
         }
         case "COMMENT":

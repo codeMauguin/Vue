@@ -1,9 +1,9 @@
 import {isMustache} from "../util/index.js";
 import {comment, TNode, VNode} from "./index.js";
 
-export function _t_(text) {
+export function _t_(text,isStatic=!isMustache(text)) {
     return TNode(text,
-                 !isMustache(text));
+               isStatic  );
 }
 
 export function _v_(
