@@ -1,11 +1,25 @@
-import {comment, TNode} from './';
-import {clone, isArray, isNotNull, isNotObject, isNull} from '../util';
+import {_c_, _t_, _v_, comment, TNode} from './';
+import {isArray, isNotNull, isNotObject, isNull} from '../util';
 import {Observer} from '../observer';
-import {mustache as h} from '../Mustache';
+import {mustache as h, packageValue} from '../Mustache';
 import {error} from "../log";
 
 const forRegExp = /((?<head>\(.*\))|(?<header>\w+))\s+(?<body>in|of)\s+(?<target>.*)/;
 const aliasExp = /(?<=[(|,]).*?(?=[,|)])/gi;
+
+function cloneNode(node) {
+    switch (node.type) {
+        case "ELEMENT":
+            return _v_(node.tagName,
+                       {props: node?.props, attributes: node?.attributes},
+                       node.children.map(cloneNode))
+        case "TEXTNODE":
+            return _t_(node.value,
+                       node.static)
+        case "COMMENT":
+            return _c_(node.value)
+    }
+}
 
 function defineShow(IF_KEY,
                     node,
@@ -94,9 +108,9 @@ function defineFor(temp,
                                  match,
                                  index,
                                  target[index]);
-            let child = clone(temp);
-            initContext(child,
-                        [context, _context]);
+            let child = cloneNode(temp);
+            child.context = context;
+            child.context = _context;
             result.push(child);
         }
     } else {
@@ -108,24 +122,15 @@ function defineFor(temp,
                                    i,
                                    value,
                                    onKeys[i]);
-            let child = clone(temp);
-            initContext(child,
-                        [context, _context]);
+            let child = cloneNode(temp);
+            child.context = context;
+            child.context = _context;
             result.push(child);
         }
     }
-
     return result;
 }
 
-function initContext(node,
-                     context) {
-    node.context = context;
-    if (node.type === "ELEMENT") {
-        for (let child of node.children) initContext(child,
-                                                     context);
-    }
-}
 
 /**
  *
@@ -158,12 +163,10 @@ function compileElement(node,
                     break;
                 case "style":
                 case "class": {
-                    node.props[index][1] = h(value,
-                                             context);
                     if (isNotNull(node['attributes'])) {
-                        node['attributes']["push"]([key, node.props[index][1]]);
+                        node['attributes']["push"]([key, node.props[index][1], 1]);
                     } else {
-                        node['attributes'] = [[key, node.props[index][1]]];
+                        node['attributes'] = [[key, node.props[index][1], 1]];
                     }
                 }
                     break;
@@ -186,6 +189,7 @@ function compileElement(node,
         });
         const IF_KEY = observer.$on("IF_KEY");
         if (isNotNull(IF_KEY)) {
+            //TODO context 自底向上编译 在for 中嵌套IF 的上下文需要处理
             defineShow(IF_KEY,
                        node,
                        context);
@@ -193,6 +197,7 @@ function compileElement(node,
         //for 4
         let for_time = observer.$on("for");
         if (isNotNull(for_time)) {
+            //TODO context 自底向上编译 在for中嵌套 的上下文需要处理，initContext是递归的取更新Context，上层的Context会覆盖下层的Context
             for (let index = node.children.length - 1; index > -1; --index) {
                 if (for_time === 0) break;
                 const element = node.children[index];
@@ -224,7 +229,7 @@ export function compile(node,
                         context,
                         observer = new Observer,
                         index = -1) {
-    node.context = [context]
+    node.context = context;
     switch (node["type"]) {
         case "ELEMENT": {
             compileElement(node,
@@ -234,7 +239,7 @@ export function compile(node,
         }
             break;
         case "TEXTNODE": {
-
+            node.value = packageValue(node.value);
         }
             break;
         case "COMMENT": {

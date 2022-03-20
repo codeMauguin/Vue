@@ -5,6 +5,7 @@ import {isMustache} from "../util";
 /**
  * @param {string} stencil
  * @param {any} view
+ * @return {object|string|number|boolean}
  */
 export default function mustache(stencil,
                                  view) {
@@ -28,6 +29,36 @@ export function propsMustache(stencil,
     }
 
 }
+
+/**
+ * code 1 :render
+ * @param text
+ * @return {*}
+ */
+export function packageValue(text) {
+    const stencilRegexp = /{{([\w\W]*?)}}|\${([\w\W]*?)}/g;
+    let match;
+    let stencil = [];
+    let index = 0;
+    if ((match = stencilRegexp.exec(text)) !== null) {
+        do {
+            // s l
+            let lastIndex = stencilRegexp.lastIndex;
+            if (match.index > index) {
+                stencil.push([`${text.slice(index,
+                                            match.index)}`, 0]);
+            }
+            stencil.push([match[1] ?? match[2], 1]);
+            index = lastIndex;
+        } while ((match = stencilRegexp.exec(text)) !== null);
+        if (index < text.length) {
+            stencil.push([`${text.slice(index,
+                                        text.length)}`, 0]);
+        }
+        return stencil;
+    } else return [text, 0];
+}
+
 
 /**
  * @param {string} text

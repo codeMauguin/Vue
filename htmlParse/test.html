@@ -5,10 +5,44 @@
     <title>Title</title>
     <script type="module">
         import {Parser} from "./Parser.js";
-        import {h,_c_,_t_,_v_} from "../VirtualDom3"
+        import {_c_, _t_, _v_, h} from "../VirtualDom3"
+        import {clone} from "../util";
+
         let parser = new Parser();
         let parse = parser.parser(document.querySelector("#app").outerHTML);
-        console.log(new Function(`with(this){return ${h(parse)}}`).call({_v_,_t_,_c_}))
+        console.log(new Function(`with(this){return ${h(parse)}}`).call({_v_, _t_, _c_}))
+
+
+        class VNode {
+            #context = [];
+
+            constructor(tagName,
+                        attributes,
+                        props,
+                        children,
+                        key,
+                        type) {
+                this.tagName = tagName;
+                this.attributes = attributes;
+                this.props = props;
+                this.children = children;
+                this.key = key;
+                this.type = type;
+            }
+
+            get context() {
+                return this.#context;
+            }
+
+            set context(context) {
+                this.#context.push(context)
+            }
+        }
+
+        const a = new VNode();
+        a.context = 1;
+        let clone1 = clone(a);
+        console.log(clone1)
     </script>
 </head>
 <body>

@@ -1,4 +1,5 @@
 class VNode {
+    #context = [];
 
     constructor(tagName,
                 attributes,
@@ -12,6 +13,14 @@ class VNode {
         this.children = children;
         this.key = key;
         this.type = type;
+    }
+
+    get context() {
+        return this.#context;
+    }
+
+    set context(context) {
+        this.#context.push(context)
     }
 }
 

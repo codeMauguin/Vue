@@ -1,10 +1,8 @@
-import {clone as h, isArray, isNotObject, isNull} from "./index.js";
+import {clone as h, isArray, isNotObject} from "./index.js";
 import {isFunction} from "./Type.js";
 
-export default function (target) {
-    if (isNull(target)) {
-        console.warn("target is null");
-    }
+export default function (target,
+                         exclude = "") {
     if (isNotObject(target) || isFunction(target)) {
         return target;
     }
@@ -21,9 +19,12 @@ export default function (target) {
                                     });
         const keys = Reflect.ownKeys(target);
         for (const key of keys) {
+            console.log(key)
             Reflect.set(clone,
                         key,
-                        h(
+                        key === exclude ? Reflect.get(target,
+                                                      key,
+                                                      target) : h(
                             Reflect.get(target,
                                         key,
                                         target)

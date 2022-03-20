@@ -4,9 +4,7 @@ function ENode(tagName,
                attributes,
                children = []) {
     return {
-        tagName,
-        attributes,
-        children,
+        tagName, attributes, children,
     };
 }
 
@@ -15,21 +13,16 @@ function ENode(tagName,
  * @param {string} string
  */
 function AttributeLiteral(string) {
-    const attributes =
-        /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
+    const attributes = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
     const dynamicAttr = /^(v-|v:|@|:)(?<key>[\w\W]*)/;
     const props = [];
     const dynamic = [];
-    let matchAttribute = null,
-        dynamicKey;
+    let matchAttribute = null, dynamicKey;
     while ((matchAttribute = attributes.exec(string)) !== null) {
-        let [propertyKey, value] = [
-            matchAttribute[1],
-            matchAttribute[3] ?? matchAttribute[4] ?? matchAttribute[5],
-        ];
+        let [propertyKey, value] = [matchAttribute[1], matchAttribute[3] ?? matchAttribute[4] ?? matchAttribute[5],];
         if ((dynamicKey = dynamicAttr.exec(propertyKey)) !== null) {
-            dynamic.push([dynamicKey.groups.key, value]);
-        } else props.push([propertyKey, value]);
+            dynamic.push([dynamicKey.groups.key, value, 1]);
+        } else props.push([propertyKey, value, 0]);
         string = string.slice(matchAttribute[0].length);
     }
     return {props, dynamic};
@@ -83,9 +76,7 @@ export class Parser {
     EOFLiteral() {
         const token = this._eat("END");
         return {
-            type: "END",
-            value: /^<\/(?<tagName>\w+)>/.exec(token.value.groups.body).groups
-                .tagName,
+            type: "END", value: /^<\/(?<tagName>\w+)>/.exec(token.value.groups.body).groups.tagName,
         };
     }
 
@@ -95,8 +86,7 @@ export class Parser {
     CommentLiteral() {
         const token = this._eat("COMMENT");
         return {
-            type: "COMMENT",
-            value: token.value.groups.data,
+            type: "COMMENT", value: token.value.groups.data,
         };
     }
 
@@ -131,9 +121,7 @@ export class Parser {
             child.push(children);
         }
         if (children.type !== "END" || children.value !== tagName) {
-            throw new SyntaxError(
-                `Unexected closed:'${children.value}', start:'${tagName}'`,
-            );
+            throw new SyntaxError(`Unexected closed:'${children.value}', start:'${tagName}'`,);
         }
         return {
             type: "ELEMENT",
@@ -145,12 +133,8 @@ export class Parser {
 
     _eat(tokenType) {
         const token = this.lookahead;
-        if (token === null)
-            throw new SyntaxError(`Unexected end of input,expected: ${tokenType}`);
-        if (tokenType !== token.type)
-            throw new SyntaxError(
-                `Unexected token: "${token.value}",expected: ${tokenType}`,
-            );
+        if (token === null) throw new SyntaxError(`Unexected end of input,expected: ${tokenType}`);
+        if (tokenType !== token.type) throw new SyntaxError(`Unexected token: "${token.value}",expected: ${tokenType}`,);
         this._lookahead = this.tokenizer.getNextToken();
         return token;
     }
@@ -161,8 +145,7 @@ export class Parser {
     TextNodeLiteral() {
         const token = this._eat("TEXTNODE");
         return {
-            type: "TEXTNODE",
-            value: token.value.groups.body,
+            type: "TEXTNODE", value: token.value.groups.body,
         };
     }
 }
