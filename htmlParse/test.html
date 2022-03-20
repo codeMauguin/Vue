@@ -6,7 +6,7 @@
     <script type="module">
         import {Parser} from "./Parser.js";
         import {_c_, _t_, _v_, compile, h, render} from "../VirtualDom3"
-        
+    
         let parser = new Parser();
         let element = document.querySelector("#app");
         let parse = parser.parser(element.outerHTML);
@@ -22,7 +22,13 @@
         let render1 = render(call);
         element.parentElement.appendChild(render1);
         element.parentElement.removeChild(element);
-        console.log(render1)
+        for (; ;) {
+            if (render1.childNodes.length === 0) break;
+            render1.childNodes[0].remove();
+        }
+        console.log(1,
+                    render1.innerHTML,
+                    1)
     </script>
 </head>
 <body>

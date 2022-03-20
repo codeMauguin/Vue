@@ -33,6 +33,12 @@ function renderAttributes(node,
     }
 }
 
+/**
+ *
+ * @param node
+ * @return {Text|Comment|*}
+ */
+
 export function render(node) {
     switch (node.type) {
         case "ELEMENT": {
@@ -46,12 +52,7 @@ export function render(node) {
         }
         case "TEXTNODE": {
             const {value} = node;
-            let data = node.static ? value.map(val => val[0])
-                                          .join('') : value.map(val => val[1] === 1 ? mustaches(val[0],
-                                                                                                node.context) : val[0])
-                                                           .reduce((a,
-                                                                    b) => a + b);
-            return node.elm = document.createTextNode(data);
+            return node.elm = document.createTextNode(value);
         }
         case "COMMENT":
             return node.elm = document.createComment(node.value);

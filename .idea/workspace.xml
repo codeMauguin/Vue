@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d0b0f5f3-d444-4af1-943b-f0cbfe8fbaf8" name="变更" comment="">
+      <change afterPath="$PROJECT_DIR$/VirtualDom3/diff.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VirtualDom3/update.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Mustache/mustache.js" beforeDir="false" afterPath="$PROJECT_DIR$/Mustache/mustache.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/compile.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/compile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/render.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/render.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/htmlParse/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/test.html" afterDir="false" />
     </list>
@@ -107,6 +109,7 @@
       <workItem from="1647737723712" duration="4644000" />
       <workItem from="1647744580633" duration="6407000" />
       <workItem from="1647763223985" duration="7026000" />
+      <workItem from="1647781353503" duration="3136000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1647491454741</created>
@@ -177,31 +180,6 @@
     <MESSAGE value="处理好if 和 for" />
     <MESSAGE value="解决for 双层问题" />
     <option name="LAST_COMMIT_MESSAGE" value="解决for 双层问题" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/VirtualDom3/compile.js</url>
-          <line>32</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/VirtualDom3/compile.js</url>
-          <line>217</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <condition expression="index===3" language="JavaScript" />
-          <url>file://$PROJECT_DIR$/VirtualDom3/compile.js</url>
-          <line>224</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="21" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

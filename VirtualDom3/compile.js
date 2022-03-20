@@ -113,6 +113,11 @@ function defineFor(temp,
                                  index,
                                  target[index]);
             let child = cloneNode(temp);
+            const {key} = temp;
+            if (isNotNull(key)) {
+                child.key = mustaches(key,
+                                      [_context]);
+            }
             initContext(child,
                         [_context].concat(...temp.context)
                                   .concat(context));
@@ -253,7 +258,11 @@ export function compile(node,
         }
             break;
         case "TEXTNODE": {
-            node.value = packageValue(node.value);
+            node.value = node.static ? node.value : packageValue(node.value)
+                .map(val => val[1] === 1 ? mustaches(val[0],
+                                                     node.context) : val[0])
+                .reduce((a,
+                         b) => a + b);
         }
             break;
         case "COMMENT": {
