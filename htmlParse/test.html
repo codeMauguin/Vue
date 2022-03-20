@@ -6,27 +6,37 @@
     <script type="module">
         import {Parser} from "./Parser.js";
         import {_c_, _t_, _v_, compile, h, render} from "../VirtualDom3"
-
+        
         let parser = new Parser();
-        let parse = parser.parser(document.querySelector("#app").outerHTML);
+        let element = document.querySelector("#app");
+        let parse = parser.parser(element.outerHTML);
         let call = new Function(`with(this){return ${h(parse)}}`).call({_v_, _t_, _c_});
         compile(call,
                 {
-                    array: [[1,2,3], [1,2]]
+                    array: [[1, 2, 3], [1, 2]],
+                    block: "id",
+                    show: false
                 },
                 undefined,
                 -1);
         let render1 = render(call);
+        element.parentElement.appendChild(render1);
+        element.parentElement.removeChild(element);
         console.log(render1)
-
     </script>
 </head>
 <body>
 <div id="app">
-    <div v-for="item in array">
-       <p v-for="it in item">
-           {{item}}
-       </p>
+    <div :key="item" v-for="(item,index) in array">
+        <p :class="block" v-for="it in item">
+            {{item}}
+        </p>
+    </div>
+    <div v-if="show">
+        if
+    </div>
+    <div v-else>
+        else
     </div>
 </div>
 

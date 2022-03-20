@@ -7,11 +7,12 @@ function renderAttributes(node,
     for (let index = 0; index < attributes.length; ++index) {
         let [key, value, type] = attributes[index];
         value = type === 1 ? mustaches(value,
-                                      node.context) : value;
+                                       node.context) : value;
         attributes[index][1] = value;
         switch (key) {
             case "class": {
-                elm.classList.add(...value.splice(" "));
+                elm.classList.add(...String(value)
+                    .split(" "));
             }
                 break;
             case "style": {
@@ -46,14 +47,13 @@ export function render(node) {
         case "TEXTNODE": {
             const {value} = node;
             let data = node.static ? value.map(val => val[0])
-                                          .join('') :
-                value.map(val => val[1] === 1 ? mustaches(val[0],
-                                                         node.context) : val[0])
-                     .reduce((a,
-                              b) => a + b);
+                                          .join('') : value.map(val => val[1] === 1 ? mustaches(val[0],
+                                                                                                node.context) : val[0])
+                                                           .reduce((a,
+                                                                    b) => a + b);
             return node.elm = document.createTextNode(data);
         }
         case "COMMENT":
-            return node.elm = document.createElement(node.value);
+            return node.elm = document.createComment(node.value);
     }
 }

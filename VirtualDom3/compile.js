@@ -1,10 +1,10 @@
 import {_c_, _t_, _v_, comment, TNode} from './';
 import {isArray, isNotNull, isNotObject, isNull} from '../util';
 import {Observer} from '../observer';
-import {mustaches, packageValue, propsMustache as h} from '../Mustache';
+import {mustaches, packageValue} from '../Mustache';
 import {error} from "../log";
 
-const forRegExp = /((?<head>\(.*\))|(?<header>\w+))\s+(?<body>in|of)\s+(?<target>.*)/;
+const forRegExp = /((?<head>\(.*\))|(?<header>^\w+))\s+(?<body>in|of)\s+(?<target>.*)/;
 const aliasExp = /(?<=[(|,]).*?(?=[,|)])/gi;
 
 function cloneNode(node) {
@@ -30,8 +30,8 @@ function defineShow(IF_KEY,
         for (let index = 0; index < block.length - 1; ++index) {
             const element = block[index];
             const {content: {value, index: element_index}} = element;
-            if (end && h(value,
-                         context)) {
+            if (end && mustaches(value,
+                                 node.context.concat(context))) {
                 end = false;
             } else {
                 node.children.splice(element_index - offset++,
@@ -42,8 +42,8 @@ function defineShow(IF_KEY,
         const element = block[block.length - 1];
         const {content: {value, index: element_index}} = element;
         if (element.key !== 3) {//not else end
-            if (!h(value,
-                   context)) {//ELSE IF ALSO HAS NO MATCH
+            if (!mustaches(value,
+                           node.context.concat(context))) {//ELSE IF ALSO HAS NO MATCH
                 node.children.splice(element_index - offset++,
                                      1);
             }
@@ -92,10 +92,13 @@ function defineFor(temp,
                    dynamic,
                    context) {
     let regExpExecArray = forRegExp.exec(dynamic.value);
+    if (isNull(regExpExecArray)) {
+        error(`v-for template error:${dynamic.value}`);
+        return [];
+    }
     const header = regExpExecArray?.groups?.header;
     const head = regExpExecArray?.groups?.head;
     let match = head?.match(aliasExp);
-
     const target = mustaches(regExpExecArray.groups.target,
                              [context].concat(...temp.context));
     if (isNotObject(target)) {

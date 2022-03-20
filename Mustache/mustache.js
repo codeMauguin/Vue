@@ -71,7 +71,7 @@ export function packageValue(text) {
                                         text.length)}`, 0]);
         }
         return stencil;
-    } else return [text, 0];
+    } else return [[text, 0]];
 }
 
 
