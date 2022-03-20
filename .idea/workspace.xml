@@ -3,12 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="d0b0f5f3-d444-4af1-943b-f0cbfe8fbaf8" name="变更" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mustache/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/Mustache/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mustache/mustache.js" beforeDir="false" afterPath="$PROJECT_DIR$/Mustache/mustache.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/compile.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/compile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/node.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/node.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/render.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/render.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/vnode.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/vnode.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/htmlParse/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/test.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/observer/observer.js" beforeDir="false" afterPath="$PROJECT_DIR$/observer/observer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +107,8 @@
       <workItem from="1647698622496" duration="891000" />
       <workItem from="1647700476206" duration="4042000" />
       <workItem from="1647737723712" duration="4644000" />
-      <workItem from="1647744580633" duration="6304000" />
+      <workItem from="1647744580633" duration="6407000" />
+      <workItem from="1647763223985" duration="4743000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1647491454741</created>
@@ -137,7 +138,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647748168704</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="处理好if 和 for">
+      <created>1647750996135</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1647750996135</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

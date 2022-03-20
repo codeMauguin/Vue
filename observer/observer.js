@@ -25,14 +25,6 @@ Observer.prototype.$on = function (message) {
  */
 Observer.prototype.$emit = function (message,
                                      content) {
-    if (message === "for") {
-        if (this.message.get("for") === undefined) this.message.set("for",
-                                                                    1); else {
-            this.message.set("for",
-                             this.message.get("for") + 1);
-        }
-        return;
-    }
     if (message === "if") {
         if (this.message.get(IF_KEY) === undefined) {
             this.message.set(IF_KEY,

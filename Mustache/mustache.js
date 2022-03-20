@@ -2,6 +2,21 @@
 import {render} from "./index.js";
 import {isMustache} from "../util";
 
+export function mustaches(text,
+                          context) {
+    let result = text;
+    for (let index = 0; index < context.length; ++index) {
+        const ctx = context[index];
+        try {
+            result = render(text,
+                            ctx);
+            break;
+        } catch (e) {
+        }
+    }
+    return result;
+}
+
 /**
  * @param {string} stencil
  * @param {any} view

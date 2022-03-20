@@ -1,7 +1,7 @@
 import {_c_, _t_, _v_, comment, TNode} from './';
 import {isArray, isNotNull, isNotObject, isNull} from '../util';
 import {Observer} from '../observer';
-import {packageValue, propsMustache as h} from '../Mustache';
+import {mustaches, packageValue, propsMustache as h} from '../Mustache';
 import {error} from "../log";
 
 const forRegExp = /((?<head>\(.*\))|(?<header>\w+))\s+(?<body>in|of)\s+(?<target>.*)/;
@@ -11,7 +11,7 @@ function cloneNode(node) {
     switch (node.type) {
         case "ELEMENT":
             return _v_(node.tagName,
-                       {props: node?.props, attributes: node?.attributes},
+                       {dynamic: node?.props, props: node?.attributes},
                        node.children.map(cloneNode))
         case "TEXTNODE":
             return _t_(node.value,
@@ -96,8 +96,8 @@ function defineFor(temp,
     const head = regExpExecArray?.groups?.head;
     let match = head?.match(aliasExp);
 
-    const target = h(regExpExecArray.groups.target,
-                     context);
+    const target = mustaches(regExpExecArray.groups.target,
+                             [context].concat(...temp.context));
     if (isNotObject(target)) {
         error(`for Object requires object or array type:${target}`)
         return [];
@@ -111,7 +111,10 @@ function defineFor(temp,
                                  target[index]);
             let child = cloneNode(temp);
             initContext(child,
-                        _context, ...temp.context)
+                        [_context].concat(...temp.context)
+                                  .concat(context));
+            compile(child,
+                    context);
             result.push(child);
         }
     } else {
@@ -125,7 +128,8 @@ function defineFor(temp,
                                    onKeys[i]);
             let child = cloneNode(temp);
             initContext(child,
-                        _context, context)
+                        [_context].concat(...temp.context)
+                                  .concat(context));
             result.push(child);
         }
     }
@@ -133,32 +137,24 @@ function defineFor(temp,
 }
 
 function initContext(node,
-                     ...context) {
-    for (let contextElement of context) {
-        node.context = contextElement
+                     context) {
+    for (let i = 0; i < context.length; ++i) {
+        node.context = context[i];
     }
     if (node.type === "ELEMENT") {
         for (let child of node.children) {
             initContext(child,
-                ...context);
+                        context);
         }
     }
 }
 
-
-/**
- *
- * @param {VNode} node
- * @param {Observer}observer
- * @param {Object}context
- * @param {number}INDEX at the subscript position of the parent node
- */
-function compileElement(node,
-                        observer,
-                        context,
-                        INDEX) {
+function compileProps(node,
+                      context,
+                      observer,
+                      INDEX) {
     if (isNotNull(node.props)) {
-        for (let index = 0; index < node.props.length; ++index) {
+        for (let index = 0, length = node.props.length; index < length; ++index) {
             const [key, value] = node.props[index];
             switch (key) {
                 /**
@@ -172,7 +168,6 @@ function compileElement(node,
                 }
                     break;
                 case "for":
-                    observer.$emit(key);
                     node.dynamic = {index: INDEX, value};
                     break;
                 case "style":
@@ -182,6 +177,9 @@ function compileElement(node,
                     } else {
                         node['attributes'] = [[key, node.props[index][1], 1]];
                     }
+                    node["props"].splice(index--,
+                                         1);
+                    length--;
                 }
                     break;
                 case "key":
@@ -192,14 +190,24 @@ function compileElement(node,
             }
         }
     }
+}
+
+/**
+ *
+ * @param {VNode} node
+ * @param {Object}context
+ */
+function compileElement(node,
+                        context) {
+
     if (node.children.length > 0) {
         const observer = new Observer();
         node.children.forEach((child,
                                index) => {
-            compile(child,
-                    context,
-                    observer,
-                    index);
+            compileProps(child,
+                         context,
+                         observer,
+                         index);
         });
         const IF_KEY = observer.$on("IF_KEY");
         if (isNotNull(IF_KEY)) {
@@ -209,26 +217,22 @@ function compileElement(node,
                        context);
         }
         //for 4
-        let for_time = observer.$on("for");
-        if (isNotNull(for_time)) {
-            //TODO context 自底向上编译 在for中嵌套 的上下文需要处理，initContext是递归的取更新Context，上层的Context会覆盖下层的Context
-            for (let index = node.children.length - 1; index > -1; --index) {
-                if (for_time === 0) break;
-                const element = node.children[index];
-                if (element.type !== "ELEMENT" || isNull(element.dynamic)) continue;
-                for_time--;
-                //已经匹配到
-                const [temp] = node.children.splice(index,
-                                                    1);//先删除这个节点
-                const children = defineFor(temp,
-                                           element.dynamic,
-                                           context);
-                node.children.splice(index,
-                                     index,
-                                     ...children)
+        //TODO context 自底向上编译 在for中嵌套 的上下文需要处理，initContext是递归的取更新Context，上层的Context会覆盖下层的Context
+        for (let index = node.children.length - 1; index > -1; --index) {
+            const element = node.children[index];
+            if (isNull(element.dynamic)) {
+                compile(element,
+                        context);
+                continue;
             }
+            //已经匹配到
+            const children = defineFor(element,
+                                       element.dynamic,
+                                       context);
+            node.children.splice(index,
+                                 1,
+                                 ...children)
         }
-
     }
 }
 
@@ -236,20 +240,13 @@ function compileElement(node,
  *
  * @param {VNode|TNode|comment} node node information
  * @param {Object} context context
- * @param observer observer
- * @param index The subscript position of the node in the parent node
  */
 export function compile(node,
-                        context,
-                        observer = new Observer,
-                        index = -1) {
-    node.context = context;
+                        context) {
     switch (node["type"]) {
         case "ELEMENT": {
             compileElement(node,
-                           observer,
-                           context,
-                           index);
+                           context);
         }
             break;
         case "TEXTNODE": {
