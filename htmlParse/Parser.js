@@ -17,15 +17,23 @@ function AttributeLiteral(string) {
     const dynamicAttr = /^(v-|v:|@|:)(?<key>[\w\W]*)/;
     const props = [];
     const dynamic = [];
+    const dynamicProps = []
     let matchAttribute = null, dynamicKey;
     while ((matchAttribute = attributes.exec(string)) !== null) {
         let [propertyKey, value] = [matchAttribute[1], matchAttribute[3] ?? matchAttribute[4] ?? matchAttribute[5],];
         if ((dynamicKey = dynamicAttr.exec(propertyKey)) !== null) {
-            dynamic.push([dynamicKey.groups.key, value, 1]);
-        } else props.push([propertyKey, value, 0]);
+            switch (dynamicKey.groups.key) {
+                case "class":
+                case "style":
+                    dynamicProps.push([dynamicKey.groups.key, value]);
+                    break;
+                default:
+                    dynamic.push([dynamicKey.groups.key, value]);
+            }
+        } else props.push([propertyKey, value]);
         string = string.slice(matchAttribute[0].length);
     }
-    return {props, dynamic};
+    return {attributes: props, props: dynamic, dynamicProps};
 }
 
 export class Parser {

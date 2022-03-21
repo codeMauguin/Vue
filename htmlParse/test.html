@@ -5,38 +5,43 @@
     <title>Title</title>
     <script type="module">
         import {Parser} from "./Parser.js";
-        import {_c_, _t_, _v_, compile, h, render} from "../VirtualDom3"
-    
+        import {_c_, _t_, _v_, compile, diff, h, render} from "../VirtualDom3"
+        
         let parser = new Parser();
         let element = document.querySelector("#app");
         let parse = parser.parser(element.outerHTML);
         let call = new Function(`with(this){return ${h(parse)}}`).call({_v_, _t_, _c_});
         compile(call,
                 {
-                    array: [[1, 2, 3], [1, 2]],
-                    block: "id",
+                    array: [{id: 2, value: 12}, {id: 1, value: 11}],
+                    block: "blue",
                     show: false
-                },
-                undefined,
-                -1);
+                });
         let render1 = render(call);
-        element.parentElement.appendChild(render1);
-        element.parentElement.removeChild(element);
-        for (; ;) {
-            if (render1.childNodes.length === 0) break;
-            render1.childNodes[0].remove();
-        }
-        console.log(1,
-                    render1.innerHTML,
-                    1)
+        let parentElement = element.parentElement;
+        console.log(parentElement)
+        parentElement.appendChild(render1);
+        parentElement.removeChild(element);
+        let call_1 = new Function(`with(this){return ${h(parse)}}`).call({_v_, _t_, _c_});
+        compile(call_1,
+                {
+                    array: [{id: 1, value: 13}, {id: 2, value: 12}],
+                    block: "red",
+                    show: false
+                });
+        document.querySelector("#btn")
+                .addEventListener("click",
+                                  () => {
+                                      diff(call.elm,
+                                           call.children,
+                                           call_1.children);
+                                  });
     </script>
 </head>
 <body>
 <div id="app">
-    <div :key="item" v-for="(item,index) in array">
-        <p :class="block" v-for="it in item">
-            {{item}}
-        </p>
+    <div :key="item.id" :style="{background:block}" v-for="(item,index) in array">
+        {{item.value}}
     </div>
     <div v-if="show">
         if
@@ -45,6 +50,7 @@
         else
     </div>
 </div>
-
+<button id="btn">更新</button>
+<div id="write"></div>
 </body>
 </html>

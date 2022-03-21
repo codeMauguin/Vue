@@ -1,5 +1,5 @@
 import {isNotNull, isNull} from "../util";
-import {compare as patchNode, same} from "./";
+import {compare as patchNode, render, same} from "./";
 
 function insertBefore(elm,
                       newElm,
@@ -46,7 +46,6 @@ export function diff(parenElm,
                         newEnd)) {
             patchNode(oldStart,
                       newEnd);
-            // @ts-ignore
             insertBefore(parenElm,
                          oldStart.elm,
                          oldEnd.elm.nextSibling);
@@ -72,29 +71,25 @@ export function diff(parenElm,
                 }
             }
             if (os > od) {
-                //创建
-                const elm = newStart.init();
-                // @ts-ignore
+                const elm = render(newStart);
                 insertBefore(parenElm,
                              elm,
                              oldStart.elm);
             } else {
                 patchNode(oldNode[os],
                           newStart);
-                // @ts-ignore
                 insertBefore(parenElm,
                              newStart.elm,
                              oldStart.elm);
-                // @ts-ignore
                 oldNode[os] = undefined;
             }
             newStart = newNode[++newStartIndex];
         }
     }
     if (oldStartIndex > oldEndIndex) {
-        var fam = document.createDocumentFragment();
+        const fam = document.createDocumentFragment();
         for (let i = newStartIndex; i <= newEndIndex; i++) {
-            fam.appendChild(newNode[i].init());
+            fam.appendChild(render(newNode[i]));
         }
         insertBefore(parenElm,
                      fam,

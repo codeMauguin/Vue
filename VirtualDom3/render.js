@@ -1,14 +1,9 @@
-import {mustaches} from "../Mustache";
+import {isObject} from "../util";
 
-
-function renderAttributes(node,
-                          elm) {
-    const {attributes = []} = node;
+function renderAttributes(elm,
+                          attributes) {
     for (let index = 0; index < attributes.length; ++index) {
-        let [key, value, type] = attributes[index];
-        value = type === 1 ? mustaches(value,
-                                       node.context) : value;
-        attributes[index][1] = value;
+        let [key, value] = attributes[index];
         switch (key) {
             case "class": {
                 elm.classList.add(...String(value)
@@ -16,15 +11,17 @@ function renderAttributes(node,
             }
                 break;
             case "style": {
-                if (type === 1) {
+                if (isObject(value)) {
                     for (let ownKey of Reflect.ownKeys(value)) {
-                        elm.style[ownKey] = value[ownKey];
+                        elm.style.setProperty(ownKey,
+                                              value[ownKey]);
                     }
                 } else {
                     const regExp = /((?<key>\w+):(?<value>\w+);?)/g;
                     let style;
                     while ((style = regExp.exec(value)) !== null) {
-                        elm.style[style.groups.key] = style.groups.value;
+                        elm.style.setProperty(style.groups.key,
+                                              style.groups.value);
                     }
                 }
             }
@@ -43,8 +40,10 @@ export function render(node) {
     switch (node.type) {
         case "ELEMENT": {
             const elm = node.elm = document.createElement(node.tagName);
-            renderAttributes(node,
-                             elm);
+            renderAttributes(elm,
+                             node.attributes);
+            renderAttributes(elm,
+                             node.dynamicProps);
             for (const children of node.children) {
                 elm.appendChild(render(children));
             }

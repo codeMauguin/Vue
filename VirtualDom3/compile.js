@@ -11,7 +11,11 @@ function cloneNode(node) {
     switch (node.type) {
         case "ELEMENT":
             return _v_(node.tagName,
-                       {dynamic: node?.props, props: node?.attributes},
+                       {
+                           props: node?.props,
+                           attributes: node?.attributes,
+                           dynamicProps: node?.dynamicProps
+                       },
                        node.children.map(cloneNode))
         case "TEXTNODE":
             return _t_(node.value,
@@ -138,6 +142,8 @@ function defineFor(temp,
             initContext(child,
                         [_context].concat(...temp.context)
                                   .concat(context));
+            compile(child,
+                    context);
             result.push(child);
         }
     }
@@ -157,12 +163,22 @@ function initContext(node,
     }
 }
 
+function compileAttributes(node,
+                           context) {
+    const {dynamicProps} = node;
+    for (let i = 0; i < dynamicProps.length; ++i) {
+        const [, value] = dynamicProps[i];
+        dynamicProps[i][1] = mustaches(value,
+                                       node.context.concat(context));
+    }
+}
+
 function compileProps(node,
                       context,
                       observer,
                       INDEX) {
     if (isNotNull(node.props)) {
-        for (let index = 0, length = node.props.length; index < length; ++index) {
+        for (let index = 0; index < node.props.length; ++index) {
             const [key, value] = node.props[index];
             switch (key) {
                 /**
@@ -177,18 +193,6 @@ function compileProps(node,
                     break;
                 case "for":
                     node.dynamic = {index: INDEX, value};
-                    break;
-                case "style":
-                case "class": {
-                    if (isNotNull(node['attributes'])) {
-                        node['attributes']["push"]([key, node.props[index][1], 1]);
-                    } else {
-                        node['attributes'] = [[key, node.props[index][1], 1]];
-                    }
-                    node["props"].splice(index--,
-                                         1);
-                    length--;
-                }
                     break;
                 case "key":
                     node['key'] = value;
@@ -210,13 +214,13 @@ function compileElement(node,
 
     if (node.children.length > 0) {
         const observer = new Observer();
-        node.children.forEach((child,
-                               index) => {
+        for (let index = 0; index < node.children.length; index++) {
+            const child = node.children[index];
             compileProps(child,
                          context,
                          observer,
                          index);
-        });
+        }
         const IF_KEY = observer.$on("IF_KEY");
         if (isNotNull(IF_KEY)) {
             //TODO context 自底向上编译 在for 中嵌套IF 的上下文需要处理
@@ -229,6 +233,8 @@ function compileElement(node,
         for (let index = node.children.length - 1; index > -1; --index) {
             const element = node.children[index];
             if (isNull(element.dynamic)) {
+                compileAttributes(node,
+                                  context);
                 compile(element,
                         context);
                 continue;
