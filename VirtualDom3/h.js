@@ -9,7 +9,8 @@ export function h({type, value}) {
         [ ${value.children?.map(h)} ]
         )`;
         case "COMMENT":
-            return `_c_(${JSON.stringify(value)})`;
+            return `_c_(${JSON.stringify(value)})`; 
+            
         default:
             throw new SyntaxError(`unsupported type：${type}`);
     }

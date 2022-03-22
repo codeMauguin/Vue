@@ -20,29 +20,27 @@ function AttributeLiteral(string) {
     const dynamic = [];
     const dynamicProps = [];
     let matchAttribute, dynamicKey;
+    let type = 'ELEMENT';
     while (null !== (matchAttribute = attributes.exec(string))) {
-        let [propertyKey, value] = [matchAttribute[1],
-                                    matchAttribute[3] ?? matchAttribute[4] ?? matchAttribute[5],];
+        let [propertyKey, value] = [matchAttribute[1], matchAttribute[3] ?? matchAttribute[4] ?? matchAttribute[5],];
         if ((dynamicKey = dynamicAttr.exec(propertyKey)) !== null) {
             switch (dynamicKey.groups.key) {
                 case "class":
                 case "style":
-                    dynamicProps.push([dynamicKey.groups.key,
-                                       value]);
+                    dynamicProps.push([dynamicKey.groups.key, value]);
                     break;
                 case "ref":
-                    dynamicProps.unshift([dynamicKey.groups.key,
-                                          value]);
+                    dynamicProps.unshift([dynamicKey.groups.key, value]);
                     break;
+                case "for":
+                    type = 'ELEMENT-FOR'
                 default:
-                    dynamic.push([dynamicKey.groups.key,
-                                  value]);
+                    dynamic.push([dynamicKey.groups.key, value]);
             }
-        } else props.push([propertyKey,
-                           value]);
+        } else props.push([propertyKey, value]);
         string = string.slice(matchAttribute[0].length);
     }
-    return {attributes: props, props: dynamic, dynamicProps};
+    return {attributes: props, props: dynamic, dynamicProps, type};
 }
 
 export class Parser {
@@ -84,11 +82,17 @@ export class Parser {
         const match = /(?<tagName>\w+)/g;
         const body = token.value.groups.body;
         const tagName = match.exec(body).groups.tagName;
-        const attributes = AttributeLiteral(body.slice(match.lastIndex));
+        const {
+            attributes,
+            props,
+            dynamicProps,
+            type
+        } = AttributeLiteral(body.slice(match.lastIndex));
         return {
-            type: "ELEMENT", value: ENode(tagName,
-                                          attributes,
-                                          undefined)
+            type,
+            value: ENode(tagName,
+                         {attributes, props, dynamicProps},
+                         undefined)
         }
     }
 
@@ -135,7 +139,12 @@ export class Parser {
         const match = /(?<tagName>\w+)/g;
         const body = token.value.groups.body;
         const tagName = match.exec(body).groups.tagName;
-        const attributes = AttributeLiteral(body.slice(match.lastIndex));
+        const {
+            attributes,
+            props,
+            dynamicProps,
+            type
+        } = AttributeLiteral(body.slice(match.lastIndex));
         let children;
         const child = [];
         while ((children = this.Literal()).type !== "END") {
@@ -144,11 +153,11 @@ export class Parser {
         if (children.type !== "END" || children.value !== tagName) {
             throw new SyntaxError(`Unexpected closed:'${children.value}', start:'${tagName}'`,);
         }
-        console.log(this._lookahead)
         return {
-            type: "ELEMENT", value: ENode(tagName,
-                                          attributes,
-                                          child),
+            type: type,
+            value: ENode(tagName,
+                         {attributes, props, dynamicProps},
+                         child),
         };
     }
 
