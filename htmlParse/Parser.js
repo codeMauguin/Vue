@@ -107,15 +107,15 @@ export class Parser {
         const match = /(?<tagName>\w+)/g;
         const body = token.value.groups.body;
         const tagName = match.exec(body).groups.tagName;
-        const BR_MATCH = /^<br>/;
-        if (BR_MATCH.test(body)) {
+        const isVoidTagName=/area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr/i
+        const attributes = AttributeLiteral(body.slice(match.lastIndex));
+        if (isVoidTagName.test(tagName)) {
             return {
                 type: "ELEMENT",
-                value: ENode("br",
-                             undefined),
+                value: ENode( tagName,
+                              attributes),
             };
         }
-        const attributes = AttributeLiteral(body.slice(match.lastIndex));
         if (/\/>$/.test(body)) {
             return {
                 type: "ELEMENT",

@@ -1,19 +1,15 @@
-const Spec = [/**
- * Match annotation tag
- */
-    [/(?<body>^<!--(?<data>[^]*?)-->)/, "COMMENT"], /**
-     * Match start label
-     */
-    [/(?<body>^<\w+(([^<>"'\/=]+)(?:\s*(=)\s*(?:"[^"]*"+|'[^']*'+|[^\s<>\/"']+))?)*>)/, "ELEMENT"], /**
-     * Match self-closed tag
-     */
-    [/(?<body>^<\w+[^]*?\/>)/, "ELEMENT"], /**
-     * Match closed label
-     */
-    [/(?<body>^<\/[^>]*>)/, "END"], /**
-     * <xxx<div></div> | <axsdxx </div>
-     */
-    [/(?<body>[^]*?)((<\w+[^]*>)|(<\/\w+>)|(<!--[^]*?-->))/, "TEXTNODE"],];
+const Spec = [/* Match annotation tag*/
+    [/(?<body>^<!--(?<data>[\s\S]*?)-->)/,
+     "COMMENT"],
+    /* Match start label */
+    [/(?<body>^<\w+(([^<>"'\/=]+)(?:\s*(=)\s*(?:"[^"]*"+|'[^']*'+|[^\s<>\/"']+))?)*\/?>)/,
+     "ELEMENT"],
+    /* Match closed label */
+    [/(?<body>^<\/[^>]*>)/,
+     "END"],
+    /* <xxx<div></div> | <axsdxx </div>*/
+    [/(?<body>[\s\S]*?)((<\w+(([^<>"'\/=]+)(?:\s*(=)\s*(?:"[^"]*"+|'[^']*'+|[^\s<>\/"']+))?)*\/?>)|(<\/\w+>)|(<!--([\s\S]*?)-->))/,
+     "TEXTNODE"],];
 
 export class Tokenizer {
     _string;
@@ -40,11 +36,12 @@ export class Tokenizer {
         this._cursor = 0;
     }
 
-    match(regexp,
-          string) {
+    match(regexp, string) {
         const match = regexp.exec(string);
         if (match === null) return null;
-        this.cursor += match.groups.body.length;
+        const length = match.groups.body.length;
+        if (length === 0) throw new SyntaxError(`没有匹配到字符`);
+        this.cursor += length;
         return match;
     }
 

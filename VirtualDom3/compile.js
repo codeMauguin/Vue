@@ -12,9 +12,8 @@ function cloneNode(node) {
         case "ELEMENT":
             return _v_(node.tagName,
                        {
-                           props: clone(node?.props),
-                           attributes: clone(node?.attributes),
-                           dynamicProps: clone(node?.dynamicProps)
+                           props: clone(node?.props), attributes: clone(node?.attributes),
+                           dynamicProps                         : clone(node?.dynamicProps)
                        },
                        node.children.map(cloneNode))
         case "TEXTNODE":
@@ -25,9 +24,7 @@ function cloneNode(node) {
     }
 }
 
-function defineShow(IF_KEY,
-                    node,
-                    context) {
+function defineShow(IF_KEY, node, context) {
     for (let i = 0; i < IF_KEY.length; ++i) {
         const block = IF_KEY[i];
         let offset = 0, end = true;
@@ -65,11 +62,7 @@ function defineShow(IF_KEY,
  * @param {any} value
  * @param key
  */
-function build(header,
-               match,
-               index,
-               value,
-               key = undefined) {
+function build(header, match, index, value, key = undefined) {
     if (isNotNull(match)) {
         switch (match.length) {
             case 1:
@@ -92,9 +85,7 @@ function build(header,
     }
 }
 
-function defineFor(temp,
-                   dynamic,
-                   context) {
+function defineFor(temp, dynamic, context) {
     let regExpExecArray = forRegExp.exec(dynamic.value);
     if (isNull(regExpExecArray)) {
         error(`v-for template error:${dynamic.value}`);
@@ -154,8 +145,7 @@ function defineFor(temp,
     return result;
 }
 
-function initContext(node,
-                     context) {
+function initContext(node, context) {
     for (let i = 0; i < context.length; ++i) {
         node.context = context[i];
     }
@@ -167,8 +157,7 @@ function initContext(node,
     }
 }
 
-function compileAttributes(node,
-                           context) {
+function compileAttributes(node, context) {
     const {dynamicProps, type} = node;
     if (!Object.is(type,
                    "ELEMENT")) return;
@@ -179,10 +168,7 @@ function compileAttributes(node,
     }
 }
 
-function compileProps(node,
-                      context,
-                      observer,
-                      INDEX) {
+function compileProps(node, context, observer, INDEX) {
     if (isNotNull(node.props)) {
         for (let index = 0; index < node.props.length; ++index) {
             const [key, value] = node.props[index];
@@ -204,6 +190,8 @@ function compileProps(node,
                     node['key'] = value;
                     break;
                 case "ref":
+                    observer.$emit("ref",
+                                   value);
                     node.ref = value;
                     break;
                 default:
@@ -218,8 +206,7 @@ function compileProps(node,
  * @param {VNode} node
  * @param {Object}context
  */
-function compileElement(node,
-                        context) {
+function compileElement(node, context) {
     if (node.children.length > 0) {
         const observer = new Observer();
         for (let index = 0; index < node.children.length; index++) {
@@ -241,6 +228,15 @@ function compileElement(node,
             if (isNull(element.dynamic)) {
                 compileAttributes(element,
                                   context);
+                if (isNotNull(element.ref)) {
+                    const ref = mustaches(element.ref,
+                                          node.context.concat(context),
+                                          false);
+                    context?.$emit?.("ref",
+                                     [ref ?? element.ref,
+                                      element])
+                }
+
                 compile(element,
                         context);
                 continue;
@@ -251,7 +247,16 @@ function compileElement(node,
                                        context);
             node.children.splice(index,
                                  1,
-                                 ...children)
+                                 ...children);
+            if (isNotNull(element.ref)) {
+                //[node1,node2]
+                context?.$emit?.("ref",
+                                 children.map(child => {
+                                     return [mustaches(element.ref,
+                                                       child.context),
+                                             child];
+                                 }))
+            }
         }
     }
 }
@@ -261,8 +266,7 @@ function compileElement(node,
  * @param {VNode|TNode|comment} node node information
  * @param {Object} context context
  */
-export function compile(node,
-                        context) {
+export function compile(node, context) {
     switch (node["type"]) {
         case "ELEMENT": {
             compileElement(node,
@@ -273,8 +277,7 @@ export function compile(node,
             node.value = node.static ? node.value : packageValue(node.value)
                 .map(val => val[1] === 1 ? mustaches(val[0],
                                                      node.context) : val[0])
-                .reduce((a,
-                         b) => a + b);
+                .reduce((a, b) => a + b);
         }
             break;
         case "COMMENT": {
