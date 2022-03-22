@@ -1,19 +1,17 @@
 import {diff, render} from "./";
-import {equal, updateArray, updateObject} from "../util";
+import {equal, isNotNull, updateArray, updateObject} from "../util";
 
 export function compare(oldNode,
                         newNode) {
     const elm = (newNode.elm = oldNode.elm);
     if (newNode.type === "ELEMENT") {
-        const {dynamicProps: oldAttrs = []} = oldNode;
-        const {dynamicProps: newAttrs = []} = newNode;
-        const oldProps = {}, newProps = {};
+        const {dynamicProps: oldAttrs = []} = oldNode, {dynamicProps: newAttrs = []} = newNode,
+            oldProps = {}, newProps = {};
         for (let index = 0; index < newAttrs.length; ++index) {
             const newAttr = newAttrs[index];
             const oldAttr = oldAttrs[index];
             if (!Object.is(newAttr[1],
                            oldAttr[1])) {
-                //Todo 更新程序
                 if (oldProps[oldAttr[0]]) {
                     oldProps[oldAttr[0]].push(oldAttr[1]);
                 } else {
@@ -83,12 +81,19 @@ export function compare(oldNode,
 
 }
 
+/**
+ *
+ * @param oldNode
+ * @param newNode
+ * @return {boolean}
+ */
 export function same(oldNode,
                      newNode) {
-    return Object.is(oldNode.type,
-                     newNode.type) && Object.is(oldNode.key,
-                                                newNode.key) && Object.is(oldNode?.tagName ?? oldNode.value,
-                                                                          newNode?.tagName ?? newNode.value) && equal(oldNode?.attributes,
-                                                                                                                      newNode?.attributes) && equal(oldNode?.props,
-                                                                                                                                                    newNode?.props)
+    return isNotNull(oldNode.key) && Object.is(oldNode.key,
+                                               newNode.key) || Object.is(oldNode.key,
+                                                                         newNode.key) && Object.is(oldNode.type,
+                                                                                                   newNode.type) && Object.is(oldNode?.tagName ?? oldNode.value,
+                                                                                                                              newNode?.tagName ?? newNode.value) && equal(oldNode?.attributes,
+                                                                                                                                                                          newNode?.attributes) && equal(oldNode?.props,
+                                                                                                                                                                                                        newNode?.props)
 }

@@ -18,8 +18,8 @@ function AttributeLiteral(string) {
     const props = [];
     const dynamic = [];
     const dynamicProps = []
-    let matchAttribute = null, dynamicKey;
-    while ((matchAttribute = attributes.exec(string)) !== null) {
+    let matchAttribute, dynamicKey;
+    while (null !== (matchAttribute = attributes.exec(string))) {
         let [propertyKey, value] = [matchAttribute[1], matchAttribute[3] ?? matchAttribute[4] ?? matchAttribute[5],];
         if ((dynamicKey = dynamicAttr.exec(propertyKey)) !== null) {
             switch (dynamicKey.groups.key) {

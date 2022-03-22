@@ -6,27 +6,24 @@
     <script type="module">
         import {Parser} from "./Parser.js";
         import {_c_, _t_, _v_, compile, diff, h, render} from "../VirtualDom3"
-        
+    
         let parser = new Parser();
         let element = document.querySelector("#app");
         let parse = parser.parser(element.outerHTML);
         let call = new Function(`with(this){return ${h(parse)}}`).call({_v_, _t_, _c_});
         compile(call,
                 {
-                    array: [{id: 2, value: 12}, {id: 1, value: 11}],
-                    block: "blue",
+                    array: [{id: 2, block: "blue", value: 12}, {id: 1, block: "red", value: 11}],
                     show: false
                 });
         let render1 = render(call);
         let parentElement = element.parentElement;
-        console.log(parentElement)
         parentElement.appendChild(render1);
         parentElement.removeChild(element);
         let call_1 = new Function(`with(this){return ${h(parse)}}`).call({_v_, _t_, _c_});
         compile(call_1,
                 {
-                    array: [{id: 1, value: 13}, {id: 2, value: 12}],
-                    block: "red",
+                    array: [{id: 1, block: "red", value: 13}, {id: 2, block: "green", value: 12}],
                     show: false
                 });
         document.querySelector("#btn")
@@ -40,7 +37,10 @@
 </head>
 <body>
 <div id="app">
-    <div :key="item.id" :style="{background:block}" v-for="(item,index) in array">
+    <div :key="item.id" :ref="(r)=>item.e=r" :style="{background:item.block}"
+         style="color:yellow"
+         async
+         v-for="(item,index) in array">
         {{item.value}}
     </div>
     <div v-if="show">

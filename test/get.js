@@ -1,35 +1,6 @@
-function loopGetter(target, key) {
-  return {
-    get [key]() {
-      return target;
-    },
-  };
-}
-function loopSetter(target, key, value) {
-  return {
-    set [key](value) {
-      target[key] = value;
-    },
-  };
-}
-class test {
-  constructor(config) {
-    for (let i of Reflect.ownKeys(config)) {
-      Reflect.defineProperty(this, i, {
-        get() {
-          return loopGetter(config[i], i)[i];
-        },
-        enumerable: false,
-        set(v) {
-          loopSetter(config, i, v)[i] = v;
-        },
-      });
-    }
-  }
-}
-let tests = new test({
-  id: 1,
-  name: 2,
-});
-tests.id = {};
-console.log(tests);
+const template = `<div :key="item.id" :ref="(ref)=>item.el=ref" :style="{background:item.block}"
+         style="color:yellow"
+         v-for="(item,index) in array" async>`;
+const math = /(?<body>^<\w+(([^<>"'\/=]+)(?:\s*(=)\s*(?:"[^"]*"+|'[^']*'+|[^\s<>\/"']+))?)*>)/
+//console.log(math.exec(template))
+console.log(template.match(math));

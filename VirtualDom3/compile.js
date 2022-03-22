@@ -1,5 +1,5 @@
 import {_c_, _t_, _v_, comment, TNode} from './';
-import {isArray, isNotNull, isNotObject, isNull} from '../util';
+import {clone, isArray, isNotNull, isNotObject, isNull} from '../util';
 import {Observer} from '../observer';
 import {mustaches, packageValue} from '../Mustache';
 import {error} from "../log";
@@ -12,9 +12,9 @@ function cloneNode(node) {
         case "ELEMENT":
             return _v_(node.tagName,
                        {
-                           props: node?.props,
-                           attributes: node?.attributes,
-                           dynamicProps: node?.dynamicProps
+                           props: clone(node?.props),
+                           attributes: clone(node?.attributes),
+                           dynamicProps: clone(node?.dynamicProps)
                        },
                        node.children.map(cloneNode))
         case "TEXTNODE":
@@ -125,6 +125,8 @@ function defineFor(temp,
             initContext(child,
                         [_context].concat(...temp.context)
                                   .concat(context));
+            compileAttributes(child,
+                              context);
             compile(child,
                     context);
             result.push(child);
@@ -142,6 +144,8 @@ function defineFor(temp,
             initContext(child,
                         [_context].concat(...temp.context)
                                   .concat(context));
+            compileAttributes(child,
+                              context);
             compile(child,
                     context);
             result.push(child);
@@ -165,7 +169,9 @@ function initContext(node,
 
 function compileAttributes(node,
                            context) {
-    const {dynamicProps} = node;
+    const {dynamicProps, type} = node;
+    if (!Object.is(type,
+                   "ELEMENT")) return;
     for (let i = 0; i < dynamicProps.length; ++i) {
         const [, value] = dynamicProps[i];
         dynamicProps[i][1] = mustaches(value,
@@ -197,6 +203,9 @@ function compileProps(node,
                 case "key":
                     node['key'] = value;
                     break;
+                case "ref":
+                    node.ref = value;
+                    break;
                 default:
                     break;
             }
@@ -211,7 +220,6 @@ function compileProps(node,
  */
 function compileElement(node,
                         context) {
-
     if (node.children.length > 0) {
         const observer = new Observer();
         for (let index = 0; index < node.children.length; index++) {
@@ -223,17 +231,15 @@ function compileElement(node,
         }
         const IF_KEY = observer.$on("IF_KEY");
         if (isNotNull(IF_KEY)) {
-            //TODO context 自底向上编译 在for 中嵌套IF 的上下文需要处理
             defineShow(IF_KEY,
                        node,
                        context);
         }
         //for 4
-        //TODO context 自底向上编译 在for中嵌套 的上下文需要处理，initContext是递归的取更新Context，上层的Context会覆盖下层的Context
         for (let index = node.children.length - 1; index > -1; --index) {
             const element = node.children[index];
             if (isNull(element.dynamic)) {
-                compileAttributes(node,
+                compileAttributes(element,
                                   context);
                 compile(element,
                         context);

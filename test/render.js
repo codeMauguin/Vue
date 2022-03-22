@@ -33,27 +33,37 @@ function longestCommonPrefix(strs) {
 }
 console.log(longestCommonPrefix(["flower", "flow", "flight"]));
 function threeSum(nums) {
-    var _a;
     // 1 2 3 4 5
     if (nums.length <= 2) {
         return [];
     }
-    var startIndex = 0, endIndex = 1, result = [];
-    while (endIndex < nums.length) {
-        for (startIndex; startIndex < nums.length; startIndex++) {
-            for (endIndex = startIndex + 1; endIndex < nums.length; endIndex++) {
-                // @ts-ignore
-                var index = nums.findIndex(function (r) { return r === 0 - nums[startIndex] - nums[endIndex]; });
-                if (index > -1 && index !== startIndex && index !== endIndex) {
-                    result.push([nums[startIndex], nums[endIndex], nums[index]].sort(function (a, b) { return a - b; }));
-                }
+    var startIndex = 0, endIndex = nums.length - 1, result = [];
+    while (endIndex > nums.length) {
+        for (startIndex; startIndex < endIndex; startIndex++) {
+        }
+    }
+}
+function letterCombinations(digits) {
+    var map = {
+        "2": ["a", "b", "c"],
+        "3": ["d", "e", "f"],
+        "4": ["g", "h", "i"],
+        "5": ["j", "k", "l"],
+        "6": ["m", "n", "o"],
+        "7": ["p", "q", "r", "s"],
+        "8": ["t", "u", "v"],
+        "9": ["w", "x", "y", "z"],
+    };
+    var res = [];
+    for (var i = 0; i < digits.length - 1; i++) {
+        var tar = map[digits[i++]];
+        for (var j = 0; j < tar.length; j++) {
+            var de = map[digits[i]];
+            for (var k = 0; k < de.length; k++) {
+                res.push("".concat(tar[j]).concat(de[k]));
             }
         }
     }
-    return ((_a = result
-        .map(function (value, index, array) {
-        return array.lastIndexOf(value) === index ? value : undefined;
-    })
-        .filter(function (c) { return c !== undefined; })) !== null && _a !== void 0 ? _a : []);
+    return res;
 }
 console.log(threeSum([-1, 0, 1, 2, -1, -4]));

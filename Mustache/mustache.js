@@ -1,18 +1,25 @@
 //Todo 类型会被转换为string 使用模版解析时
 import {render} from "./index.js";
-import {isMustache} from "../util";
+import {isMustache, isNotArray} from "../util";
+import {warn} from "../log";
 
 export function mustaches(text,
                           context) {
     let result = text;
-    for (let index = 0; index < context.length; ++index) {
-        const ctx = context[index];
+    let error;
+    if (isNotArray(context)) context = [context];
+    for (const ctx of context) {
         try {
             result = render(text,
                             ctx);
             break;
         } catch (e) {
+            error = e;
         }
+    }
+    if (result === text) {
+        warn(error.message);
+        return '';
     }
     return result;
 }

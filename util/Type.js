@@ -5,18 +5,48 @@ export const isNotFunction = (/** @type {any} */
 export const isObject = (/** @type {any} */
                          target) => target instanceof Object;
 export const isArray = Array.isArray;
+/**
+ *
+ * @param target
+ * @return {boolean}
+ */
 export const isNotObject = (/** @type {any} */
                             target) => !isObject(target) && isNotArray(target);
+/**
+ *
+ * @param target
+ * @return {boolean}
+ */
 export const isNotArray = (/** @type {any} */
                            target) => !isArray(target);
 export const isString = (/** @type {any} */
                          target) => typeof target === "string";
+/**
+ *
+ * @param target
+ * @return {boolean}
+ */
 export const isNotString = (/** @type {any} */
                             target) => !isString(target);
+/**
+ *
+ * @param target
+ * @return {boolean}
+ */
 export const isNull = (/** @type {any} */
                        target) => target === (void 0) || target === null || target === undefined;
+/**
+ *
+ * @param target
+ * @return {boolean}
+ */
 export const isNotNull = (/** @type {any} */
                           target) => !isNull(target);
+/**
+ *
+ * @return {boolean}
+ * @param value
+ */
 export const isMustache = value => {
     return /{{(.+?)}}/gi.test(value) || /\${(.+?)}/gi.test(value);
 }
@@ -32,6 +62,7 @@ export const cloneClass = (target,
  * @param {Array} target
  * @param {Array} source
  * @param compare
+ * @return {Object}
  */
 export const updateArray = (target,
                             source,
