@@ -1,6 +1,8 @@
 const Spec = [/* Match annotation tag*/
     [/(?<body>^<!--(?<data>[\s\S]*?)-->)/,
      "COMMENT"],
+    [/(?<body>^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)(([^<>"'\/=]+)(?:\s*(=)\s*(?:"[^"]*"+|'[^']*'+|[^\s<>\/"']+))?)*\/?>)/i,
+     "ELEMENT-LINE"],
     /* Match start label */
     [/(?<body>^<\w+(([^<>"'\/=]+)(?:\s*(=)\s*(?:"[^"]*"+|'[^']*'+|[^\s<>\/"']+))?)*\/?>)/,
      "ELEMENT"],

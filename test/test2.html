@@ -5,12 +5,11 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Document</title>
-    <script src="./1.js"></script>
 </head>
 
 <body>
-<div id="app">
-    <div :class="left" @click="sliderLeft" class="slider-left">
+<div id="app" >
+    <div  :class="left" @click="sliderLeft" class="slider-left">
         <span>&lt;</span>
     </div>
     <div :style="containerStyle" class="container">
@@ -34,6 +33,7 @@
 </body>
 <script src="./ts.js"></script>
 <script>
+
     let a = Vue.createApp({
                               setup(prop) {
                                   const pages = Vue.reactive([]);
@@ -82,7 +82,7 @@
                                   let dataLength =
                                       offset * pageSum + (pageSum - 1) * /*空格长度*/ spaceLength;
                                   let dataStyle = Vue.reactive({
-                                                                   width: dataLength + "px",
+                                                                   width        : dataLength + "px",
                                                                    "margin-left": "0px",
                                                                });
                                   const containerStyle = Vue.reactive({
@@ -130,10 +130,13 @@
                                           console.warn(`arg0 is not a Array or Number -${array}`);
                                       }
                                   };
-                                  function Page(index,quad){
-                                      console.log(index,quad);
+
+                                  function Page(index, quad) {
+                                      console.log(index,
+                                                  quad);
                                       activeIndex.value = index.index;
                                   }
+
                                   const initPages = function () {
                                       arrayForEach(pageSum,
                                                    (index) => pages.push({index}));

@@ -3,17 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="d0b0f5f3-d444-4af1-943b-f0cbfe8fbaf8" name="变更" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Mustache/mustache.js" beforeDir="false" afterPath="$PROJECT_DIR$/Mustache/mustache.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/compile.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/compile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/update.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/update.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/node.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/node.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/render.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/render.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/vnode.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/vnode.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/htmlParse/Parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Parser.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/htmlParse/Tokenizer.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Tokenizer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/htmlParse/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/test.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/get.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/get.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/render.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/render.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/Type.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/Type.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/clone.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/clone.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/equal.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/equal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/observer/observer.js" beforeDir="false" afterPath="$PROJECT_DIR$/observer/observer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test2.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/test2.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +63,7 @@
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="rearrange.code.on.save" value="true" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.folding" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.JavaScript" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
     <property name="typescript.add.unambiguous.imports.on.the.fly" value="true" />
     <property name="vue.rearranger.settings.migration" value="true" />
@@ -73,7 +71,10 @@
   <component name="ReaderModeSettings">
     <option name="showLigatures" value="true" />
   </component>
-  <component name="RunManager" selected="JavaScript 调试.test.html (1)">
+  <component name="RunManager" selected="Node.js.1.js">
+    <configuration name="test2.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/test/test2.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
     <configuration name="test.html (1)" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/htmlParse/test.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
@@ -83,19 +84,16 @@
     <configuration name="1.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/test/1.js" working-dir="$PROJECT_DIR$/test">
       <method v="2" />
     </configuration>
-    <configuration name="cloneClass.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/util/cloneClass.js" working-dir="$PROJECT_DIR$/util">
-      <method v="2" />
-    </configuration>
     <configuration name="get.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/test/get.js" working-dir="$PROJECT_DIR$/test">
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Node.js.1.js" />
+        <item itemvalue="JavaScript 调试.test2.html" />
         <item itemvalue="JavaScript 调试.test.html (1)" />
         <item itemvalue="JavaScript 调试.test.html" />
         <item itemvalue="Node.js.get.js" />
-        <item itemvalue="Node.js.cloneClass.js" />
-        <item itemvalue="Node.js.1.js" />
       </list>
     </recent_temporary>
   </component>
@@ -128,6 +126,9 @@
       <workItem from="1647859552161" duration="197000" />
       <workItem from="1647859760080" duration="76000" />
       <workItem from="1647869713564" duration="3882000" />
+      <workItem from="1647923567785" duration="1584000" />
+      <workItem from="1647933302345" duration="103000" />
+      <workItem from="1647933484886" duration="2860000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1647491454741</created>
@@ -185,7 +186,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647850544938</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="对单标签的支持，ref">
+      <created>1647920609975</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1647920609975</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -212,7 +220,8 @@
     <MESSAGE value="处理好if 和 for" />
     <MESSAGE value="解决for 双层问题" />
     <MESSAGE value="添加属性的添加" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加属性的添加" />
+    <MESSAGE value="对单标签的支持，ref" />
+    <option name="LAST_COMMIT_MESSAGE" value="对单标签的支持，ref" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

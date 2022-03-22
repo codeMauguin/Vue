@@ -1,7 +1,8 @@
-import {isObject} from "../util";
+import {isFunction, isObject} from "../util";
 
 function renderAttributes(elm,
-                          attributes) {
+                          attributes,
+                          context) {
     for (let index = 0; index < attributes.length; ++index) {
         let [key, value] = attributes[index];
         switch (key) {
@@ -25,6 +26,16 @@ function renderAttributes(elm,
                     }
                 }
             }
+                break;
+            case "ref": {
+                if (isFunction(value)) {
+                    value(elm);
+                } else {
+                    context?.$emit?.([key,
+                                      value])
+                }
+            }
+                break;
         }
 
     }
@@ -41,9 +52,11 @@ export function render(node) {
         case "ELEMENT": {
             const elm = node.elm = document.createElement(node.tagName);
             renderAttributes(elm,
-                             node.attributes);
+                             node.attributes,
+                             node.mainContext);
             renderAttributes(elm,
-                             node.dynamicProps);
+                             node.dynamicProps,
+                             node.mainContext);
             for (const children of node.children) {
                 elm.appendChild(render(children));
             }

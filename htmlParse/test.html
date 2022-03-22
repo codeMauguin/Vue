@@ -6,21 +6,23 @@
     <script type="module">
         import {Parser} from "./Parser.js";
         import {_c_, _t_, _v_, compile, diff, h, render} from "../VirtualDom3"
+        import {isFunction, isString} from "../util";
 
         let parser = new Parser();
         let element = document.querySelector("#app");
-        console.log(element.outerHTML)
         let parse = parser.parser(element.outerHTML);
         let call = new Function(`with(this){return ${h(parse)}}`).call({_v_, _t_, _c_});
+        const messageEvent = []
         const context = {
             array: [{id: 2, block: "blue", value: 12},
                     {id: 1, block: "red", value: 11}],
-            show : false
+            show : false,
         };
         compile(call,
                 context
         );
         let render1 = render(call);
+        console.log(context);
         let parentElement = element.parentElement;
         parentElement.appendChild(render1);
         parentElement.removeChild(element);
@@ -46,10 +48,10 @@
     <!--    sd-->
     <input>
     <img/>
-    <div :key="item.id" :style="{background:item.block}"
-         style="color:yellow"
-         :ref="(r)=>item.e=r"
+    <div :key="item.id" :ref="(r)=>item.e=r"
+         :style="{background:item.block}"
          async
+         style="color:yellow"
          v-for="(item,index) in array">
         <p :ref="o"> {{item.value}}</p>
     </div>

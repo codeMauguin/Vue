@@ -7,7 +7,8 @@ import {error} from "../log";
 const forRegExp = /((?<head>\(.*\))|(?<header>^\w+))\s+(?<body>in|of)\s+(?<target>.*)/;
 const aliasExp = /(?<=[(|,]).*?(?=[,|)])/gi;
 
-function cloneNode(node) {
+function cloneNode(node,
+                   context) {
     switch (node.type) {
         case "ELEMENT":
             return _v_(node.tagName,
@@ -15,7 +16,9 @@ function cloneNode(node) {
                            props: clone(node?.props), attributes: clone(node?.attributes),
                            dynamicProps                         : clone(node?.dynamicProps)
                        },
-                       node.children.map(cloneNode))
+                       node.children.map(child => cloneNode(child,
+                                                            context)),
+                       context)
         case "TEXTNODE":
             return _t_(node.value,
                        node.static)
@@ -24,7 +27,9 @@ function cloneNode(node) {
     }
 }
 
-function defineShow(IF_KEY, node, context) {
+function defineShow(IF_KEY,
+                    node,
+                    context) {
     for (let i = 0; i < IF_KEY.length; ++i) {
         const block = IF_KEY[i];
         let offset = 0, end = true;
@@ -62,7 +67,11 @@ function defineShow(IF_KEY, node, context) {
  * @param {any} value
  * @param key
  */
-function build(header, match, index, value, key = undefined) {
+function build(header,
+               match,
+               index,
+               value,
+               key = undefined) {
     if (isNotNull(match)) {
         switch (match.length) {
             case 1:
@@ -85,7 +94,9 @@ function build(header, match, index, value, key = undefined) {
     }
 }
 
-function defineFor(temp, dynamic, context) {
+function defineFor(temp,
+                   dynamic,
+                   context) {
     let regExpExecArray = forRegExp.exec(dynamic.value);
     if (isNull(regExpExecArray)) {
         error(`v-for template error:${dynamic.value}`);
@@ -107,15 +118,15 @@ function defineFor(temp, dynamic, context) {
                                  match,
                                  index,
                                  target[index]);
-            let child = cloneNode(temp);
+            let child = cloneNode(temp,
+                                  context);
             const {key} = temp;
             if (isNotNull(key)) {
                 child.key = mustaches(key,
                                       [_context]);
             }
             initContext(child,
-                        [_context].concat(...temp.context)
-                                  .concat(context));
+                        [_context].concat(...temp.context));
             compileAttributes(child,
                               context);
             compile(child,
@@ -131,10 +142,10 @@ function defineFor(temp, dynamic, context) {
                                    i,
                                    value,
                                    onKeys[i]);
-            let child = cloneNode(temp);
+            let child = cloneNode(temp,
+                                  context);
             initContext(child,
-                        [_context].concat(...temp.context)
-                                  .concat(context));
+                        [_context].concat(...temp.context));
             compileAttributes(child,
                               context);
             compile(child,
@@ -145,7 +156,8 @@ function defineFor(temp, dynamic, context) {
     return result;
 }
 
-function initContext(node, context) {
+function initContext(node,
+                     context) {
     for (let i = 0; i < context.length; ++i) {
         node.context = context[i];
     }
@@ -157,18 +169,32 @@ function initContext(node, context) {
     }
 }
 
-function compileAttributes(node, context) {
+function compileAttributes(node,
+                           context) {
     const {dynamicProps, type} = node;
     if (!Object.is(type,
                    "ELEMENT")) return;
-    for (let i = 0; i < dynamicProps.length; ++i) {
-        const [, value] = dynamicProps[i];
-        dynamicProps[i][1] = mustaches(value,
-                                       node.context.concat(context));
+    //check 第一个是否为ref
+    if (dynamicProps.length > 0) {
+        for (let i = 0; i < dynamicProps.length; ++i) {
+            const [key, value] = dynamicProps[i];
+            if (key === "ref") {
+                dynamicProps[i][1] = mustaches(value,
+                                               node.context.concat(context),
+                                               false) ?? String(value);
+            } else {
+                dynamicProps[i][1] = mustaches(value,
+                                               node.context.concat(context));
+            }
+
+        }
     }
 }
 
-function compileProps(node, context, observer, INDEX) {
+function compileProps(node,
+                      context,
+                      observer,
+                      INDEX) {
     if (isNotNull(node.props)) {
         for (let index = 0; index < node.props.length; ++index) {
             const [key, value] = node.props[index];
@@ -189,11 +215,6 @@ function compileProps(node, context, observer, INDEX) {
                 case "key":
                     node['key'] = value;
                     break;
-                case "ref":
-                    observer.$emit("ref",
-                                   value);
-                    node.ref = value;
-                    break;
                 default:
                     break;
             }
@@ -206,7 +227,8 @@ function compileProps(node, context, observer, INDEX) {
  * @param {VNode} node
  * @param {Object}context
  */
-function compileElement(node, context) {
+function compileElement(node,
+                        context) {
     if (node.children.length > 0) {
         const observer = new Observer();
         for (let index = 0; index < node.children.length; index++) {
@@ -226,17 +248,9 @@ function compileElement(node, context) {
         for (let index = node.children.length - 1; index > -1; --index) {
             const element = node.children[index];
             if (isNull(element.dynamic)) {
+                element.mainContext = context;
                 compileAttributes(element,
                                   context);
-                if (isNotNull(element.ref)) {
-                    const ref = mustaches(element.ref,
-                                          node.context.concat(context),
-                                          false);
-                    context?.$emit?.("ref",
-                                     [ref ?? element.ref,
-                                      element])
-                }
-
                 compile(element,
                         context);
                 continue;
@@ -248,15 +262,6 @@ function compileElement(node, context) {
             node.children.splice(index,
                                  1,
                                  ...children);
-            if (isNotNull(element.ref)) {
-                //[node1,node2]
-                context?.$emit?.("ref",
-                                 children.map(child => {
-                                     return [mustaches(element.ref,
-                                                       child.context),
-                                             child];
-                                 }))
-            }
         }
     }
 }
@@ -266,7 +271,8 @@ function compileElement(node, context) {
  * @param {VNode|TNode|comment} node node information
  * @param {Object} context context
  */
-export function compile(node, context) {
+export function compile(node,
+                        context) {
     switch (node["type"]) {
         case "ELEMENT": {
             compileElement(node,
@@ -277,7 +283,8 @@ export function compile(node, context) {
             node.value = node.static ? node.value : packageValue(node.value)
                 .map(val => val[1] === 1 ? mustaches(val[0],
                                                      node.context) : val[0])
-                .reduce((a, b) => a + b);
+                .reduce((a,
+                         b) => a + b);
         }
             break;
         case "COMMENT": {

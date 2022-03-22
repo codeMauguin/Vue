@@ -61,7 +61,6 @@ Observer.prototype.$emit = function (message,
         if (value === undefined) throw new SyntaxError(`else without if tag`);
         let keyElement = value[value.length - 1];
         keyElement.push({key: keys.ELSE, content});
-
     }
 };
 export {
