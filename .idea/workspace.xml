@@ -3,15 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="d0b0f5f3-d444-4af1-943b-f0cbfe8fbaf8" name="变更" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/compile.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/compile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/node.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/node.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/render.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/render.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/vnode.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/vnode.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/htmlParse/Parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Parser.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/htmlParse/Tokenizer.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Tokenizer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/htmlParse/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/test.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/observer/observer.js" beforeDir="false" afterPath="$PROJECT_DIR$/observer/observer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/test2.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/test2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/1.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/1.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +65,7 @@
   <component name="ReaderModeSettings">
     <option name="showLigatures" value="true" />
   </component>
-  <component name="RunManager" selected="Node.js.1.js">
+  <component name="RunManager" selected="JavaScript 调试.test.html (1)">
     <configuration name="test2.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/test/test2.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
@@ -89,9 +83,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JavaScript 调试.test.html (1)" />
         <item itemvalue="Node.js.1.js" />
         <item itemvalue="JavaScript 调试.test2.html" />
-        <item itemvalue="JavaScript 调试.test.html (1)" />
         <item itemvalue="JavaScript 调试.test.html" />
         <item itemvalue="Node.js.get.js" />
       </list>
@@ -128,7 +122,7 @@
       <workItem from="1647869713564" duration="3882000" />
       <workItem from="1647923567785" duration="1584000" />
       <workItem from="1647933302345" duration="103000" />
-      <workItem from="1647933484886" duration="2860000" />
+      <workItem from="1647933484886" duration="6404000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1647491454741</created>
@@ -193,7 +187,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647920609975</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="对单标签的单独解析，ref的支持细化">
+      <created>1647936548009</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1647936548009</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -221,7 +222,8 @@
     <MESSAGE value="解决for 双层问题" />
     <MESSAGE value="添加属性的添加" />
     <MESSAGE value="对单标签的支持，ref" />
-    <option name="LAST_COMMIT_MESSAGE" value="对单标签的支持，ref" />
+    <MESSAGE value="对单标签的单独解析，ref的支持细化" />
+    <option name="LAST_COMMIT_MESSAGE" value="对单标签的单独解析，ref的支持细化" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

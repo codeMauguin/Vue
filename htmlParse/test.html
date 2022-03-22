@@ -6,13 +6,15 @@
     <script type="module">
         import {Parser} from "./Parser.js";
         import {_c_, _t_, _v_, compile, diff, h, render} from "../VirtualDom3"
-        import {isFunction, isString} from "../util";
 
         let parser = new Parser();
         let element = document.querySelector("#app");
-        let parse = parser.parser(element.outerHTML);
+        const template = `<div>${element.innerHTML}</div>`
+        element.innerHTML = '';
+        let fragment = document.createDocumentFragment();
+        let parse =
+            parser.parser(template);
         let call = new Function(`with(this){return ${h(parse)}}`).call({_v_, _t_, _c_});
-        const messageEvent = []
         const context = {
             array: [{id: 2, block: "blue", value: 12},
                     {id: 1, block: "red", value: 11}],
@@ -22,10 +24,10 @@
                 context
         );
         let render1 = render(call);
+        fragment.append(...render1.childNodes)
+        element.appendChild(fragment)
         console.log(context);
         let parentElement = element.parentElement;
-        parentElement.appendChild(render1);
-        parentElement.removeChild(element);
         let call_1 = new Function(`with(this){return ${h(parse)}}`).call({_v_, _t_, _c_});
         compile(call_1,
                 {
@@ -36,7 +38,7 @@
         document.querySelector("#btn")
                 .addEventListener("click",
                                   () => {
-                                      diff(call.elm,
+                                      diff(element,
                                            call.children,
                                            call_1.children);
                                   });
@@ -52,9 +54,7 @@
          :style="{background:item.block}"
          async
          style="color:yellow"
-         v-for="(item,index) in array">
-        <p :ref="o"> {{item.value}}</p>
-    </div>
+         v-for="(item,index) in array"><p :ref="o">{{item.value}}</p></div>
     <div v-if="show">
         if
     </div>

@@ -1,6 +1,9 @@
 import {Tokenizer} from "./Tokenizer.js";
+import {isNotNull} from "../util";
 
-function ENode(tagName, attributes, children = []) {
+function ENode(tagName,
+               attributes,
+               children = []) {
     return {
         tagName, attributes, children,
     };
@@ -29,7 +32,7 @@ function AttributeLiteral(string) {
                     break;
                 case "ref":
                     dynamicProps.unshift([dynamicKey.groups.key,
-                                       value]);
+                                          value]);
                     break;
                 default:
                     dynamic.push([dynamicKey.groups.key,
@@ -53,6 +56,10 @@ export class Parser {
 
     get tokenizer() {
         return this._tokenizer;
+    }
+
+    get hasNext() {
+        return isNotNull(this.lookahead);
     }
 
     _lookahead;
@@ -79,9 +86,9 @@ export class Parser {
         const tagName = match.exec(body).groups.tagName;
         const attributes = AttributeLiteral(body.slice(match.lastIndex));
         return {
-            type : "ELEMENT", value: ENode(tagName,
-                                           attributes,
-                                           undefined)
+            type: "ELEMENT", value: ENode(tagName,
+                                          attributes,
+                                          undefined)
         }
     }
 
@@ -135,12 +142,13 @@ export class Parser {
             child.push(children);
         }
         if (children.type !== "END" || children.value !== tagName) {
-            throw new SyntaxError(`Unexected closed:'${children.value}', start:'${tagName}'`,);
+            throw new SyntaxError(`Unexpected closed:'${children.value}', start:'${tagName}'`,);
         }
+        console.log(this._lookahead)
         return {
-            type : "ELEMENT", value: ENode(tagName,
-                                           attributes,
-                                           child),
+            type: "ELEMENT", value: ENode(tagName,
+                                          attributes,
+                                          child),
         };
     }
 
