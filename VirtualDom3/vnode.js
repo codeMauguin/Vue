@@ -35,6 +35,7 @@ export function Vnode(tagName,
                       props,
                       dynamicProps,
                       children = [],
+                      type,
                       context = undefined) {
     return new VNode(tagName,
                      attributes,
@@ -42,7 +43,7 @@ export function Vnode(tagName,
                      dynamicProps,
                      children,
                      undefined,
-                     "ELEMENT",
+                     type,
                      context);
 }
 

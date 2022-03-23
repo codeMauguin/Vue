@@ -32,8 +32,6 @@ function AttributeLiteral(string) {
                 case "ref":
                     dynamicProps.unshift([dynamicKey.groups.key, value]);
                     break;
-                case "for":
-                    type = 'ELEMENT-FOR'
                 default:
                     dynamic.push([dynamicKey.groups.key, value]);
             }

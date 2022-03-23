@@ -10,12 +10,14 @@ export function _t_(text,
 export function _v_(tagName,
                     {props = undefined, attributes = undefined, dynamicProps = undefined} = {},
                     children,
+                    type="ELEMENT",
                     context=undefined) {
     return VNode(tagName,
                  attributes,
                  props,
                  dynamicProps,
                  children,
+                 type,
                  context);
 }
 

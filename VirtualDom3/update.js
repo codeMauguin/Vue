@@ -1,5 +1,5 @@
-import {diff, render} from "./";
 import {equal, isNotNull, updateArray, updateObject} from "../util";
+import {diff, render} from "./";
 
 export function compare(oldNode,
                         newNode) {

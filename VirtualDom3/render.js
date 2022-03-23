@@ -31,8 +31,7 @@ function renderAttributes(elm,
                 if (isFunction(value)) {
                     value(elm);
                 } else {
-                    context?.$emit?.([key,
-                                      value])
+                    context?.$emit?.([key, value])
                 }
             }
                 break;
@@ -44,6 +43,7 @@ function renderAttributes(elm,
 /**
  *
  * @param node
+ * @param el
  * @return {Text|Comment|*}
  */
 

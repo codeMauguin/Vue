@@ -1,9 +1,11 @@
 //Todo 类型会被转换为string 使用模版解析时
-import {render} from "./index.js";
-import {isMustache, isNotArray, isNull} from "../util";
 import {warn} from "../log";
+import {isMustache, isNotArray,isNotNull} from "../util";
+import {render} from "./index.js";
 
-export function mustaches(text, context, isLog = true) {
+export function mustaches(text,
+                          context,
+                          isLog = true) {
     let result;
     let error;
     if (isNotArray(context)) context = [context];
@@ -16,11 +18,11 @@ export function mustaches(text, context, isLog = true) {
             error = e;
         }
     }
-    if (isLog && isNull(result)) {
+    if (isLog && isNotNull(error)) {
         warn(error.message);
         return '';
     }
-    return result ;
+    return result;
 }
 
 /**
@@ -28,7 +30,8 @@ export function mustaches(text, context, isLog = true) {
  * @param {any} view
  * @return {object|string|number|boolean}
  */
-export default function mustache(stencil, view) {
+export default function mustache(stencil,
+                                 view) {
     return ProcessingText(stencil,
                           view);
 }
@@ -38,7 +41,8 @@ export default function mustache(stencil, view) {
  * @param {any} view
  * @returns {string|boolean|Function|object}
  */
-export function propsMustache(stencil, view) {
+export function propsMustache(stencil,
+                              view) {
     try {
         return isMustache(stencil) ? mustache(stencil,
                                               view) : render(stencil,
@@ -66,20 +70,20 @@ export function packageValue(text) {
             if (match.index > index) {
                 stencil.push([`${text.slice(index,
                                             match.index)}`,
-                              0]);
+                                 0]);
             }
             stencil.push([match[1] ?? match[2],
-                          1]);
+                             1]);
             index = lastIndex;
         } while ((match = stencilRegexp.exec(text)) !== null);
         if (index < text.length) {
             stencil.push([`${text.slice(index,
                                         text.length)}`,
-                          0]);
+                             0]);
         }
         return stencil;
     } else return [[text,
-                    0]];
+        0]];
 }
 
 
@@ -88,7 +92,8 @@ export function packageValue(text) {
  * @param view
  * @returns {string}
  */
-export function ProcessingText(text, view) {
+export function ProcessingText(text,
+                               view) {
     const stencilRegexp = /{{([\w\W]*?)}}|\${([\w\W]*?)}/g;
     let match;
     let stencil = [];
@@ -109,6 +114,7 @@ export function ProcessingText(text, view) {
             stencil.push(`${text.slice(index,
                                        text.length)}`);
         }
-        return stencil.reduce((a, b) => a + b);
+        return stencil.reduce((a,
+                               b) => a + b);
     } else return text;
 }

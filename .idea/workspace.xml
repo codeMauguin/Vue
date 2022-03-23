@@ -3,6 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="d0b0f5f3-d444-4af1-943b-f0cbfe8fbaf8" name="变更" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mustache/mustache.js" beforeDir="false" afterPath="$PROJECT_DIR$/Mustache/mustache.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/compile.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/compile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/h.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/h.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/node.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/node.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/render.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/render.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/update.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/update.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/vnode.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/vnode.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/htmlParse/Parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Parser.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,13 +62,14 @@
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="rearrange.code.on.save" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.JavaScript" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.jsOptions" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
     <property name="typescript.add.unambiguous.imports.on.the.fly" value="true" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="ReaderModeSettings">
-    <option name="showLigatures" value="true" />
+    <option name="increaseLineSpacing" value="true" />
+    <option name="showWarnings" value="true" />
   </component>
   <component name="RunManager" selected="JavaScript 调试.test.html (1)">
     <configuration name="test2.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/test/test2.html" useBuiltInWebServerPort="true">
@@ -121,6 +129,7 @@
       <workItem from="1647923567785" duration="1584000" />
       <workItem from="1647933302345" duration="103000" />
       <workItem from="1647933484886" duration="6404000" />
+      <workItem from="1647990905402" duration="3753000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1647491454741</created>
@@ -192,7 +201,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647936548009</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="暂定对for提供单独解析编译">
+      <created>1647963068495</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1647963068495</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -221,7 +237,8 @@
     <MESSAGE value="添加属性的添加" />
     <MESSAGE value="对单标签的支持，ref" />
     <MESSAGE value="对单标签的单独解析，ref的支持细化" />
-    <option name="LAST_COMMIT_MESSAGE" value="对单标签的单独解析，ref的支持细化" />
+    <MESSAGE value="暂定对for提供单独解析编译" />
+    <option name="LAST_COMMIT_MESSAGE" value="暂定对for提供单独解析编译" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

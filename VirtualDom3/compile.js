@@ -1,8 +1,8 @@
-import {_c_, _t_, _v_, comment, TNode} from './';
-import {clone, isArray, isNotNull, isNotObject, isNull} from '../util';
-import {Observer} from '../observer';
-import {mustaches, packageValue} from '../Mustache';
 import {error} from "../log";
+import {mustaches, packageValue} from '../Mustache';
+import {Observer} from '../observer';
+import {clone, isArray, isNotNull, isNotObject, isNull} from '../util';
+import {_c_, _t_, _v_} from './';
 
 const forRegExp = /((?<head>\(.*\))|(?<header>^\w+))\s+(?<body>in|of)\s+(?<target>.*)/;
 const aliasExp = /(?<=[(|,]).*?(?=[,|)])/gi;
@@ -13,11 +13,13 @@ function cloneNode(node,
         case "ELEMENT":
             return _v_(node.tagName,
                        {
-                           props: clone(node?.props), attributes: clone(node?.attributes),
-                           dynamicProps                         : clone(node?.dynamicProps)
+                           props: clone(node?.props),
+                           attributes: clone(node?.attributes),
+                           dynamicProps: clone(node?.dynamicProps)
                        },
                        node.children.map(child => cloneNode(child,
                                                             context)),
+                       node.type,
                        context)
         case "TEXTNODE":
             return _t_(node.value,
@@ -118,6 +120,7 @@ function defineFor(temp,
                                  match,
                                  index,
                                  target[index]);
+            temp.type = "ELEMENT";
             let child = cloneNode(temp,
                                   context);
             const {key} = temp;
@@ -127,10 +130,6 @@ function defineFor(temp,
             }
             initContext(child,
                         [_context].concat(...temp.context));
-            compileAttributes(child,
-                              context);
-            compile(child,
-                    context);
             result.push(child);
         }
     } else {
@@ -146,10 +145,6 @@ function defineFor(temp,
                                   context);
             initContext(child,
                         [_context].concat(...temp.context));
-            compileAttributes(child,
-                              context);
-            compile(child,
-                    context);
             result.push(child);
         }
     }
@@ -210,6 +205,7 @@ function compileProps(node,
                 }
                     break;
                 case "for":
+                    node.props[index][0] = undefined;
                     node.dynamic = {index: INDEX, value};
                     break;
                 case "key":
@@ -259,6 +255,16 @@ function compileElement(node,
             const children = defineFor(element,
                                        element.dynamic,
                                        context);
+            const dynamicNode = {
+                type: "ELEMENT",
+                props: undefined,
+                dynamicProps: undefined,
+                attributes: undefined,
+                children
+            }
+            //call-hook(dynamicNode,"ELEMENT-FOR",{});
+            compile(dynamicNode,
+                    context);
             node.children.splice(index,
                                  1,
                                  ...children);
@@ -268,7 +274,7 @@ function compileElement(node,
 
 /**
  *
- * @param {VNode|TNode|comment} node node information
+ * @param {VNode|{__proto__: *, static: *, context, readonly type: string, value: *}|{__proto__: *, readonly type: string, value: *}} node node information
  * @param {Object} context context
  */
 export function compile(node,
@@ -292,7 +298,7 @@ export function compile(node,
         }
             break;
         default:
-            throw new SyntaxError(`type not supported`);
+            throw new SyntaxError(`type not supported:${node.type}`);
 
     }
 }
