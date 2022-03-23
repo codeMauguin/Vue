@@ -1,5 +1,5 @@
 import { isObject } from "../util/index.js";
-const get = (target, key, receiver) => Reflect.get(target, key, receiver);
+const get = (target, key, receiver) => Reflect.get(target, key);
 const set = (target, key, value, receiver) => {
   if (!has(target, key)) return true;
   if (get(target, key, receiver)) {

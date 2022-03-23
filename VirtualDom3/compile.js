@@ -288,7 +288,7 @@ export function compile(node,
         case "TEXTNODE": {
             node.value = node.static ? node.value : packageValue(node.value)
                 .map(val => val[1] === 1 ? mustaches(val[0],
-                                                     node.context) : val[0])
+                                                     node.context.concat(context)) : val[0])
                 .reduce((a,
                          b) => a + b);
         }

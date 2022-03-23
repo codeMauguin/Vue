@@ -21,8 +21,7 @@ export default function (target) {
             Reflect.set(clone,
                         key,
                         h(Reflect.get(target,
-                                      key,
-                                      target)),
+                                      key)),
                         clone);
         }
         return clone;

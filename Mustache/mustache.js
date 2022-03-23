@@ -1,6 +1,6 @@
 //Todo 类型会被转换为string 使用模版解析时
 import {warn} from "../log";
-import {isMustache, isNotArray,isNotNull} from "../util";
+import {isMustache, isNotArray, isNotNull} from "../util";
 import {render} from "./index.js";
 
 export function mustaches(text,
@@ -13,13 +13,14 @@ export function mustaches(text,
         try {
             result = render(text,
                             ctx);
+            error = null;
             break;
         } catch (e) {
             error = e;
         }
     }
     if (isLog && isNotNull(error)) {
-        warn(error.message);
+        warn(error?.message);
         return '';
     }
     return result;
@@ -70,20 +71,20 @@ export function packageValue(text) {
             if (match.index > index) {
                 stencil.push([`${text.slice(index,
                                             match.index)}`,
-                                 0]);
+                              0]);
             }
             stencil.push([match[1] ?? match[2],
-                             1]);
+                          1]);
             index = lastIndex;
         } while ((match = stencilRegexp.exec(text)) !== null);
         if (index < text.length) {
             stencil.push([`${text.slice(index,
                                         text.length)}`,
-                             0]);
+                          0]);
         }
         return stencil;
     } else return [[text,
-        0]];
+                    0]];
 }
 
 

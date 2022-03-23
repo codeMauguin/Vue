@@ -54,9 +54,9 @@ const forDynamicGeneration = ({
             for (const child of templateChildren) {
                 let clone = child.clone();
                 const _context = {
-                    [forModel["itemKey"]]: convex,
+                    [forModel["itemKey"]] : convex,
                     [forModel["indexKey"]]: index,
-                    ["global"]: global,
+                    ["global"]            : global,
                 };
                 clone.key = propsMustache(attrElement2,
                                           _context);
@@ -70,18 +70,17 @@ const forDynamicGeneration = ({
     } else if (isObject(target)) {
         for (const ownKey of Reflect.ownKeys(target)) {
             const value = Reflect.get(target,
-                                      ownKey,
-                                      target);
+                                      ownKey);
             for (const child of templateChildren) {
                 let clone = child.clone();
                 clone.key = value[attrElement2];
                 compile(
                     clone,
                     {
-                        [forModel["itemKey"]]: value,
-                        [forModel["nameKey"]]: ownKey,
+                        [forModel["itemKey"]] : value,
+                        [forModel["nameKey"]] : ownKey,
                         [forModel["indexKey"]]: index,
-                        ["global"]: global,
+                        ["global"]            : global,
                     },
                     index,
                 );
@@ -111,9 +110,9 @@ export function compile(node,
         let flag = true;
         if (isNotNull(node.dynamicTemplate)) {
             node.children = forDynamicGeneration({
-                                                     context: context,
-                                                     node: node,
-                                                     attrElement: node.dynamicTemplate,
+                                                     context     : context,
+                                                     node        : node,
+                                                     attrElement : node.dynamicTemplate,
                                                      attrElement2: node.prop.attributes["key"],
                                                  });
             flag = false;
@@ -190,7 +189,7 @@ class Observer {
         }
         while (this.message.length > 0) {
             const res = this.message.shift() ?? {
-                attr: "",
+                attr : "",
                 index: -1,
             };
             if (isNotNull(res?.attr["else-if"])) {

@@ -8,8 +8,8 @@
 </head>
 
 <body>
-<div id="app" >
-    <div  :class="left" @click="sliderLeft" class="slider-left">
+<div id="app">
+    <div :class="left" @click="sliderLeft" class="slider-left">
         <span>&lt;</span>
     </div>
     <div :style="containerStyle" class="container">
@@ -22,7 +22,7 @@
                     key="item.index"
                     v-for="(item, index) in pages"
             >
-                <span>{{item.index}}</span>
+                <span>{{item.index}}{{id}}</span>
             </div>
         </div>
     </div>
@@ -35,7 +35,7 @@
 <script>
 
     let a = Vue.createApp({
-                              setup(prop) {
+                              setup({reactive}) {
                                   const pages = Vue.reactive([]);
                                   const pageSum = 5;
                                   const pageSize = 5;
@@ -131,7 +131,8 @@
                                       }
                                   };
 
-                                  function Page(index, quad) {
+                                  function Page(index,
+                                                quad) {
                                       console.log(index,
                                                   quad);
                                       activeIndex.value = index.index;
@@ -144,6 +145,7 @@
                                   //初始化页面总数
                                   initPages();
                                   return {
+                                      id: 2,
                                       pages,
                                       left,
                                       right,
@@ -155,9 +157,26 @@
                                       Page,
                                   };
                               },
+                              created() {
+
+                                  console.log(1)
+                              },
+                              data() {
+                                  return {
+                                      id: 1
+                                  }
+                              }
                           })
-               .mount("#app");
+               .mount("#app")
     console.log(a);
+    const data = {id: 1};
+    const context = {}
+    Reflect.defineProperty(context,
+                           "id",
+                           {
+                               get: () => data['id']
+                           })
+    console.log(context)
 </script>
 <link href="html2.css" rel="stylesheet"/>
 </html>

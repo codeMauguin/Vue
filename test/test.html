@@ -1,90 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8"/>
     <script src="./get.js"></script>
     <title>Title</title>
     <script defer type="module">
       import Vue from "../Vue/Vue.js";
-      import { toRef } from "../proxy/index.js";
-      import { watcher } from "../watcher/index.js";
+      import {toRef} from "../proxy/index.js";
+
       window.a = new Vue({
-        el: "#app1",
-        create() {
-          this.array.reverse();
-        },
-        data({ reactive }) {
-          let res = reactive({});
-          res.id = 10;
-          res.isShow = true;
-          res.array = [
-            [{ id: 1 }],
-            [{ id: 3 }, { id: 4 }, { id: 9 }],
-            [{ id: 6 }, { id: 7 }, { id: 8 }],
-          ];
-          res.hobby = { game: "游戏", name: "PUBG", age: "22" };
-          res.div = "wo ois";
-          const state = toRef(90);
-          return { ...res, state };
-        },
-        methods: {
-          adds() {
-            this.global.state.value += 1;
-            this.global.div = "ds sa";
-            this.global.isShow = !this.global.isShow;
-            this.global.id++;
-            this.global.array[0].reverse();
-            this.global.array[1].reverse();
-            this.global.array.reverse();
-          },
-          add(id) {
-            this.state.value += 1;
-            this.div = "ds sa";
-            this.isShow = !this.isShow;
-            this.hobby.age = id;
-            this.id++;
-            this.array[0].reverse();
-            this.array[1].reverse();
-            this.array.reverse();
-          },
-          del() {
-            this.id--;
-          },
-        },
-      });
-      console.log(a);
+                               el: "#app1",
+                               create() {
+                                   this.array.reverse();
+                               },
+                               data({reactive}) {
+                                   let res = reactive({});
+                                   res.id = 10;
+                                   res.isShow = true;
+                                   res.array = [
+                                       [{id: 1}],
+                                       [{id: 3},
+                                        {id: 4},
+                                        {id: 9}],
+                                       [{id: 6},
+                                        {id: 7},
+                                        {id: 8}],
+                                   ];
+                                   res.hobby = {game: "游戏", name: "PUBG", age: "22"};
+                                   res.div = "wo ois";
+                                   const state = toRef(90);
+                                   return {...res, state};
+                               },
+                               methods: {
+                                   adds() {
+                                       this.global.state.value += 1;
+                                       this.global.div = "ds sa";
+                                       this.global.isShow = !this.global.isShow;
+                                       this.global.id++;
+                                       this.global.array[0].reverse();
+                                       this.global.array[1].reverse();
+                                       this.global.array.reverse();
+                                   },
+                                   add(id) {
+                                       this.state.value += 1;
+                                       this.div = "ds sa";
+                                       this.isShow = !this.isShow;
+                                       this.hobby.age = id;
+                                       this.id++;
+                                       this.array[0].reverse();
+                                       this.array[1].reverse();
+                                       this.array.reverse();
+                                   },
+                                   del() {
+                                       this.id--;
+                                   },
+                               },
+                           });
+        console.log(a);
     </script>
     <style>
-      .p {
-        transition: all 2s;
-        animation: linear 1s;
-      }
+        .p {
+            transition: all 2s;
+            animation: linear 1s;
+        }
     </style>
-  </head>
+</head>
 
-  <body>
-    <div id="app1">
-      <p>{{state}}</p>
-      s{{ isShow?true:false }}s
-      <div @for="(item,index) in array">
+<body>
+<div id="app1">
+    <p>{{state}}</p>
+    s{{ isShow?true:false }}s
+    <div @for="(item,index) in array">
         <div :key="item.id" @for="(item,index) in item">
-          <p class="p">{{global.isShow}}-{{index}}ss</p>
+            <p class="p">{{global.isShow}}-{{index}}ss</p>
         </div>
-      </div>
-      <div @class="div" @for="(item,name,index) in hobby">
+    </div>
+    <div @class="div" @for="(item,name,index) in hobby">
         <p>{{item}}-${name}-${index}</p>
         <button @click="adds(global.id)">测试</button>
-      </div>
-      <button @click="add(id)">添加</button>
-      <div @if="{{isShow?false:true}}">wo是True</div>
-      <div @else-if="{{isShow?false:false}}">wo是else-if</div>
-      <div @else-if="{{isShow?true:false}}">wo是else-2-if</div>
-      <div @else>wo是False</div>
     </div>
-    <!-- <div id="app2">
+    <button @click="add(id)">添加</button>
+    <div @if="{{isShow?false:true}}">wo是True</div>
+    <div @else-if="{{isShow?false:false}}">wo是else-if</div>
+    <div @else-if="{{isShow?true:false}}">wo是else-2-if</div>
+    <div @else>wo是False</div>
+</div>
+<!-- <div id="app2">
 {{id}}
 <p>2</p>
 </div> -->
-    <div id="app3">选择</div>
-  </body>
+<div id="app3">选择</div>
+</body>
 </html>

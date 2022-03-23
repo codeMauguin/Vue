@@ -2,15 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d0b0f5f3-d444-4af1-943b-f0cbfe8fbaf8" name="变更" comment="">
+      <change afterPath="$PROJECT_DIR$/Vue/Vue2.0.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Vue/test.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Mustache/mustache.js" beforeDir="false" afterPath="$PROJECT_DIR$/Mustache/mustache.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom2/compile.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom2/compile.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/compile.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/compile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/h.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/h.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/node.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/node.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/render.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/render.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/update.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/update.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/vnode.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/vnode.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/htmlParse/Parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Parser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vue.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/Vue.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vue/Vue.js" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/Vue.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/listen /monitor.js" beforeDir="false" afterPath="$PROJECT_DIR$/listen /monitor.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxy/createProxy.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/createProxy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxy/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxy/readonly.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/readonly.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxy/ref.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/ref.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/1.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/test.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test2.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/test2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/ts.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/ts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/clone.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/clone.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/watcher/Dept.js" beforeDir="false" afterPath="$PROJECT_DIR$/watcher/Dept.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,8 +30,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="JavaScript File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -71,29 +81,29 @@
     <option name="increaseLineSpacing" value="true" />
     <option name="showWarnings" value="true" />
   </component>
-  <component name="RunManager" selected="JavaScript 调试.test.html (1)">
-    <configuration name="test2.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/test/test2.html" useBuiltInWebServerPort="true">
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="JavaScript 调试.test.html (2)">
     <configuration name="test.html (1)" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/htmlParse/test.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
-    <configuration name="test.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue-1/htmlParse/test.html" useBuiltInWebServerPort="true">
+    <configuration name="test.html (2)" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/Vue/test.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="test.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/test/test.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
     <configuration name="1.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/test/1.js" working-dir="$PROJECT_DIR$/test">
       <method v="2" />
     </configuration>
-    <configuration name="get.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/test/get.js" working-dir="$PROJECT_DIR$/test">
+    <configuration name="Vue2.0.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/Vue/Vue2.0.js" working-dir="$PROJECT_DIR$/Vue">
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JavaScript 调试.test.html (2)" />
+        <item itemvalue="JavaScript 调试.test.html" />
         <item itemvalue="JavaScript 调试.test.html (1)" />
         <item itemvalue="Node.js.1.js" />
-        <item itemvalue="JavaScript 调试.test2.html" />
-        <item itemvalue="JavaScript 调试.test.html" />
-        <item itemvalue="Node.js.get.js" />
+        <item itemvalue="Node.js.Vue2.0.js" />
       </list>
     </recent_temporary>
   </component>
@@ -130,6 +140,7 @@
       <workItem from="1647933302345" duration="103000" />
       <workItem from="1647933484886" duration="6404000" />
       <workItem from="1647990905402" duration="3753000" />
+      <workItem from="1648033787046" duration="9724000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1647491454741</created>
@@ -241,6 +252,16 @@
     <option name="LAST_COMMIT_MESSAGE" value="暂定对for提供单独解析编译" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/VirtualDom3/compile.js</url>
+          <line>109</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <inline-watch fileUrl="file://$PROJECT_DIR$/VirtualDom3/diff.js" line="7">
         <watch expression="oldElm" language="JavaScript" />

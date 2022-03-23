@@ -1,16 +1,23 @@
 class Dept {
-  #value = [];
+    #value = [];
 
-  /**
-   * @param {any} context
-   */
-  $emit(context) {
-    this.#value.push(context);
-  }
+    /**
+     * @param {any} context
+     * @param {{even: *, key: string}}updateEvent 更新方法
+     */
+    $emit(context,
+          updateEvent) {
+        this.#value.push([context,
+                          updateEvent]);
+    }
 
-  notifyAll() {
-    this.#value.forEach((e) => e.update());
-  }
+    notifyAll() {
+        this.#value.forEach(async ([context, updateEvent]) => {
+            if (!context[updateEvent["key"]]) {
+                updateEvent.even.call(context);
+            }
+        });
+    }
 }
 
 const dept = new Dept();
