@@ -112,8 +112,8 @@ class Vue {
     }
 }
 
-Object.defineProperty(Vue,
-                      "property",
+Reflect.defineProperty(Vue,
+                      "prototype",
                       {
                           enumerable: false, configurable: false, writable: false
                       })

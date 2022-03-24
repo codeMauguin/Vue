@@ -12,9 +12,9 @@ export
     isNull,
     isNotNull,
     isMustache,
-    cloneClass,
     updateArray,
-    updateObject
+    updateObject,
+    isRef
 } from "./Type.js";
 export {default as clone} from "./clone.js";
 export {default as timer} from "./Logger.js";

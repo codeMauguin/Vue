@@ -33,9 +33,12 @@
 </body>
 <script src="./ts.js"></script>
 <script>
-
+    
     let a = Vue.createApp({
-                              setup({reactive}) {
+                              setup() {
+                                  console.log(Vue.reactive({
+                                                               id: Vue.ref(1)
+                                                           }))
                                   const pages = Vue.reactive([]);
                                   const pageSum = 5;
                                   const pageSize = 5;
@@ -56,8 +59,8 @@
                                       if (value === pageSum) {
                                           right.value = "prohibit";
                                       } else if (
-                                          (a === 0 && value > pageSum - pageSize) ||
-                                          (a !== 0 && value > pageSum - a)
+                                              (a === 0 && value > pageSum - pageSize) ||
+                                              (a !== 0 && value > pageSum - a)
                                       ) {
                                           right.value = "first";
                                       } else {
@@ -80,19 +83,19 @@
                                   let currentOffset = 0;
                                   //计算总长度，包括空格 单位 px
                                   let dataLength =
-                                      offset * pageSum + (pageSum - 1) * /*空格长度*/ spaceLength;
+                                          offset * pageSum + (pageSum - 1) * /*空格长度*/ spaceLength;
                                   let dataStyle = Vue.reactive({
-                                                                   width        : dataLength + "px",
+                                                                   width: dataLength + "px",
                                                                    "margin-left": "0px",
                                                                });
                                   const containerStyle = Vue.reactive({
                                                                           width: `${offset * pageSize + spaceLength * (pageSize - 1)}` + "px",
                                                                       });
-
+            
                                   const sliderLeft = function () {
                                       if (
-                                          activeIndex.value > pageSize &&
-                                          activeIndex.value % pageSize === 1
+                                              activeIndex.value > pageSize &&
+                                              activeIndex.value % pageSize === 1
                                       ) {
                                           currentOffset = currentOffset + pageSize * (offset + spaceLength);
                                           dataStyle["margin-left"] = `${currentOffset}px`;
@@ -102,12 +105,12 @@
                                   };
                                   const sliderRight = function () {
                                       activeIndex.value =
-                                          activeIndex.value < pageSum ? activeIndex.value + 1 : pageSum;
+                                              activeIndex.value < pageSum ? activeIndex.value + 1 : pageSum;
                                       page = Math.ceil(activeIndex.value / pageSize);
                                       //控制翻页
                                       if (
-                                          activeIndex.value % pageSize === 1 &&
-                                          page <= Math.ceil(pageSum / pageSize)
+                                              activeIndex.value % pageSize === 1 &&
+                                              page <= Math.ceil(pageSum / pageSize)
                                       ) {
                                           currentOffset = currentOffset - pageSize * (offset + spaceLength);
                                           dataStyle["margin-left"] = `${currentOffset}px`;
@@ -130,14 +133,14 @@
                                           console.warn(`arg0 is not a Array or Number -${array}`);
                                       }
                                   };
-
+            
                                   function Page(index,
                                                 quad) {
                                       console.log(index,
                                                   quad);
                                       activeIndex.value = index.index;
                                   }
-
+            
                                   const initPages = function () {
                                       arrayForEach(pageSum,
                                                    (index) => pages.push({index}));
@@ -158,7 +161,7 @@
                                   };
                               },
                               created() {
-
+            
                                   console.log(1)
                               },
                               data() {

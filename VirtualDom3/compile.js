@@ -1,7 +1,7 @@
 import {error} from "../log";
 import {mustaches, packageValue} from '../Mustache';
 import {Observer} from '../observer';
-import {clone, isArray, isNotNull, isNotObject, isNull} from '../util';
+import {clone, isArray, isNotNull, isNotObject, isNull, isObject, isRef} from '../util';
 import {_c_, _t_, _v_} from './';
 
 const forRegExp = /((?<head>\(.*\))|(?<header>^\w+))\s+(?<body>in|of)\s+(?<target>.*)/;
@@ -14,8 +14,9 @@ function cloneNode(node,
         case "ELEMENT":
             return _v_(node.tagName,
                        {
-                           props: clone(node?.props), attributes: clone(node?.attributes),
-                           dynamicProps                         : clone(node?.dynamicProps)
+                           props: clone(node?.props),
+                           attributes: clone(node?.attributes),
+                           dynamicProps: clone(node?.dynamicProps)
                        },
                        node.children.map(child => cloneNode(child,
                                                             context)),
@@ -296,7 +297,10 @@ function compileElement(node,
                                        element.dynamic,
                                        context);
             const dynamicNode = {
-                type: "ELEMENT", props: undefined, dynamicProps: undefined, attributes: undefined,
+                type: "ELEMENT",
+                props: undefined,
+                dynamicProps: undefined,
+                attributes: undefined,
                 children
             }
             //call-hook(dynamicNode,"ELEMENT-FOR",{});
@@ -307,6 +311,11 @@ function compileElement(node,
                                  ...children);
         }
     }
+}
+
+
+function toString(target) {
+    return isObject(target) ? isRef(target) ? target.value : JSON.stringify(target) : target;
 }
 
 /**
@@ -325,10 +334,9 @@ export function compile(node,
             break;
         case "TEXTNODE": {
             node.value = node.static ? node.value : packageValue(node.value)
-                .map(val => val[1] === 1 ? mustaches(val[0],
-                                                     node.context.concat(context)) : val[0])
-                .reduce((a,
-                         b) => a + b);
+                .map(val => val[1] === 1 ? toString(mustaches(val[0],
+                                                              node.context.concat(context))) : val[0])
+                .join(``);
         }
             break;
         case "COMMENT": {

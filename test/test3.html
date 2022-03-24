@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <div v-for="item in array">{{item}}</div>
+</div>
+</body>
+<script src="./ts.js"></script>
+<script>
+    Vue.createApp({
+                      setup: function () {
+                          return Vue.reactive({array: [{id:{ds:2}}, {id:2}]})
+                      }
+                  }).mount('#app')
+</script>
+</html>

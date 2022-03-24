@@ -1,4 +1,4 @@
-import {isNotObject, isObject} from "../util";
+import {isNotObject, isObject, isRef} from "../util";
 import Vue from "../Vue/Vue.js";
 import {ref} from "./";
 
@@ -44,7 +44,7 @@ export default function createProxy(target) {
         return undefined;
     }
     for (const key of Object.keys(target)) {
-        if (isObject(target[key])) {
+        if (isObject(target[key])&&!isRef(target[key])) {
             target[key] = createProxy(target[key]);
         }
     }

@@ -5,10 +5,10 @@
     <script src="./get.js"></script>
     <title>Title</title>
     <script defer type="module">
-      import Vue from "../Vue/Vue.js";
-      import {toRef} from "../proxy/index.js";
-
-      window.a = new Vue({
+        import {toRef} from "../proxy/index.js";
+        import Vue from "../Vue/Vue.js";
+        
+        window.a = new Vue({
                                el: "#app1",
                                create() {
                                    this.array.reverse();
@@ -20,11 +20,11 @@
                                    res.array = [
                                        [{id: 1}],
                                        [{id: 3},
-                                        {id: 4},
-                                        {id: 9}],
+                                           {id: 4},
+                                           {id: 9}],
                                        [{id: 6},
-                                        {id: 7},
-                                        {id: 8}],
+                                           {id: 7},
+                                           {id: 8}],
                                    ];
                                    res.hobby = {game: "游戏", name: "PUBG", age: "22"};
                                    res.div = "wo ois";

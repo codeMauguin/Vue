@@ -1,3 +1,5 @@
+import {ref} from "../proxy";
+
 export const isFunction = (/** @type {any} */
                            target) => target instanceof Function;
 export const isNotFunction = (/** @type {any} */
@@ -51,12 +53,7 @@ export const isMustache = value => {
     return /{{(.+?)}}/gi.test(value) || /\${(.+?)}/gi.test(value);
 }
 
-export const cloneClass = (target,
-                           sourceClass) => {
-    const clone = new sourceClass();
-    return Object.assign(clone,
-                         target);
-}
+export const isRef = target => target instanceof ref
 /**
  *
  * @param {Array} target

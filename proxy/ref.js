@@ -1,35 +1,35 @@
 import {isNull, isObject} from "../util";
-import {reactive} from "./index.js";
 import Vue from "../Vue/Vue.js";
+import {reactive} from "./index.js";
 
-const value = Symbol("value");
 
-export class ref {
-    [value];
-
+class ref {
     constructor(val) {
-        this[value] = val;
+        this._value = val;
     }
 
+    _value;
+
     get value() {
-        return this[value];
+        return this._value;
     }
 
     set value(val) {
-        if (this[value] === val) return;
+        if (this._value === val) return;
         this["__ob__"]?.(val,
                          val,
-                         () => Reflect.deleteProperty(target,
+                         () => Reflect.deleteProperty(this,
                                                       "__ob__"));
-        this[value] = val;
+        this._value = val;
         Vue.dept.notifyAll();
-    }
-
-    toString() {
-        return this[value];
     }
 }
 
+Reflect.defineProperty(ref,
+                       "prototype",
+                       {
+                           configurable: false, writable: false, enumerable: false
+                       });
 export default function (value) {
     if (isNull(value)) {
         value = 0;
@@ -39,3 +39,4 @@ export default function (value) {
     }
     return new ref(value);
 }
+export {ref};

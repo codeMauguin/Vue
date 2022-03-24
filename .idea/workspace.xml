@@ -2,12 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d0b0f5f3-d444-4af1-943b-f0cbfe8fbaf8" name="变更" comment="">
+      <change afterPath="$PROJECT_DIR$/test/test3.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/compile.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/compile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/render.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/render.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Vue/Vue2.0.js" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/Vue2.0.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Vue/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/test.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/htmlParse/Parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Parser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxy/createProxy.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/createProxy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxy/ref.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/ref.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/test.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test2.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/test2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/Type.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/Type.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +73,10 @@
     <option name="increaseLineSpacing" value="true" />
     <option name="showWarnings" value="true" />
   </component>
-  <component name="RunManager" selected="JavaScript 调试.test.html (2)">
+  <component name="RunManager" selected="JavaScript 调试.test2.html">
+    <configuration name="test2.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/test/test2.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
     <configuration name="test.html (1)" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/htmlParse/test.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
@@ -81,16 +89,13 @@
     <configuration name="1.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/test/1.js" working-dir="$PROJECT_DIR$/test">
       <method v="2" />
     </configuration>
-    <configuration name="Vue2.0.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/Vue/Vue2.0.js" working-dir="$PROJECT_DIR$/Vue">
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JavaScript 调试.test2.html" />
         <item itemvalue="JavaScript 调试.test.html (2)" />
         <item itemvalue="JavaScript 调试.test.html" />
         <item itemvalue="JavaScript 调试.test.html (1)" />
         <item itemvalue="Node.js.1.js" />
-        <item itemvalue="Node.js.Vue2.0.js" />
       </list>
     </recent_temporary>
   </component>
@@ -249,6 +254,16 @@
     <option name="LAST_COMMIT_MESSAGE" value="重写Vue" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/test/test2.html</url>
+          <line>69</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <inline-watch fileUrl="file://$PROJECT_DIR$/VirtualDom3/diff.js" line="7">
         <watch expression="oldElm" language="JavaScript" />

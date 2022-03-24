@@ -10,7 +10,7 @@
     s{{ isShow?true:false }}s
     <div @for="(item,index) in array">
         <div :key="item.id" :ref="test" @for="(item,index) in item">
-            <p class="p">{{isShow}}-{{index}}ss</p>
+            <p class="p">{{item}}-{{index}}ss</p>
         </div>
     </div>
     <div @for="(item,name,index) in hobby">
@@ -26,16 +26,17 @@
 </body>
 <script type="module">
     import {Vue} from "./Vue2.0.js";
-    import {reactive} from "../proxy";
+    import {reactive,toRef} from "../proxy";
 
     function add() {
         data.isShow=!data.isShow
+        data.array.reverse();
     }
 
     const data = reactive({
                               id     : 1,
                               div    : "p",
-                              state  : "ready", isShow: false, array: [
+                              state  : toRef("ready"), isShow: false, array: [
             [{id: 1}],
             [{id: 3},
              {id: 4},
@@ -52,7 +53,7 @@
                               return data;
                           }
                       }).mount('#app');
-    data.state = "onMounted"
+    data.state.value = "onMounted"
     console.log(a)
 </script>
 </html>
