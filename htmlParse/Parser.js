@@ -22,20 +22,26 @@ function AttributeLiteral(string) {
     let matchAttribute, dynamicKey;
     let type = 'ELEMENT';
     while (null !== (matchAttribute = attributes.exec(string))) {
-        let [propertyKey, value] = [matchAttribute[1], matchAttribute[3] ?? matchAttribute[4] ?? matchAttribute[5],];
+        let [propertyKey, value] = [matchAttribute[1],
+                                    matchAttribute[3] ?? matchAttribute[4] ?? matchAttribute[5],];
         if ((dynamicKey = dynamicAttr.exec(propertyKey)) !== null) {
             switch (dynamicKey.groups.key) {
                 case "class":
                 case "style":
-                    dynamicProps.push([dynamicKey.groups.key, value]);
+                case "click":
+                    dynamicProps.push([dynamicKey.groups.key,
+                                       value]);
                     break;
                 case "ref":
-                    dynamicProps.unshift([dynamicKey.groups.key, value]);
+                    dynamicProps.unshift([dynamicKey.groups.key,
+                                          value]);
                     break;
                 default:
-                    dynamic.push([dynamicKey.groups.key, value]);
+                    dynamic.push([dynamicKey.groups.key,
+                                  value]);
             }
-        } else props.push([propertyKey, value]);
+        } else props.push([propertyKey,
+                           value]);
         string = string.slice(matchAttribute[0].length);
     }
     return {attributes: props, props: dynamic, dynamicProps, type};
@@ -152,7 +158,7 @@ export class Parser {
             throw new SyntaxError(`Unexpected closed:'${children.value}', start:'${tagName}'`,);
         }
         return {
-            type: type,
+            type : type,
             value: ENode(tagName,
                          {attributes, props, dynamicProps},
                          child),

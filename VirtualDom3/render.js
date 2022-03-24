@@ -31,8 +31,14 @@ function renderAttributes(elm,
                 if (isFunction(value)) {
                     value(elm);
                 } else {
-                    context?.$emit?.([key, value])
+                    context?.$emit?.([key,
+                                      {key:value,elm}])
                 }
+            }
+                break;
+            case "click": {
+                elm.addEventListener(key,
+                                     value);
             }
                 break;
         }

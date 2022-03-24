@@ -2,25 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d0b0f5f3-d444-4af1-943b-f0cbfe8fbaf8" name="变更" comment="">
-      <change afterPath="$PROJECT_DIR$/Vue/Vue2.0.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Vue/test.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Mustache/mustache.js" beforeDir="false" afterPath="$PROJECT_DIR$/Mustache/mustache.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom2/compile.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom2/compile.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/compile.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/compile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Vue.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/Vue.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Vue/Vue.js" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/Vue.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/listen /monitor.js" beforeDir="false" afterPath="$PROJECT_DIR$/listen /monitor.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxy/createProxy.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/createProxy.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxy/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxy/readonly.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/readonly.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxy/ref.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/ref.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/1.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/1.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/test.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/test2.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/test2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/ts.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/ts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/clone.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/clone.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/watcher/Dept.js" beforeDir="false" afterPath="$PROJECT_DIR$/watcher/Dept.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/render.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/render.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vue/Vue2.0.js" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/Vue2.0.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vue/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/test.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlParse/Parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Parser.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +54,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="code.cleanup.on.save" value="true" />
-    <property name="last.edited.regexp" value=" id=ds" />
+    <property name="last.edited.regexp" value="ass" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -140,7 +127,9 @@
       <workItem from="1647933302345" duration="103000" />
       <workItem from="1647933484886" duration="6404000" />
       <workItem from="1647990905402" duration="3753000" />
-      <workItem from="1648033787046" duration="9724000" />
+      <workItem from="1648033787046" duration="10066000" />
+      <workItem from="1648078386040" duration="114000" />
+      <workItem from="1648087616327" duration="3100000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1647491454741</created>
@@ -219,7 +208,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647963068495</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="重写Vue">
+      <created>1648044121430</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1648044121430</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -249,19 +245,10 @@
     <MESSAGE value="对单标签的支持，ref" />
     <MESSAGE value="对单标签的单独解析，ref的支持细化" />
     <MESSAGE value="暂定对for提供单独解析编译" />
-    <option name="LAST_COMMIT_MESSAGE" value="暂定对for提供单独解析编译" />
+    <MESSAGE value="重写Vue" />
+    <option name="LAST_COMMIT_MESSAGE" value="重写Vue" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/VirtualDom3/compile.js</url>
-          <line>109</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <inline-watch fileUrl="file://$PROJECT_DIR$/VirtualDom3/diff.js" line="7">
         <watch expression="oldElm" language="JavaScript" />

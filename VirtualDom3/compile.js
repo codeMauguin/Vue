@@ -6,6 +6,7 @@ import {_c_, _t_, _v_} from './';
 
 const forRegExp = /((?<head>\(.*\))|(?<header>^\w+))\s+(?<body>in|of)\s+(?<target>.*)/;
 const aliasExp = /(?<=[(|,]).*?(?=[,|)])/gi;
+const methodRegExp = /(?<name>^\w+)(?:\((?<args>([\w,]+))\)$)?/
 
 function cloneNode(node,
                    context) {
@@ -13,9 +14,8 @@ function cloneNode(node,
         case "ELEMENT":
             return _v_(node.tagName,
                        {
-                           props: clone(node?.props),
-                           attributes: clone(node?.attributes),
-                           dynamicProps: clone(node?.dynamicProps)
+                           props: clone(node?.props), attributes: clone(node?.attributes),
+                           dynamicProps                         : clone(node?.dynamicProps)
                        },
                        node.children.map(child => cloneNode(child,
                                                             context)),
@@ -164,6 +164,34 @@ function initContext(node,
     }
 }
 
+function generateClick(name,
+                       args,
+                       context,
+                       mainContext) {
+    const fn = mustaches(name,
+                         context);
+    args = args?.split?.(',');
+    return () => {
+        if (isNotNull(args)) {
+            const _arguments = [];
+            for (const arg of args) {
+                if (arg === '') {
+                    Array.prototype.push.apply(_arguments,
+                                               [undefined]);
+                } else {
+                    Array.prototype.push.apply(_arguments,
+                                               [mustaches(arg,
+                                                          context)]);
+                }
+            }
+            fn.apply(mainContext,
+                     _arguments);
+        } else {
+            fn.call(mainContext);
+        }
+    };
+}
+
 function compileAttributes(node,
                            context) {
     const {dynamicProps, type} = node;
@@ -173,13 +201,25 @@ function compileAttributes(node,
     if (dynamicProps.length > 0) {
         for (let i = 0; i < dynamicProps.length; ++i) {
             const [key, value] = dynamicProps[i];
-            if (key === "ref") {
-                dynamicProps[i][1] = mustaches(value,
-                                               node.context.concat(context),
-                                               false) ?? String(value);
-            } else {
-                dynamicProps[i][1] = mustaches(value,
-                                               node.context.concat(context));
+            switch (key) {
+                case 'ref': {
+                    dynamicProps[i][1] = mustaches(value,
+                                                   node.context.concat(context),
+                                                   false) ?? String(value);
+                }
+                    break;
+                case "click": {
+                    const {groups: {name, args}} = methodRegExp.exec(value);
+                    dynamicProps[i][1] = generateClick(name,
+                                                       args,
+                                                       node.context.concat(context),
+                                                       context);
+                    break;
+                }
+                default:
+                    dynamicProps[i][1] = mustaches(value,
+                                                   node.context.concat(context));
+
             }
 
         }
@@ -256,10 +296,7 @@ function compileElement(node,
                                        element.dynamic,
                                        context);
             const dynamicNode = {
-                type: "ELEMENT",
-                props: undefined,
-                dynamicProps: undefined,
-                attributes: undefined,
+                type: "ELEMENT", props: undefined, dynamicProps: undefined, attributes: undefined,
                 children
             }
             //call-hook(dynamicNode,"ELEMENT-FOR",{});
@@ -274,7 +311,8 @@ function compileElement(node,
 
 /**
  *
- * @param {VNode|{__proto__: *, static: *, context, readonly type: string, value: *}|{__proto__: *, readonly type: string, value: *}} node node information
+ * @param {VNode|{__proto__: *, static: *, context, readonly type: string, value: *}|{__proto__: *,
+ *     readonly type: string, value: *}} node node information
  * @param {Object} context context
  */
 export function compile(node,

@@ -29,20 +29,16 @@ function exposeSetupStateOnRenderContext(data,
         Reflect.defineProperty(context,
                                key,
                                {
-                                   enumerable: true, configurable: true, get: () => setupState[key],
-                                   set                                      : NOOP
+                                   enumerable: true, configurable: true, get: () => setupState[key], set: NOOP
                                })
     }
 }
 
-function exposeOnRenderNode(context,
-                            template) {
-    const parser = new Parser();
-    const AST = parser.parser(template);
+function exposeOnRenderNode(AST) {
     return () => new Function(`with(this){return ${h(AST)}}`).call({_v_, _t_, _c_});
 }
 
-export class Vue {
+class Vue {
     isVue = true;
     V_ID = VUE_UID++;
     #component = {};
@@ -50,6 +46,19 @@ export class Vue {
 
     constructor(config) {
         this.#component = config;
+    }
+
+    $emit([message, payload]) {
+        switch (message) {
+            case 'ref': {
+                Reflect.defineProperty(this,
+                                       `$${payload.key}`,
+                                       {
+                                           value: payload.elm
+                                       });
+            }
+                break;
+        }
     }
 
     mount(containerOrSelector) {
@@ -66,8 +75,9 @@ export class Vue {
                                          methods],
                                         this);
         created.call(this);
-        const h = exposeOnRenderNode(this,
-                                     template);
+        const parser = new Parser();
+        const AST = parser.parser(template);
+        const h = exposeOnRenderNode(AST);
         let environment = h();
         compile(environment,
                 this);
@@ -89,10 +99,10 @@ export class Vue {
                                                                    environment.children,
                                                                    updateEnvironment.children);
                                                               environment = updateEnvironment;
-                                                              context.isMound=false;
+                                                              context.isMound = false;
                                                           },
                                                           "View update time"))
-                                      .then(fn=>fn());
+                                      .then(fn => fn());
                            }
 
 
@@ -102,6 +112,12 @@ export class Vue {
     }
 }
 
+Object.defineProperty(Vue,
+                      "property",
+                      {
+                          enumerable: false, configurable: false, writable: false
+                      })
+
 function normalizeContainer(container) {
     let res = document.querySelector(container);
     if (isNull(res)) {
@@ -109,3 +125,5 @@ function normalizeContainer(container) {
     }
     return res;
 }
+
+export {Vue};
