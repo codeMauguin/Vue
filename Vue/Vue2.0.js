@@ -29,7 +29,8 @@ function exposeSetupStateOnRenderContext(data,
         Reflect.defineProperty(context,
                                key,
                                {
-                                   enumerable: true, configurable: true, get: () => setupState[key], set: NOOP
+                                   enumerable: true, configurable: true, get: () => setupState[key],
+                                   set: NOOP
                                })
     }
 }

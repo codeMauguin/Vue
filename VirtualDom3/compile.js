@@ -22,7 +22,7 @@ function cloneNode(node,
                                                             context)),
                        node.type,
                        context)
-        case "TEXTNODE":
+        case "TEXT-NODE":
             return _t_(node.value,
                        node.static)
         case "COMMENT":
@@ -332,7 +332,7 @@ export function compile(node,
                            context);
         }
             break;
-        case "TEXTNODE": {
+        case "TEXT-NODE": {
             node.value = node.static ? node.value : packageValue(node.value)
                 .map(val => val[1] === 1 ? toString(mustaches(val[0],
                                                               node.context.concat(context))) : val[0])

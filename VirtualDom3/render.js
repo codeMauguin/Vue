@@ -68,7 +68,7 @@ export function render(node) {
             }
             return elm;
         }
-        case "TEXTNODE": {
+        case "TEXT-NODE": {
             const {value} = node;
             return node.elm = document.createTextNode(value);
         }

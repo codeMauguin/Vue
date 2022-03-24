@@ -6,12 +6,14 @@ const Spec = [/* Match annotation tag*/
     /* Match start label */
     [/(?<body>^<\w+(([^<>"'\/=]+)(?:\s*(=)\s*(?:"[^"]*"+|'[^']*'+|[^\s<>\/"']+))?)*\/?>)/,
      "ELEMENT"],
+    [/(?<body>^>)/,
+     'TAG-END'],
     /* Match closed label */
     [/(?<body>^<\/[^>]*>)/,
      "END"],
     /* <xxx<div></div> | <axsdxx </div>*/
     [/(?<body>[\s\S]*?)((<\w+(([^<>"'\/=]+)(?:\s*(=)\s*(?:"[^"]*"+|'[^']*'+|[^\s<>\/"']+))?)*\/?>)|(<\/\w+>)|(<!--([\s\S]*?)-->))/,
-     "TEXTNODE"],];
+     "TEXT-NODE"],];
 
 export class Tokenizer {
     _string;
@@ -38,7 +40,8 @@ export class Tokenizer {
         this._cursor = 0;
     }
 
-    match(regexp, string) {
+    match(regexp,
+          string) {
         const match = regexp.exec(string);
         if (match === null) return null;
         const length = match.groups.body.length;

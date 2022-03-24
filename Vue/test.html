@@ -28,6 +28,7 @@
     import {Vue} from "./Vue2.0.js";
     import {reactive,toRef} from "../proxy";
 
+    console.log(document.querySelector('#app').outerHTML)
     function add() {
         data.isShow=!data.isShow
         data.array.reverse();

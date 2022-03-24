@@ -1,7 +1,7 @@
 export function h({type, value}) {
     switch (type) {
-        
-        case "TEXTNODE":
+
+        case "TEXT-NODE":
             return `_t_(${JSON.stringify(value)})`;
         case "ELEMENT":
             return `_v_(

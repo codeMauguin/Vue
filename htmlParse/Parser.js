@@ -103,7 +103,7 @@ export class Parser {
     Literal() {
         if (this.lookahead === null) throw new SyntaxError(`Unexpected stop`);
         switch (this.lookahead.type) {
-            case "TEXTNODE":
+            case "TEXT-NODE":
                 return this.TextNodeLiteral();
             case "ELEMENT":
                 return this.ElementLiteral();
@@ -114,7 +114,7 @@ export class Parser {
             case "ELEMENT-LINE":
                 return this.LineElementLiteral();
         }
-        throw new SyntaxError(`Literal: unexpected literal production`);
+        throw new SyntaxError(`Literal: unexpected literal production:${this.lookahead.type}`);
     }
 
     EOFLiteral() {
@@ -136,7 +136,7 @@ export class Parser {
 
     /**
      * Parser Element
-     * :{body:Array<Element|TextNode>,attributes:obkect}
+     * :{body:Array<Element|TEXT-NODE>,attributes:obkect}
      */
     ElementLiteral() {
         const token = this._eat("ELEMENT");
@@ -174,12 +174,12 @@ export class Parser {
     }
 
     /**
-     * Parser TextNode
+     * Parser TEXT-NODE
      */
     TextNodeLiteral() {
-        const token = this._eat("TEXTNODE");
+        const token = this._eat("TEXT-NODE");
         return {
-            type: "TEXTNODE", value: token.value.groups.body,
+            type: "TEXT-NODE", value: token.value.groups.body,
         };
     }
 }

@@ -52,7 +52,7 @@ export function TNode(text,
     const that = {context: []};
     return {
         __proto__: TNode.prototype, static: isStatic, value: text, get type() {
-            return "TEXTNODE";
+            return "TEXT-NODE";
         }, get context() {
             return that.context;
         }, set context(context) {
