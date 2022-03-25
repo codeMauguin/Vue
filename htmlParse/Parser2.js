@@ -1,24 +1,5 @@
-//import {warn} from "../../log";
+import {warn} from "../log";
 
-function warn() {
-}
-
-const template = ` <p :class="div">{{state}}</p>
-    s{{ isShow?true:false }}s
-    <div @for="(item,index) in array">
-        <div :key="item.id" :ref="test" @for="(item,index) in item">
-            <p class="p">{{item}}-{{index}}ss</p>
-        </div>
-    </div>
-    <div @for="(item,name,index) in hobby">
-        <p>{{item}}-\${name}-\${index}</p>
-        <button @click="add(,id)">测试</button>
-    </div>
-    <button @click="add(id)">添加</button>
-    <div @if="isShow?false:true">wo是True</div>
-    <div @else-if="isShow?false:false">wo是else-if</div>
-    <div @else-if="isShow?true:false">wo是else-2-if</div>
-    <div @else>wo是False</div>`;
 const attributes = /(?<body>^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?)/;
 const unicodeRegExp = /a-zA-Z\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD/
 const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z${unicodeRegExp.source}]*`
@@ -257,6 +238,4 @@ class Parser {
     }
 }
 
-const parser = new Parser(template);
-//export {Parser}
-console.log(parser.childLiteral())
+export {Parser}

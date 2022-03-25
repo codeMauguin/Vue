@@ -2,17 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d0b0f5f3-d444-4af1-943b-f0cbfe8fbaf8" name="变更" comment="">
-      <change afterPath="$PROJECT_DIR$/test/htmlParser/1.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/htmlParse/Parser2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/compile.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/compile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/h.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/h.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/render.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/render.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/vnode.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/vnode.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Vue/Vue2.0.js" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/Vue2.0.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Vue/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/test.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/htmlParse/Parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Parser.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/htmlParse/Tokenizer.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Tokenizer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/test2.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/test2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/1.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/htmlParser/1.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/htmlParser/1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/Logger.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/Logger.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +27,7 @@
     <option name="myRunOnSave" value="true" />
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="UPDATE_TYPE" value="REBASE" />
   </component>
@@ -65,7 +62,7 @@
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="rearrange.code.on.save" value="true" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.jsOptions" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
     <property name="typescript.add.unambiguous.imports.on.the.fly" value="true" />
     <property name="vue.rearranger.settings.migration" value="true" />
@@ -74,10 +71,7 @@
     <option name="increaseLineSpacing" value="true" />
     <option name="showWarnings" value="true" />
   </component>
-  <component name="RunManager" selected="JavaScript 调试.test.html (1)">
-    <configuration name="test2.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/test/test2.html" useBuiltInWebServerPort="true">
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Node.js.1.js (1)">
     <configuration name="test.html (1)" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/htmlParse/test.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
@@ -87,16 +81,19 @@
     <configuration name="1.js (1)" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/test/htmlParser/1.js" working-dir="$PROJECT_DIR$/test/htmlParser">
       <method v="2" />
     </configuration>
+    <configuration name="1.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/test/1.js" working-dir="$PROJECT_DIR$/test">
+      <method v="2" />
+    </configuration>
     <configuration name="Parser.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/htmlParse/Parser.js" working-dir="$PROJECT_DIR$/htmlParse">
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JavaScript 调试.test.html (1)" />
         <item itemvalue="Node.js.1.js (1)" />
+        <item itemvalue="Node.js.1.js" />
+        <item itemvalue="JavaScript 调试.test.html (1)" />
         <item itemvalue="JavaScript 调试.test.html (2)" />
         <item itemvalue="Node.js.Parser.js" />
-        <item itemvalue="JavaScript 调试.test2.html" />
       </list>
     </recent_temporary>
   </component>
@@ -137,7 +134,9 @@
       <workItem from="1648078386040" duration="114000" />
       <workItem from="1648087616327" duration="3162000" />
       <workItem from="1648110967326" duration="9680000" />
-      <workItem from="1648121975100" duration="4224000" />
+      <workItem from="1648121975100" duration="4533000" />
+      <workItem from="1648127576136" duration="124000" />
+      <workItem from="1648195120656" duration="2177000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1647491454741</created>
@@ -223,7 +222,14 @@
       <option name="project" value="LOCAL" />
       <updated>1648044121430</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="重写Vue">
+      <created>1648127355181</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1648127355181</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -92,8 +92,7 @@ class Vue {
                            if (context.isMound === false) {
                                context.isMound = true;
                                Promise.resolve(timer.bind(null,
-                                                          () => {
-                                                              const updateEnvironment = h();
+                                                          (updateEnvironment ) => {
                                                               compile(updateEnvironment,
                                                                       context);
                                                               diff(container,
@@ -103,7 +102,7 @@ class Vue {
                                                               context.isMound = false;
                                                           },
                                                           "View update time"))
-                                      .then(fn => fn());
+                                      .then(fn => fn(h()));
                            }
 
 
