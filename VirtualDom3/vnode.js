@@ -1,18 +1,17 @@
 class VNode {
     #context = [];
     mainContext = undefined;
+    key;
 
     constructor(tagName,
                 attributes,
                 props,
-                dynamicProps = [],
                 children,
                 key,
                 type,
                 context) {
         this.tagName = tagName;
         this.attributes = attributes;
-        this.dynamicProps = dynamicProps;
         this.props = props;
         this.children = children;
         this.key = key;
@@ -30,17 +29,15 @@ class VNode {
 }
 
 
-export function Vnode(tagName,
+export function vNode(tagName,
                       attributes,
                       props,
-                      dynamicProps,
                       children = [],
                       type,
                       context = undefined) {
     return new VNode(tagName,
                      attributes,
                      props,
-                     dynamicProps,
                      children,
                      undefined,
                      type,
@@ -51,7 +48,7 @@ export function TNode(text,
                       isStatic) {
     const that = {context: []};
     return {
-        __proto__: TNode.prototype, static: isStatic, value: text, get type() {
+        static: isStatic, value: text, get type() {
             return "TEXT-NODE";
         }, get context() {
             return that.context;
@@ -63,8 +60,8 @@ export function TNode(text,
 
 export function comment(data) {
     return {
-        __proto__: comment.prototype, get type() {
+        get type() {
             return "COMMENT";
-        }, value : data,
+        }, value: data,
     };
 }

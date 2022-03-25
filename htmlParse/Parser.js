@@ -1,13 +1,6 @@
 import {Tokenizer} from "./Tokenizer.js";
 import {isNotNull} from "../util";
 
-function ENode(tagName,
-               attributes,
-               children = []) {
-    return {
-        tagName, attributes, children,
-    };
-}
 
 /**
  *
@@ -18,7 +11,6 @@ function AttributeLiteral(string) {
     const dynamicAttr = /^(v-|v:|@|:)(?<key>[\w\W]*)/;
     const props = [];
     const dynamic = [];
-    const dynamicProps = [];
     let matchAttribute, dynamicKey;
     let type = 'ELEMENT';
     while (null !== (matchAttribute = attributes.exec(string))) {
@@ -26,25 +18,25 @@ function AttributeLiteral(string) {
                                     matchAttribute[3] ?? matchAttribute[4] ?? matchAttribute[5],];
         if ((dynamicKey = dynamicAttr.exec(propertyKey)) !== null) {
             switch (dynamicKey.groups.key) {
-                case "class":
-                case "style":
-                case "click":
-                    dynamicProps.push([dynamicKey.groups.key,
-                                       value]);
-                    break;
-                case "ref":
-                    dynamicProps.unshift([dynamicKey.groups.key,
-                                          value]);
-                    break;
-                default:
+                case "if":
+                case "else-if":
+                case `else`:
+                case "for":
+                case "key":
                     dynamic.push([dynamicKey.groups.key,
                                   value]);
+                    break;
+                default:
+                    props.push([dynamicKey.groups.key,
+                                value,
+                                1]);
             }
         } else props.push([propertyKey,
-                           value]);
+                           value,
+                           0]);
         string = string.slice(matchAttribute[0].length);
     }
-    return {attributes: props, props: dynamic, dynamicProps, type};
+    return {attributes: props, props: dynamic, type};
 }
 
 export class Parser {
@@ -81,7 +73,7 @@ export class Parser {
         return this.Literal();
     }
 
-    LineElementLiteral() {
+    SelfElementLiteral() {
         const token = this._eat("ELEMENT-LINE");
         const match = /(?<tagName>\w+)/g;
         const body = token.value.groups.body;
@@ -89,14 +81,13 @@ export class Parser {
         const {
             attributes,
             props,
-            dynamicProps,
             type
         } = AttributeLiteral(body.slice(match.lastIndex));
         return {
             type,
-            value: ENode(tagName,
-                         {attributes, props, dynamicProps},
-                         undefined)
+            value: {
+                tagName, attributes: {attributes, props}, children: [],
+            }
         }
     }
 
@@ -112,7 +103,7 @@ export class Parser {
             case "END":
                 return this.EOFLiteral();
             case "ELEMENT-LINE":
-                return this.LineElementLiteral();
+                return this.SelfElementLiteral();
         }
         throw new SyntaxError(`Literal: unexpected literal production:${this.lookahead.type}`);
     }
@@ -146,22 +137,21 @@ export class Parser {
         const {
             attributes,
             props,
-            dynamicProps,
             type
         } = AttributeLiteral(body.slice(match.lastIndex));
-        let children;
-        const child = [];
-        while ((children = this.Literal()).type !== "END") {
-            child.push(children);
+        let child;
+        const children = [];
+        while ((child = this.Literal()).type !== "END") {
+            children.push(child);
         }
-        if (children.type !== "END" || children.value !== tagName) {
-            throw new SyntaxError(`Unexpected closed:'${children.value}', start:'${tagName}'`,);
+        if (child.type !== "END" || child.value !== tagName) {
+            throw new SyntaxError(`Unexpected closed:'${child.value}', start:'${tagName}'`,);
         }
         return {
             type : type,
-            value: ENode(tagName,
-                         {attributes, props, dynamicProps},
-                         child),
+            value: {
+                tagName, attributes: {attributes, props}, children,
+            },
         };
     }
 

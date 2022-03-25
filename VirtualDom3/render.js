@@ -32,7 +32,7 @@ function renderAttributes(elm,
                     value(elm);
                 } else {
                     context?.$emit?.([key,
-                                      {key:value,elm}])
+                                      {key: value, elm}])
                 }
             }
                 break;
@@ -59,9 +59,6 @@ export function render(node) {
             const elm = node.elm = document.createElement(node.tagName);
             renderAttributes(elm,
                              node.attributes,
-                             node.mainContext);
-            renderAttributes(elm,
-                             node.dynamicProps,
                              node.mainContext);
             for (const children of node.children) {
                 elm.appendChild(render(children));

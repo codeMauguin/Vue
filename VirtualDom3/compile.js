@@ -6,7 +6,7 @@ import {_c_, _t_, _v_} from './';
 
 const forRegExp = /((?<head>\(.*\))|(?<header>^\w+))\s+(?<body>in|of)\s+(?<target>.*)/;
 const aliasExp = /(?<=[(|,]).*?(?=[,|)])/gi;
-const methodRegExp = /(?<name>^\w+)(?:\((?<args>([\w,]+))\)$)?/
+const methodRegExp = /(?<name>^\w+)(?:\((?<args>([\w,]+))\)$)?/;
 
 function cloneNode(node,
                    context) {
@@ -14,9 +14,8 @@ function cloneNode(node,
         case "ELEMENT":
             return _v_(node.tagName,
                        {
-                           props: clone(node?.props),
-                           attributes: clone(node?.attributes),
-                           dynamicProps: clone(node?.dynamicProps)
+                           props: clone(node?.props), attributes: clone(node?.attributes),
+                           dynamicProps                         : clone(node?.dynamicProps)
                        },
                        node.children.map(child => cloneNode(child,
                                                             context)),
@@ -42,6 +41,8 @@ function defineShow(IF_KEY,
             if (end && mustaches(value,
                                  node.context.concat(context))) {
                 end = false;
+                compileAttributes(node.children[element_index - offset],
+                                  context);
             } else {
                 node.children.splice(element_index - offset++,
                                      1);
@@ -55,10 +56,16 @@ function defineShow(IF_KEY,
                            node.context.concat(context))) {//ELSE IF ALSO HAS NO MATCH
                 node.children.splice(element_index - offset++,
                                      1);
+            } else {
+                compileAttributes(node.children[element_index - offset],
+                                  context);
             }
         } else if (!end) {//Indicates that there is a successful match before
             node.children.splice(element_index - offset++,
                                  1);
+        } else {
+            compileAttributes(node.children[element_index - offset],
+                              context);
         }
     }
 }
@@ -195,31 +202,32 @@ function generateClick(name,
 
 function compileAttributes(node,
                            context) {
-    const {dynamicProps, type} = node;
+    const {attributes, type} = node;
     if (!Object.is(type,
                    "ELEMENT")) return;
     //check 第一个是否为ref
-    if (dynamicProps.length > 0) {
-        for (let i = 0; i < dynamicProps.length; ++i) {
-            const [key, value] = dynamicProps[i];
+    if (attributes.length > 0) {
+        for (let i = 0; i < attributes.length; ++i) {
+            const [key, value, type] = attributes[i];
+            if (type === 0) continue;
             switch (key) {
                 case 'ref': {
-                    dynamicProps[i][1] = mustaches(value,
-                                                   node.context.concat(context),
-                                                   false) ?? String(value);
+                    attributes[i][1] = mustaches(value,
+                                                 node.context.concat(context),
+                                                 false) ?? String(value);
                 }
                     break;
                 case "click": {
                     const {groups: {name, args}} = methodRegExp.exec(value);
-                    dynamicProps[i][1] = generateClick(name,
-                                                       args,
-                                                       node.context.concat(context),
-                                                       context);
+                    attributes[i][1] = generateClick(name,
+                                                     args,
+                                                     node.context.concat(context),
+                                                     context);
                     break;
                 }
                 default:
-                    dynamicProps[i][1] = mustaches(value,
-                                                   node.context.concat(context));
+                    attributes[i][1] = mustaches(value,
+                                                 node.context.concat(context));
 
             }
 
@@ -227,13 +235,13 @@ function compileAttributes(node,
     }
 }
 
-function compileProps(node,
-                      context,
+function compileProps(props,
                       observer,
                       INDEX) {
-    if (isNotNull(node.props)) {
-        for (let index = 0; index < node.props.length; ++index) {
-            const [key, value] = node.props[index];
+    if (isNotNull(props)) {
+        let key_v = undefined, dynamic = undefined;
+        for (let index = 0; index < props.length; ++index) {
+            const [key, value] = props[index];
             switch (key) {
                 /**
                  * 处理if标签
@@ -246,18 +254,24 @@ function compileProps(node,
                 }
                     break;
                 case "for":
-                    node.props[index][0] = undefined;
-                    node.dynamic = {index: INDEX, value};
+                    dynamic = {index: INDEX, value};
                     break;
                 case "key":
-                    node['key'] = value;
+                    key_v = value;
                     break;
                 default:
                     break;
             }
         }
+        return [key_v,
+                dynamic];
     }
+    return [undefined,
+            undefined];
 }
+
+
+
 
 /**
  *
@@ -270,10 +284,18 @@ function compileElement(node,
         const observer = new Observer();
         for (let index = 0; index < node.children.length; index++) {
             const child = node.children[index];
-            compileProps(child,
-                         context,
-                         observer,
-                         index);
+            const {props} = child;
+            if (!!props && props.length > 0) {
+                [child.key,
+                 child.dynamic] = compileProps(props,
+                                               observer,
+                                               index);
+                child.props = undefined;
+            } else {
+                compileAttributes(child,
+                                  context);
+            }
+
         }
         const IF_KEY = observer.$on("IF_KEY");
         if (isNotNull(IF_KEY)) {
@@ -286,8 +308,8 @@ function compileElement(node,
             const element = node.children[index];
             if (isNull(element.dynamic)) {
                 element.mainContext = context;
-                compileAttributes(element,
-                                  context);
+                //compileAttributes(element,
+                //                  context);
                 compile(element,
                         context);
                 continue;
@@ -297,10 +319,7 @@ function compileElement(node,
                                        element.dynamic,
                                        context);
             const dynamicNode = {
-                type: "ELEMENT",
-                props: undefined,
-                dynamicProps: undefined,
-                attributes: undefined,
+                type: "ELEMENT", props: undefined, dynamicProps: undefined, attributes: undefined,
                 children
             }
             //call-hook(dynamicNode,"ELEMENT-FOR",{});

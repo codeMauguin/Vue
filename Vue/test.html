@@ -8,7 +8,7 @@
 <div id="app">
     <p :class="div">{{state}}</p>
     s{{ isShow?true:false }}s
-    <div @for="(item,index) in array">
+    <div  @class="div" @for="(item,index) in array">
         <div :key="item.id" :ref="test" @for="(item,index) in item">
             <p class="p">{{item}}-{{index}}ss</p>
         </div>
@@ -18,7 +18,7 @@
         <button @click="add(,id)">测试</button>
     </div>
     <button @click="add(id)">添加</button>
-    <div @if="isShow?false:true">wo是True</div>
+    <div @class="div" @if="isShow?false:true">wo是True</div>
     <div @else-if="isShow?false:false">wo是else-if</div>
     <div @else-if="isShow?true:false">wo是else-2-if</div>
     <div @else>wo是False</div>
