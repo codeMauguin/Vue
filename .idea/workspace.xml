@@ -3,18 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="d0b0f5f3-d444-4af1-943b-f0cbfe8fbaf8" name="变更" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Mustache/mustache.js" beforeDir="false" afterPath="$PROJECT_DIR$/Mustache/mustache.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/compile.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/compile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/node.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/node.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/render.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/render.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/update.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/update.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VirtualDom3/vnode.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/vnode.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Vue/Vue2.0.js" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/Vue2.0.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Vue/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/test.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/htmlParse/Parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Parser.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/htmlParse/Tokenizer.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Tokenizer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/proxy/createProxy.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/createProxy.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/test2.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/test2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/watcher/Dept.js" beforeDir="false" afterPath="$PROJECT_DIR$/watcher/Dept.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,7 +140,7 @@
       <workItem from="1648211362028" duration="2050000" />
       <workItem from="1648250995474" duration="1800000" />
       <workItem from="1648254450234" duration="2146000" />
-      <workItem from="1648257136722" duration="3255000" />
+      <workItem from="1648257136722" duration="5380000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1647491454741</created>
@@ -246,7 +240,14 @@
       <option name="project" value="LOCAL" />
       <updated>1648197434407</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="准备增加watch">
+      <created>1648260437839</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1648260437839</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -277,7 +278,8 @@
     <MESSAGE value="对单标签的单独解析，ref的支持细化" />
     <MESSAGE value="暂定对for提供单独解析编译" />
     <MESSAGE value="重写Vue" />
-    <option name="LAST_COMMIT_MESSAGE" value="重写Vue" />
+    <MESSAGE value="准备增加watch" />
+    <option name="LAST_COMMIT_MESSAGE" value="准备增加watch" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -286,12 +288,6 @@
           <url>file://$PROJECT_DIR$/test/ts.js</url>
           <line>14831</line>
           <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/test/test2.html</url>
-          <line>173</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/test/ts.js</url>

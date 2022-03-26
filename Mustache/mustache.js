@@ -1,6 +1,6 @@
 //Todo 类型会被转换为string 使用模版解析时
 import {warn} from "../log";
-import {isMustache, isNotArray, isNotNull} from "../util";
+import {isMustache, isNotArray, isNotNull, isRef} from "../util";
 import {render} from "./index.js";
 
 export function mustaches(text,
@@ -23,7 +23,7 @@ export function mustaches(text,
         warn(error?.message);
         return '';
     }
-    return result;
+    return isRef(result)?result.value:result;
 }
 
 /**

@@ -100,7 +100,6 @@ export function same(oldNode,
                                                newNode.key) || Object.is(oldNode.key,
                                                                          newNode.key) && Object.is(oldNode.type,
                                                                                                    newNode.type) && Object.is(oldNode?.tagName ?? oldNode.value,
-                                                                                                                              newNode?.tagName ?? newNode.value) && equal(oldNode?.attributes,
-                                                                                                                                                                          newNode?.attributes) && equal(oldNode?.props,
-                                                                                                                                                                                                        newNode?.props)
+                                                                                                                              newNode?.tagName ?? newNode.value) && equal(oldNode?.props,
+                                                                                                                                                                          newNode?.props)
 }

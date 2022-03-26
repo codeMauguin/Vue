@@ -222,8 +222,8 @@ function compileAttributes(node,
                     break;
                 }
                 default:
-                    attributes[i][1] = mustaches(value,
-                                                 context);
+                    attributes[i][1] = clone(mustaches(value,
+                                                       context));
 
             }
 

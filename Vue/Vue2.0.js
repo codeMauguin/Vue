@@ -1,6 +1,6 @@
 import {Parser} from "../htmlParse/Parser.js";
 import {warn} from "../log";
-import {reactive, ref, toRef} from "../proxy";
+import {reactive, toRef} from "../proxy";
 import {isNull, timer} from "../util";
 import {_c_, _t_, _v_, compileChild, diff, h, render} from "../VirtualDom3";
 import {dept, watcher} from "../watcher";
@@ -41,13 +41,14 @@ function exposeOnRenderNode(AST) {
 }
 
 class Vue {
+    static reactive = reactive;
+    static ref = toRef;
+    static watch = watcher
     isVue = true;
     V_ID = VUE_UID++;
     #component = {};
     isMound = false;
-    static reactive=reactive;
-    static ref=toRef;
-    static watch=watcher
+
     constructor(config) {
         this.#component = config;
     }
@@ -91,7 +92,9 @@ class Vue {
         container.append(...environment.elm.childNodes);
         dept.$emit(context,
                    {
-                       key: "isMound", even: () => {
+                       key: "isMound",
+                       monitor: null,
+                       even: (e) => {
                            if (context.isMound === false) {
                                context.isMound = true;
                                Promise.resolve(timer.bind(null,
@@ -103,13 +106,18 @@ class Vue {
                                                                    environment.children,
                                                                    updateEnvironment.children);
                                                               environment = updateEnvironment;
+                                                              if (e.monitor) {
+                                                                  e.even(e);
+                                                                  e.monitor = false;
+                                                              }
                                                               context.isMound = false;
                                                           },
                                                           "View update time"))
                                       .then(fn => fn(h()));
                            }
-
-
+                       },
+                       wait() {
+                           this.monitor = true;
                        }
                    })
         return this;

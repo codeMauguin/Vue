@@ -22,7 +22,7 @@
                     key="item.index"
                     v-for="(item, index) in pages"
             >
-                <span>{{item.index}}{{id}}</span>
+                <span>{{item.index}}</span>
             </div>
         </div>
     </div>
@@ -37,9 +37,6 @@
     
     let a = new Vue({
                         setup() {
-                            console.log(Vue.reactive({
-                                                         id: Vue.ref(1)
-                                                     }))
                             const pages = Vue.reactive([]);
                             const pageSum = 5;
                             const pageSize = 5;
@@ -70,11 +67,13 @@
                             };
                             Vue.watch(activeIndex,
                                       (newValue) => {
+                                          console.log(newValue,
+                                                      activeIndex.value)
                                           updateStyle(newValue);
                                           let $_o;
-                                          if (activeIndex.value % pageSize === 0) {
+                                          if (newValue % pageSize === 0) {
                                               $_o = pageSize - 1;
-                                          } else $_o = (activeIndex.value % pageSize) - 1;
+                                          } else $_o = (newValue % pageSize) - 1;
                                           sliderActive["left"] = `${$_o * (offset + spaceLength)}px`;
                                       });
                             const offset = 50; // px
@@ -135,10 +134,7 @@
                                 }
                             };
             
-                            function Page(index,
-                                          quad) {
-                                console.log(index,
-                                            quad);
+                            function Page(index) {
                                 activeIndex.value = index.index;
                             }
             

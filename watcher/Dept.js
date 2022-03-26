@@ -8,13 +8,15 @@ class Dept {
     $emit(context,
           updateEvent) {
         this.#value.push([context,
-                          updateEvent]);
+                             updateEvent]);
     }
 
     notifyAll() {
         this.#value.forEach(async ([context, updateEvent]) => {
             if (!context[updateEvent["key"]]) {
-                updateEvent.even.call(context);
+                updateEvent.even(updateEvent);
+            } else {
+                updateEvent.wait(updateEvent.even);
             }
         });
     }
