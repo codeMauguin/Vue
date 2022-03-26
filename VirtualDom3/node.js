@@ -10,14 +10,12 @@ export function _t_(text,
 export function _v_(tagName,
                     {props = undefined, attributes = undefined} = {},
                     children,
-                    type = "ELEMENT",
-                    context = undefined) {
+                    type = "ELEMENT") {
     return VNode(tagName,
                  attributes,
                  props,
                  children,
-                 type,
-                 context);
+                 type);
 }
 
 export function _c_(data) {

@@ -7,9 +7,14 @@
       <change beforePath="$PROJECT_DIR$/VirtualDom3/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/node.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/node.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/render.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/render.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/update.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/update.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/vnode.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/vnode.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vue/Vue2.0.js" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/Vue2.0.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Vue/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/test.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/htmlParse/Parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Parser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlParse/Tokenizer.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Tokenizer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxy/createProxy.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/createProxy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test2.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/test2.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,7 +77,10 @@
     <option name="increaseLineSpacing" value="true" />
     <option name="showWarnings" value="true" />
   </component>
-  <component name="RunManager" selected="Node.js.1.js (1)">
+  <component name="RunManager" selected="JavaScript 调试.test2.html">
+    <configuration name="test2.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/test/test2.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
     <configuration name="test.html (1)" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/htmlParse/test.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
@@ -85,16 +93,13 @@
     <configuration name="1.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/test/1.js" working-dir="$PROJECT_DIR$/test">
       <method v="2" />
     </configuration>
-    <configuration name="Parser.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/htmlParse/Parser.js" working-dir="$PROJECT_DIR$/htmlParse">
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JavaScript 调试.test2.html" />
+        <item itemvalue="JavaScript 调试.test.html (2)" />
         <item itemvalue="Node.js.1.js (1)" />
         <item itemvalue="Node.js.1.js" />
         <item itemvalue="JavaScript 调试.test.html (1)" />
-        <item itemvalue="JavaScript 调试.test.html (2)" />
-        <item itemvalue="Node.js.Parser.js" />
       </list>
     </recent_temporary>
   </component>
@@ -139,6 +144,9 @@
       <workItem from="1648127576136" duration="124000" />
       <workItem from="1648195120656" duration="2267000" />
       <workItem from="1648211362028" duration="2050000" />
+      <workItem from="1648250995474" duration="1800000" />
+      <workItem from="1648254450234" duration="2146000" />
+      <workItem from="1648257136722" duration="3255000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1647491454741</created>
@@ -278,6 +286,54 @@
           <url>file://$PROJECT_DIR$/test/ts.js</url>
           <line>14831</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/test/test2.html</url>
+          <line>173</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/test/ts.js</url>
+          <line>6553</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/test/ts.js</url>
+          <line>8094</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/test/ts.js</url>
+          <line>10897</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/test/ts.js</url>
+          <line>18931</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/test/ts.js</url>
+          <line>14505</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/test/ts.js</url>
+          <line>14591</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/test/ts.js</url>
+          <line>15246</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="14" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

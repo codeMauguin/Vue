@@ -74,7 +74,7 @@ export class Parser {
     }
 
     SelfElementLiteral() {
-        const token = this._eat("ELEMENT-LINE");
+        const token = this._eat("ELEMENT-SELF");
         const match = /(?<tagName>\w+)/g;
         const body = token.value.groups.body;
         const tagName = match.exec(body).groups.tagName;
@@ -102,7 +102,7 @@ export class Parser {
                 return this.CommentLiteral();
             case "END":
                 return this.EOFLiteral();
-            case "ELEMENT-LINE":
+            case "ELEMENT-SELF":
                 return this.SelfElementLiteral();
         }
         throw new SyntaxError(`Literal: unexpected literal production:${this.lookahead.type}`);

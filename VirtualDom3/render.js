@@ -1,8 +1,7 @@
-import {isFunction, isObject} from "../util";
+import {isObject} from "../util";
 
 function renderAttributes(elm,
-                          attributes,
-                          context) {
+                          attributes) {
     for (let index = 0; index < attributes.length; ++index) {
         let [key, value] = attributes[index];
         switch (key) {
@@ -28,12 +27,7 @@ function renderAttributes(elm,
             }
                 break;
             case "ref": {
-                if (isFunction(value)) {
-                    value(elm);
-                } else {
-                    context?.$emit?.([key,
-                                      {key: value, elm}])
-                }
+                value(elm);
             }
                 break;
             case "click": {
@@ -58,8 +52,7 @@ export function render(node) {
         case "ELEMENT": {
             const elm = node.elm = document.createElement(node.tagName);
             renderAttributes(elm,
-                             node.attributes,
-                             node.mainContext);
+                             node.attributes);
             for (const children of node.children) {
                 elm.appendChild(render(children));
             }

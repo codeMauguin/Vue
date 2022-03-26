@@ -11,7 +11,7 @@
 <div id="app">
     <div :class="left" @click="sliderLeft" class="slider-left">
         <span>&lt;</span>
-    </di>
+    </div>
     <div :style="containerStyle" class="container">
         <div :style="dataStyle" class="data-container">
             <div :style="sliderActive" class="slider-active"></div>
@@ -32,154 +32,147 @@
 </div>
 </body>
 <script src="./ts.js"></script>
-<script>
+<script type="module">
+    import {Vue} from "../Vue/Vue2.0.js";
     
-    let a = Vue.createApp({
-                              setup() {
-                                  console.log(Vue.reactive({
-                                                               id: Vue.ref(1)
-                                                           }))
-                                  const pages = Vue.reactive([]);
-                                  const pageSum = 5;
-                                  const pageSize = 5;
-                                  const spaceLength = 20;
-                                  let page = 1;
-                                  let activeIndex = Vue.ref(1);
-                                  const left = Vue.ref("prohibit");
-                                  const right = Vue.ref(pageSize > pageSum ? "prohibit" : "block");
-                                  const updateStyle = (value) => {
-                                      if (value === 1) {
-                                          left.value = "prohibit";
-                                      } else if (value > pageSize) {
-                                          left.value = "block";
-                                      } else {
-                                          left.value = "first";
-                                      }
-                                      let a = pageSum % pageSize;
-                                      if (value === pageSum) {
-                                          right.value = "prohibit";
-                                      } else if (
-                                              (a === 0 && value > pageSum - pageSize) ||
-                                              (a !== 0 && value > pageSum - a)
-                                      ) {
-                                          right.value = "first";
-                                      } else {
-                                          right.value = "block";
-                                      }
-                                  };
-                                  Vue.watch(activeIndex,
-                                            (newValue) => {
-                                                updateStyle(newValue);
-                                                let $_o;
-                                                if (activeIndex.value % pageSize === 0) {
-                                                    $_o = pageSize - 1;
-                                                } else $_o = (activeIndex.value % pageSize) - 1;
-                                                sliderActive["left"] = `${$_o * (offset + spaceLength)}px`;
-                                            });
-                                  const offset = 50; // px
-                                  const sliderActive = Vue.reactive({
-                                                                        left: 0 + "px",
-                                                                    });
-                                  let currentOffset = 0;
-                                  //计算总长度，包括空格 单位 px
-                                  let dataLength =
-                                          offset * pageSum + (pageSum - 1) * /*空格长度*/ spaceLength;
-                                  let dataStyle = Vue.reactive({
-                                                                   width: dataLength + "px",
-                                                                   "margin-left": "0px",
-                                                               });
-                                  const containerStyle = Vue.reactive({
-                                                                          width: `${offset * pageSize + spaceLength * (pageSize - 1)}` + "px",
-                                                                      });
+    let a = new Vue({
+                        setup() {
+                            console.log(Vue.reactive({
+                                                         id: Vue.ref(1)
+                                                     }))
+                            const pages = Vue.reactive([]);
+                            const pageSum = 5;
+                            const pageSize = 5;
+                            const spaceLength = 20;
+                            let page = 1;
+                            let activeIndex = Vue.ref(1);
+                            const left = Vue.ref("prohibit");
+                            const right = Vue.ref(pageSize > pageSum ? "prohibit" : "block");
+                            const updateStyle = (value) => {
+                                if (value === 1) {
+                                    left.value = "prohibit";
+                                } else if (value > pageSize) {
+                                    left.value = "block";
+                                } else {
+                                    left.value = "first";
+                                }
+                                let a = pageSum % pageSize;
+                                if (value === pageSum) {
+                                    right.value = "prohibit";
+                                } else if (
+                                        (a === 0 && value > pageSum - pageSize) ||
+                                        (a !== 0 && value > pageSum - a)
+                                ) {
+                                    right.value = "first";
+                                } else {
+                                    right.value = "block";
+                                }
+                            };
+                            Vue.watch(activeIndex,
+                                      (newValue) => {
+                                          updateStyle(newValue);
+                                          let $_o;
+                                          if (activeIndex.value % pageSize === 0) {
+                                              $_o = pageSize - 1;
+                                          } else $_o = (activeIndex.value % pageSize) - 1;
+                                          sliderActive["left"] = `${$_o * (offset + spaceLength)}px`;
+                                      });
+                            const offset = 50; // px
+                            const sliderActive = Vue.reactive({
+                                                                  left: 0 + "px",
+                                                              });
+                            let currentOffset = 0;
+                            //计算总长度，包括空格 单位 px
+                            let dataLength =
+                                    offset * pageSum + (pageSum - 1) * /*空格长度*/ spaceLength;
+                            let dataStyle = Vue.reactive({
+                                                             width: dataLength + "px",
+                                                             "margin-left": "0px",
+                                                         });
+                            const containerStyle = Vue.reactive({
+                                                                    width: `${offset * pageSize + spaceLength * (pageSize - 1)}` + "px",
+                                                                });
             
-                                  const sliderLeft = function () {
-                                      if (
-                                              activeIndex.value > pageSize &&
-                                              activeIndex.value % pageSize === 1
-                                      ) {
-                                          currentOffset = currentOffset + pageSize * (offset + spaceLength);
-                                          dataStyle["margin-left"] = `${currentOffset}px`;
-                                      }
-                                      activeIndex.value = activeIndex.value > 1 ? activeIndex.value - 1 : 1;
-                                      page = Math.ceil(activeIndex.value / pageSize);
-                                  };
-                                  const sliderRight = function () {
-                                      activeIndex.value =
-                                              activeIndex.value < pageSum ? activeIndex.value + 1 : pageSum;
-                                      page = Math.ceil(activeIndex.value / pageSize);
-                                      //控制翻页
-                                      if (
-                                              activeIndex.value % pageSize === 1 &&
-                                              page <= Math.ceil(pageSum / pageSize)
-                                      ) {
-                                          currentOffset = currentOffset - pageSize * (offset + spaceLength);
-                                          dataStyle["margin-left"] = `${currentOffset}px`;
-                                      }
-                                  };
-                                  const arrayForEach = function (array,
-                                                                 fn) {
-                                      if (Array.isArray(array))
-                                          for (let i = 0; i < array.length; i++) {
-                                              fn(array[i],
-                                                 i,
-                                                 array);
-                                          }
-                                      else if (typeof array === "number") {
-                                          for (let i = 1; i <= array; i++) {
-                                              fn(i,
-                                                 array);
-                                          }
-                                      } else {
-                                          console.warn(`arg0 is not a Array or Number -${array}`);
-                                      }
-                                  };
+                            const sliderLeft = function () {
+                                if (
+                                        activeIndex.value > pageSize &&
+                                        activeIndex.value % pageSize === 1
+                                ) {
+                                    currentOffset = currentOffset + pageSize * (offset + spaceLength);
+                                    dataStyle["margin-left"] = `${currentOffset}px`;
+                                }
+                                activeIndex.value = activeIndex.value > 1 ? activeIndex.value - 1 : 1;
+                                page = Math.ceil(activeIndex.value / pageSize);
+                            };
+                            const sliderRight = function () {
+                                activeIndex.value =
+                                        activeIndex.value < pageSum ? activeIndex.value + 1 : pageSum;
+                                page = Math.ceil(activeIndex.value / pageSize);
+                                //控制翻页
+                                if (
+                                        activeIndex.value % pageSize === 1 &&
+                                        page <= Math.ceil(pageSum / pageSize)
+                                ) {
+                                    currentOffset = currentOffset - pageSize * (offset + spaceLength);
+                                    dataStyle["margin-left"] = `${currentOffset}px`;
+                                }
+                            };
+                            const arrayForEach = function (array,
+                                                           fn) {
+                                if (Array.isArray(array))
+                                    for (let i = 0; i < array.length; i++) {
+                                        fn(array[i],
+                                           i,
+                                           array);
+                                    }
+                                else if (typeof array === "number") {
+                                    for (let i = 1; i <= array; i++) {
+                                        fn(i,
+                                           array);
+                                    }
+                                } else {
+                                    console.warn(`arg0 is not a Array or Number -${array}`);
+                                }
+                            };
             
-                                  function Page(index,
-                                                quad) {
-                                      console.log(index,
-                                                  quad);
-                                      activeIndex.value = index.index;
-                                  }
+                            function Page(index,
+                                          quad) {
+                                console.log(index,
+                                            quad);
+                                activeIndex.value = index.index;
+                            }
             
-                                  const initPages = function () {
-                                      arrayForEach(pageSum,
-                                                   (index) => pages.push({index}));
-                                  };
-                                  //初始化页面总数
-                                  initPages();
-                                  return {
-                                      id: 2,
-                                      pages,
-                                      left,
-                                      right,
-                                      sliderLeft,
-                                      sliderRight,
-                                      dataStyle,
-                                      containerStyle,
-                                      sliderActive,
-                                      Page,
-                                  };
-                              },
-                              created() {
+                            const initPages = function () {
+                                arrayForEach(pageSum,
+                                             (index) => pages.push({index}));
+                            };
+                            //初始化页面总数
+                            initPages();
+                            return {
+                                id: 2,
+                                pages,
+                                left,
+                                right,
+                                sliderLeft,
+                                sliderRight,
+                                dataStyle,
+                                containerStyle,
+                                sliderActive,
+                                Page,
+                            };
+                        },
+                        created() {
             
-                                  console.log(1)
-                              },
-                              data() {
-                                  return {
-                                      id: 1
-                                  }
-                              }
-                          })
-               .mount("#app")
+                            console.log(1)
+                        },
+                        data() {
+                            return {
+                                id: 1
+                            }
+                        }
+                    })
+            .mount("#app")
     console.log(a);
-    const data = {id: 1};
-    const context = {}
-    Reflect.defineProperty(context,
-                           "id",
-                           {
-                               get: () => data['id']
-                           })
-    console.log(context)
 </script>
 <link href="html2.css" rel="stylesheet"/>
 </html>

@@ -23,6 +23,12 @@ function ƒ(target) {
                                                                                    "__ob__"),
                                      ); //执行观察 this
                                  }
+                                 if (value instanceof Node) {
+                                     return Reflect.set(target,
+                                                        key,
+                                                        value,
+                                                        receiver);
+                                 }
                                  if (!Reflect.has(target,
                                                   key) && isObject(value)) {
                                      value = createProxy(value);
@@ -44,7 +50,7 @@ export default function createProxy(target) {
         return undefined;
     }
     for (const key of Object.keys(target)) {
-        if (isObject(target[key])&&!isRef(target[key])) {
+        if (isObject(target[key]) && !isRef(target[key])) {
             target[key] = createProxy(target[key]);
         }
     }

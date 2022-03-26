@@ -1,31 +1,21 @@
 class VNode {
-    #context = [];
-    mainContext = undefined;
     key;
+    dynamic;
 
     constructor(tagName,
                 attributes,
                 props,
                 children,
                 key,
-                type,
-                context) {
+                type) {
         this.tagName = tagName;
         this.attributes = attributes;
         this.props = props;
         this.children = children;
         this.key = key;
         this.type = type;
-        this.mainContext = context;
     }
 
-    get context() {
-        return this.#context;
-    }
-
-    set context(context) {
-        this.#context.push(context)
-    }
 }
 
 
@@ -33,15 +23,13 @@ export function vNode(tagName,
                       attributes,
                       props,
                       children = [],
-                      type,
-                      context = undefined) {
+                      type) {
     return new VNode(tagName,
                      attributes,
                      props,
                      children,
                      undefined,
-                     type,
-                     context);
+                     type);
 }
 
 export function TNode(text,

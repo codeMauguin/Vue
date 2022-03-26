@@ -5,23 +5,30 @@ export function compare(oldNode,
                         newNode) {
     const elm = (newNode.elm = oldNode.elm);
     if (newNode.type === "ELEMENT") {
-        const {dynamicProps: oldAttrs = []} = oldNode, {dynamicProps: newAttrs = []} = newNode,
+        const {attributes: oldAttrs = []} = oldNode, {attributes: newAttrs = []} = newNode,
             oldProps = {}, newProps = {};
         for (let index = 0; index < newAttrs.length; ++index) {
             const newAttr = newAttrs[index];
+            if (newAttr[2] === 0) continue;
             const oldAttr = oldAttrs[index];
-            if (!Object.is(newAttr[1],
-                           oldAttr[1])) {
-                if (oldProps[oldAttr[0]]) {
-                    oldProps[oldAttr[0]].push(oldAttr[1]);
-                } else {
-                    oldProps[oldAttr[0]] = [oldAttr[1]];
-                }
-                if (newProps[newAttr[0]]) {
-                    newProps[newAttr[0]].push(newAttr[1]);
-                } else {
-                    newProps[newAttr[0]] = [newAttr[1]];
-                }
+            switch (newAttr[0]) {
+                case "ref":
+                    newAttr[1](elm);
+                    break;
+                default:
+                    if (!Object.is(newAttr[1],
+                                   oldAttr[1])) {
+                        if (oldProps[oldAttr[0]]) {
+                            oldProps[oldAttr[0]].push(oldAttr[1]);
+                        } else {
+                            oldProps[oldAttr[0]] = [oldAttr[1]];
+                        }
+                        if (newProps[newAttr[0]]) {
+                            newProps[newAttr[0]].push(newAttr[1]);
+                        } else {
+                            newProps[newAttr[0]] = [newAttr[1]];
+                        }
+                    }
             }
         }
         for (const key of Object.keys(newProps)) {

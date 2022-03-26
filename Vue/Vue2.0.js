@@ -1,8 +1,9 @@
-import {warn} from "../log";
-import {isNull, timer} from "../util";
 import {Parser} from "../htmlParse/Parser.js";
-import {_c_, _t_, _v_, compile, diff, h, render} from "../VirtualDom3";
-import {dept} from "../watcher";
+import {warn} from "../log";
+import {reactive, ref, toRef} from "../proxy";
+import {isNull, timer} from "../util";
+import {_c_, _t_, _v_, compileChild, diff, h, render} from "../VirtualDom3";
+import {dept, watcher} from "../watcher";
 
 let VUE_UID = 0;
 const emptyFunction = () => ({})
@@ -44,7 +45,9 @@ class Vue {
     V_ID = VUE_UID++;
     #component = {};
     isMound = false;
-
+    static reactive=reactive;
+    static ref=toRef;
+    static watch=watcher
     constructor(config) {
         this.#component = config;
     }
@@ -52,11 +55,10 @@ class Vue {
     $emit([message, payload]) {
         switch (message) {
             case 'ref': {
-                Reflect.defineProperty(this,
-                                       `$${payload.key}`,
-                                       {
-                                           value: payload.elm
-                                       });
+                Reflect.set(this,
+                            `$${payload.key}`,
+                            payload.elm,
+                            this);
             }
                 break;
         }
@@ -72,16 +74,17 @@ class Vue {
             created = emptyFunction, mounted = emptyFunction
         } = this.#component;
         exposeSetupStateOnRenderContext([data(),
-                                         setup({}),
-                                         methods],
+                                            setup({}),
+                                            methods],
                                         this);
         created.call(this);
         const parser = new Parser();
         const AST = parser.parser(template);
         const h = exposeOnRenderNode(AST);
         let environment = h();
-        compile(environment,
-                this);
+        compileChild(environment.children,
+                     environment,
+                     [this]);
         render(environment);
         const context = this;
         mounted.call(this);
@@ -92,9 +95,10 @@ class Vue {
                            if (context.isMound === false) {
                                context.isMound = true;
                                Promise.resolve(timer.bind(null,
-                                                          (updateEnvironment ) => {
-                                                              compile(updateEnvironment,
-                                                                      context);
+                                                          (updateEnvironment) => {
+                                                              compileChild(updateEnvironment.children,
+                                                                           updateEnvironment,
+                                                                           [context]);
                                                               diff(container,
                                                                    environment.children,
                                                                    updateEnvironment.children);
@@ -113,10 +117,10 @@ class Vue {
 }
 
 Reflect.defineProperty(Vue,
-                      "prototype",
-                      {
-                          enumerable: false, configurable: false, writable: false
-                      })
+                       "prototype",
+                       {
+                           enumerable: false, configurable: false, writable: false
+                       })
 
 function normalizeContainer(container) {
     let res = document.querySelector(container);

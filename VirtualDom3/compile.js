@@ -4,23 +4,21 @@ import {Observer} from '../observer';
 import {clone, isArray, isNotNull, isNotObject, isNull, isObject, isRef} from '../util';
 import {_c_, _t_, _v_} from './';
 
+const emptyDOM = document.createElement('div');
+
 const forRegExp = /((?<head>\(.*\))|(?<header>^\w+))\s+(?<body>in|of)\s+(?<target>.*)/;
 const aliasExp = /(?<=[(|,]).*?(?=[,|)])/gi;
 const methodRegExp = /(?<name>^\w+)(?:\((?<args>([\w,]+))\)$)?/;
 
-function cloneNode(node,
-                   context) {
+function cloneNode(node) {
     switch (node.type) {
         case "ELEMENT":
             return _v_(node.tagName,
                        {
                            props: clone(node?.props), attributes: clone(node?.attributes),
-                           dynamicProps                         : clone(node?.dynamicProps)
                        },
-                       node.children.map(child => cloneNode(child,
-                                                            context)),
-                       node.type,
-                       context)
+                       node.children.map(child => cloneNode(child)),
+                       node.type)
         case "TEXT-NODE":
             return _t_(node.value,
                        node.static)
@@ -32,6 +30,7 @@ function cloneNode(node,
 function defineShow(IF_KEY,
                     node,
                     context) {
+    let res = undefined;
     for (let i = 0; i < IF_KEY.length; ++i) {
         const block = IF_KEY[i];
         let offset = 0, end = true;
@@ -39,11 +38,11 @@ function defineShow(IF_KEY,
             const element = block[index];
             const {content: {value, index: element_index}} = element;
             if (end && mustaches(value,
-                                 node.context.concat(context))) {
+                                 context)) {
                 end = false;
-                compileAttributes(node.children[element_index - offset],
-                                  context);
+                res = node.children[element_index - offset]
             } else {
+                //
                 node.children.splice(element_index - offset++,
                                      1);
             }
@@ -57,17 +56,16 @@ function defineShow(IF_KEY,
                 node.children.splice(element_index - offset++,
                                      1);
             } else {
-                compileAttributes(node.children[element_index - offset],
-                                  context);
+                res = node.children[element_index - offset]
             }
         } else if (!end) {//Indicates that there is a successful match before
             node.children.splice(element_index - offset++,
                                  1);
         } else {
-            compileAttributes(node.children[element_index - offset],
-                              context);
+            res = node.children[element_index - offset]
         }
     }
+    return res;
 }
 
 /**
@@ -116,7 +114,7 @@ function defineFor(temp,
     const head = regExpExecArray?.groups?.head;
     let match = head?.match(aliasExp);
     const target = mustaches(regExpExecArray.groups.target,
-                             [context].concat(...temp.context));
+                             context);
     if (isNotObject(target)) {
         error(`for Object requires object or array type:${target}`)
         return [];
@@ -128,7 +126,6 @@ function defineFor(temp,
                                  match,
                                  index,
                                  target[index]);
-            temp.type = "ELEMENT";
             let child = cloneNode(temp,
                                   context);
             const {key} = temp;
@@ -136,8 +133,11 @@ function defineFor(temp,
                 child.key = mustaches(key,
                                       [_context]);
             }
-            initContext(child,
-                        [_context].concat(...temp.context));
+            compileAttributes(child,
+                              [_context, ...context]);
+            compileChild(child.children,
+                         child,
+                         [_context, ...context]);
             result.push(child);
         }
     } else {
@@ -151,31 +151,26 @@ function defineFor(temp,
                                    onKeys[i]);
             let child = cloneNode(temp,
                                   context);
-            initContext(child,
-                        [_context].concat(...temp.context));
+            const {key} = temp;
+            if (isNotNull(key)) {
+                child.key = mustaches(key,
+                                      [_context]);
+            }
+            compileAttributes(child,
+                              [_context, ...context]);
+            compileChild(child.children,
+                         child,
+                         [_context, ...context]);
             result.push(child);
         }
     }
     return result;
 }
 
-function initContext(node,
-                     context) {
-    for (let i = 0; i < context.length; ++i) {
-        node.context = context[i];
-    }
-    if (node.type === "ELEMENT") {
-        for (let child of node.children) {
-            initContext(child,
-                        context);
-        }
-    }
-}
 
 function generateClick(name,
                        args,
-                       context,
-                       mainContext) {
+                       context) {
     const fn = mustaches(name,
                          context);
     args = args?.split?.(',');
@@ -192,10 +187,10 @@ function generateClick(name,
                                                           context)]);
                 }
             }
-            fn.apply(mainContext,
+            fn.apply(context[context.length - 1],
                      _arguments);
         } else {
-            fn.call(mainContext);
+            fn.call(context[context.length - 1]);
         }
     };
 }
@@ -213,21 +208,22 @@ function compileAttributes(node,
             switch (key) {
                 case 'ref': {
                     attributes[i][1] = mustaches(value,
-                                                 node.context.concat(context),
-                                                 false) ?? String(value);
+                                                 context,
+                                                 false) ?? function (elm) {
+                        context[context.length - 1].$emit([key, {key: value, elm}]);
+                    };
                 }
                     break;
                 case "click": {
                     const {groups: {name, args}} = methodRegExp.exec(value);
                     attributes[i][1] = generateClick(name,
                                                      args,
-                                                     node.context.concat(context),
                                                      context);
                     break;
                 }
                 default:
                     attributes[i][1] = mustaches(value,
-                                                 node.context.concat(context));
+                                                 context);
 
             }
 
@@ -263,107 +259,76 @@ function compileProps(props,
                     break;
             }
         }
-        return [key_v,
-                dynamic];
+        return [key_v, dynamic];
     }
-    return [undefined,
-            undefined];
+    return [undefined, undefined];
 }
-
-
-
 
 /**
  *
- * @param {VNode} node
- * @param {Object}context
+ * @param {Array}children
+ * @param node
+ * @param {Array}context
  */
-function compileElement(node,
-                        context) {
-    if (node.children.length > 0) {
-        const observer = new Observer();
-        for (let index = 0; index < node.children.length; index++) {
-            const child = node.children[index];
+export function compileChild(children,
+                             node,
+                             context) {
+    const observer = new Observer();
+    for (let index = 0; index < children.length; ++index) {
+        const child = children[index];
+        const {type} = child;
+        if (type === "TEXT-NODE") {
+            child.value = child.static ? decode(child.value) : packageValue(child.value)
+                .map(val => val[1] === 1 ? decode(toString(mustaches(val[0],
+                                                                     context))) : decode(val[0]))
+                .join(``);
+        } else if (type === "COMMENT") {
+
+        } else {
             const {props} = child;
-            if (!!props && props.length > 0) {
-                [child.key,
-                 child.dynamic] = compileProps(props,
-                                               observer,
-                                               index);
+            if (props && props.length > 0) {
+                [child.key, child.dynamic] = compileProps(props,
+                                                          observer,
+                                                          index);
                 child.props = undefined;
             } else {
                 compileAttributes(child,
                                   context);
+                compileChild(child.children,
+                             child,
+                             context);
             }
+        }
 
+    }
+    const $if = observer.$on("IF_KEY");
+    if (isNotNull($if)) {
+        const $child = defineShow($if,
+                                  node,
+                                  context);
+
+        if ($child) {
+            compileAttributes($child,
+                              context);
         }
-        const IF_KEY = observer.$on("IF_KEY");
-        if (isNotNull(IF_KEY)) {
-            defineShow(IF_KEY,
-                       node,
-                       context);
-        }
-        //for 4
-        for (let index = node.children.length - 1; index > -1; --index) {
-            const element = node.children[index];
-            if (isNull(element.dynamic)) {
-                element.mainContext = context;
-                //compileAttributes(element,
-                //                  context);
-                compile(element,
-                        context);
-                continue;
-            }
-            //已经匹配到
-            const children = defineFor(element,
-                                       element.dynamic,
-                                       context);
-            const dynamicNode = {
-                type: "ELEMENT", props: undefined, dynamicProps: undefined, attributes: undefined,
-                children
-            }
-            //call-hook(dynamicNode,"ELEMENT-FOR",{});
-            compile(dynamicNode,
-                    context);
-            node.children.splice(index,
-                                 1,
-                                 ...children);
-        }
+    }
+    for (let index = children.length - 1; index > -1; --index) {
+        const element = children[index];
+        if (!element.dynamic) continue;
+        const child = defineFor(element,
+                                element.dynamic,
+                                context);
+        children.splice(index,
+                        1,
+                        ...child);
     }
 }
 
+function decode(content) {
+    emptyDOM.innerHTML = content;
+    return emptyDOM.textContent;
+}
 
 function toString(target) {
     return isObject(target) ? isRef(target) ? target.value : JSON.stringify(target) : target;
-}
-
-/**
- *
- * @param {VNode|{__proto__: *, static: *, context, readonly type: string, value: *}|{__proto__: *,
- *     readonly type: string, value: *}} node node information
- * @param {Object} context context
- */
-export function compile(node,
-                        context) {
-    switch (node["type"]) {
-        case "ELEMENT": {
-            compileElement(node,
-                           context);
-        }
-            break;
-        case "TEXT-NODE": {
-            node.value = node.static ? node.value : packageValue(node.value)
-                .map(val => val[1] === 1 ? toString(mustaches(val[0],
-                                                              node.context.concat(context))) : val[0])
-                .join(``);
-        }
-            break;
-        case "COMMENT": {
-
-        }
-            break;
-        default:
-            throw new SyntaxError(`type not supported:${node.type}`);
-
-    }
 }
