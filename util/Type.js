@@ -1,7 +1,8 @@
 import {ref} from "../proxy";
 
 export const isFunction = (/** @type {any} */
-                           target) => target instanceof Function;
+                           target) =>
+    target instanceof Function;
 export const isNotFunction = (/** @type {any} */
                               target) => !isFunction(target);
 export const isObject = (/** @type {any} */
@@ -13,7 +14,8 @@ export const isArray = Array.isArray;
  * @return {boolean}
  */
 export const isNotObject = (/** @type {any} */
-                            target) => !isObject(target) && isNotArray(target);
+                            target) =>
+    !isObject(target) && isNotArray(target);
 /**
  *
  * @param target
@@ -22,7 +24,8 @@ export const isNotObject = (/** @type {any} */
 export const isNotArray = (/** @type {any} */
                            target) => !isArray(target);
 export const isString = (/** @type {any} */
-                         target) => typeof target === "string";
+                         target) =>
+    typeof target === "string";
 /**
  *
  * @param target
@@ -36,7 +39,8 @@ export const isNotString = (/** @type {any} */
  * @return {boolean}
  */
 export const isNull = (/** @type {any} */
-                       target) => target === (void 0) || target === null || target === undefined;
+                       target) =>
+    target === void 0 || target === null || target === undefined;
 /**
  *
  * @param target
@@ -49,11 +53,11 @@ export const isNotNull = (/** @type {any} */
  * @return {boolean}
  * @param value
  */
-export const isMustache = value => {
+export const isMustache = (value) => {
     return /{{([\s\S]*?)}}/gi.test(value) || /\${([\s\S]*?)}/gi.test(value);
-}
+};
 
-export const isRef = target => target instanceof ref
+export const isRef = (target) => target instanceof ref;
 /**
  *
  * @param {Array} target
@@ -68,8 +72,10 @@ export const updateArray = (target,
     if (!isArray(target) || !isArray(source)) {
         return null;
     }
-    const add = [], del = [];
-    let old_index = 0, new_index = 0;
+    const add = [],
+        del = [];
+    let old_index = 0,
+        new_index = 0;
     P: while (old_index < target.length && new_index < source.length) {
         if (target[old_index] === null) {
             old_index++;
@@ -94,15 +100,33 @@ export const updateArray = (target,
         }
     }
     return {del, add};
-}
+};
+
+export const Assert = (target,
+                       message,
+                       input = console.warn,
+                       error = null) => {
+    if (isNull(target)) {
+        input(message);
+        if (typeof error === "function") {
+            throw new error(message)
+        }
+        return null;
+    }
+    return target;
+};
 
 export const updateObject = (target,
                              source) => {
     if (isNull(target) || isNull(source)) return;
-    const update = [], del = [], add = [];
+    const update = [],
+        del = [],
+        add = [];
     const oldKeys = Reflect.ownKeys(target);
     const newKeys = Reflect.ownKeys(source);
-    let oldKey_index = 0, newKey_index = 0, oldKey = oldKeys[oldKey_index],
+    let oldKey_index = 0,
+        newKey_index = 0,
+        oldKey = oldKeys[oldKey_index],
         newKey = newKeys[newKey_index];
     P: while (oldKey_index < oldKeys.length && newKey_index < newKeys.length) {
         if (oldKey === null) {
@@ -134,4 +158,4 @@ export const updateObject = (target,
         }
     }
     return {del, add, update};
-}
+};

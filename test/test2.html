@@ -67,8 +67,6 @@
                             };
                             Vue.watch(activeIndex,
                                       (newValue) => {
-                                          console.log(newValue,
-                                                      activeIndex.value)
                                           updateStyle(newValue);
                                           let $_o;
                                           if (newValue % pageSize === 0) {
@@ -93,6 +91,7 @@
                                                                 });
             
                             const sliderLeft = function () {
+                                if (activeIndex.value <= 1) return;
                                 if (
                                         activeIndex.value > pageSize &&
                                         activeIndex.value % pageSize === 1
@@ -104,6 +103,7 @@
                                 page = Math.ceil(activeIndex.value / pageSize);
                             };
                             const sliderRight = function () {
+                                if (activeIndex.value+1 > pageSum) return;
                                 activeIndex.value =
                                         activeIndex.value < pageSum ? activeIndex.value + 1 : pageSum;
                                 page = Math.ceil(activeIndex.value / pageSize);

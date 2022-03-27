@@ -14,7 +14,8 @@ export
     isMustache,
     updateArray,
     updateObject,
-    isRef
+    isRef,
+    Assert
 } from "./Type.js";
 export {default as clone} from "./clone.js";
 export {default as timer} from "./Logger.js";
