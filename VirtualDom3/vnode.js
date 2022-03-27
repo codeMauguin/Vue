@@ -1,3 +1,6 @@
+const isTagName = /html|body|base|head|link|meta|style|title|address|article|aside|footer|header|h1|h2|h3|h4|h5|h6|nav|section|div|dd|dl|dt|figcaption|figure|picture|hr|img|li|main|ol|p|pre|ul|a|b|abbr|bdi|bdo|br|cite|code|data|dfn|em|i|kbd|mark|q|rp|rt|ruby|s|samp|small|span|strong|sub|sup|time|u|var|wbr|area|audio|map|track|video|embed|object|param|source|canvas|script|noscript|del|ins|caption|col|colgroup|table|thead|tbody|td|th|tr|button|datalist|fieldset|form|input|label|legend|meter|optgroup|option|output|progress|select|textarea|details|dialog|menu|summary|template|blockquote|iframe|tfoot/i
+
+
 class VNode {
     key;
     dynamic;
@@ -6,14 +9,13 @@ class VNode {
                 attributes,
                 props,
                 children,
-                key,
-                type) {
+                key) {
+        this.type = isTagName.test(tagName) ? "ELEMENT" : "COMPONENT";
         this.tagName = tagName;
         this.attributes = attributes;
         this.props = props;
         this.children = children;
         this.key = key;
-        this.type = type;
     }
 
 }
@@ -22,26 +24,19 @@ class VNode {
 export function vNode(tagName,
                       attributes,
                       props,
-                      children = [],
-                      type) {
+                      children = []) {
     return new VNode(tagName,
                      attributes,
                      props,
                      children,
-                     undefined,
-                     type);
+                     undefined);
 }
 
 export function TNode(text,
                       isStatic) {
-    const that = {context: []};
     return {
         static: isStatic, value: text, get type() {
             return "TEXT-NODE";
-        }, get context() {
-            return that.context;
-        }, set context(context) {
-            that.context.push(context);
         }
     };
 }

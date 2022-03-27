@@ -1,4 +1,4 @@
-import {equal, isNotNull, updateArray, updateObject} from "../util";
+import {isNotNull, updateArray, updateObject} from "../util";
 import {diff, render} from "./";
 
 export function compare(oldNode,
@@ -99,7 +99,6 @@ export function same(oldNode,
     return isNotNull(oldNode.key) && Object.is(oldNode.key,
                                                newNode.key) || Object.is(oldNode.key,
                                                                          newNode.key) && Object.is(oldNode.type,
-                                                                                                   newNode.type) && Object.is(oldNode?.tagName ?? oldNode.value,
-                                                                                                                              newNode?.tagName ?? newNode.value) && equal(oldNode?.props,
-                                                                                                                                                                          newNode?.props)
+                                                                                                   newNode.type) && Object.is(oldNode.hasCode,
+                                                                                                                              newNode.hasCode);
 }

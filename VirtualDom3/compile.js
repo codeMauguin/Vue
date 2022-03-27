@@ -1,5 +1,5 @@
 import {error} from "../log";
-import {mustaches, packageValue} from '../Mustache';
+import {mustaches} from '../Mustache';
 import {Observer} from '../observer';
 import {clone, isArray, isNotNull, isNotObject, isNull, isObject, isRef} from '../util';
 import {_c_, _t_, _v_} from './';
@@ -17,18 +17,16 @@ function cloneNode(node) {
                        {
                            props: clone(node?.props), attributes: clone(node?.attributes),
                        },
-                       node.children.map(child => cloneNode(child)),
-                       node.type)
+                       node.children.map(child => cloneNode(child)))
         case "TEXT-NODE":
-            return _t_(node.value,
-                       node.static)
+            return _t_([node.value, node.static])
         case "COMMENT":
             return _c_(node.value)
     }
 }
 
 function defineShow(IF_KEY,
-                    node,
+                    children,
                     context) {
     let res = undefined;
     for (let i = 0; i < IF_KEY.length; ++i) {
@@ -40,11 +38,11 @@ function defineShow(IF_KEY,
             if (end && mustaches(value,
                                  context)) {
                 end = false;
-                res = node.children[element_index - offset]
+                res = children[element_index - offset]
             } else {
                 //
-                node.children.splice(element_index - offset++,
-                                     1);
+                children.splice(element_index - offset++,
+                                1);
             }
         }
         //Processing the last element: the main processing is else or else-if
@@ -52,17 +50,17 @@ function defineShow(IF_KEY,
         const {content: {value, index: element_index}} = element;
         if (element.key !== 3) {//not else end
             if (!mustaches(value,
-                           node.context.concat(context))) {//ELSE IF ALSO HAS NO MATCH
-                node.children.splice(element_index - offset++,
-                                     1);
+                           context)) {//ELSE IF ALSO HAS NO MATCH
+                children.splice(element_index - offset++,
+                                1);
             } else {
-                res = node.children[element_index - offset]
+                res = children[element_index - offset]
             }
         } else if (!end) {//Indicates that there is a successful match before
-            node.children.splice(element_index - offset++,
-                                 1);
+            children.splice(element_index - offset++,
+                            1);
         } else {
-            res = node.children[element_index - offset]
+            res = children[element_index - offset]
         }
     }
     return res;
@@ -128,15 +126,9 @@ function defineFor(temp,
                                  target[index]);
             let child = cloneNode(temp,
                                   context);
-            const {key} = temp;
-            if (isNotNull(key)) {
-                child.key = mustaches(key,
-                                      [_context]);
-            }
             compileAttributes(child,
                               [_context, ...context]);
             compileChild(child.children,
-                         child,
                          [_context, ...context]);
             result.push(child);
         }
@@ -151,15 +143,9 @@ function defineFor(temp,
                                    onKeys[i]);
             let child = cloneNode(temp,
                                   context);
-            const {key} = temp;
-            if (isNotNull(key)) {
-                child.key = mustaches(key,
-                                      [_context]);
-            }
             compileAttributes(child,
                               [_context, ...context]);
             compileChild(child.children,
-                         child,
                          [_context, ...context]);
             result.push(child);
         }
@@ -200,6 +186,10 @@ function compileAttributes(node,
     const {attributes, type} = node;
     if (!Object.is(type,
                    "ELEMENT")) return;
+    node.hasCode = attributes.concat(...(node.props ?? []))
+                             .reduce((a,
+                                      b) => a + b[0],
+                                     node.tagName);
     //check 第一个是否为ref
     if (attributes.length > 0) {
         for (let i = 0; i < attributes.length; ++i) {
@@ -221,6 +211,10 @@ function compileAttributes(node,
                                                      context);
                     break;
                 }
+                case "key":
+                    node.key = mustaches(value,
+                                         context);
+                    break;
                 default:
                     attributes[i][1] = clone(mustaches(value,
                                                        context));
@@ -229,13 +223,14 @@ function compileAttributes(node,
 
         }
     }
+
 }
 
 function compileProps(props,
                       observer,
                       INDEX) {
     if (isNotNull(props)) {
-        let key_v = undefined, dynamic = undefined;
+        let dynamic = undefined;
         for (let index = 0; index < props.length; ++index) {
             const [key, value] = props[index];
             switch (key) {
@@ -252,50 +247,43 @@ function compileProps(props,
                 case "for":
                     dynamic = {index: INDEX, value};
                     break;
-                case "key":
-                    key_v = value;
-                    break;
                 default:
                     break;
             }
         }
-        return [key_v, dynamic];
+        return dynamic;
     }
-    return [undefined, undefined];
+    return undefined;
 }
 
 /**
  *
  * @param {Array}children
- * @param node
  * @param {Array}context
  */
 export function compileChild(children,
-                             node,
                              context) {
     const observer = new Observer();
     for (let index = 0; index < children.length; ++index) {
         const child = children[index];
         const {type} = child;
         if (type === "TEXT-NODE") {
-            child.value = child.static ? decode(child.value) : packageValue(child.value)
-                .map(val => val[1] === 1 ? decode(toString(mustaches(val[0],
-                                                                     context))) : decode(val[0]))
-                .join(``);
+            child.value = child.static ? decode(child.value) : mustaches(decode(child.value),
+                                                                         context);
+            child.hasCode = child.value;
         } else if (type === "COMMENT") {
-
+            child.hasCode = child.value;
         } else {
             const {props} = child;
             if (props && props.length > 0) {
-                [child.key, child.dynamic] = compileProps(props,
-                                                          observer,
-                                                          index);
+                child.dynamic = compileProps(props,
+                                             observer,
+                                             index);
                 child.props = undefined;
             } else {
                 compileAttributes(child,
                                   context);
                 compileChild(child.children,
-                             child,
                              context);
             }
         }
@@ -304,7 +292,7 @@ export function compileChild(children,
     const $if = observer.$on("IF_KEY");
     if (isNotNull($if)) {
         const $child = defineShow($if,
-                                  node,
+                                  children,
                                   context);
 
         if ($child) {
@@ -325,8 +313,11 @@ export function compileChild(children,
 }
 
 function decode(content) {
-    emptyDOM.innerHTML = content;
-    return emptyDOM.textContent;
+    if (/[&]/.test(content)) {
+        emptyDOM.innerHTML = content;
+        return emptyDOM.textContent;
+    } else return content;
+
 }
 
 function toString(target) {

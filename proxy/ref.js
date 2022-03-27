@@ -16,10 +16,8 @@ class ref {
 
     set value(val) {
         if (this._value === val) return;
-        this["__ob__"]?.(val,
-                         val,
-                         () => Reflect.deleteProperty(this,
-                                                      "__ob__"));
+        this["__ob__"]?.notify?.(val,
+                                 this.value);
         this._value = val;
         Vue.dept.notifyAll();
     }

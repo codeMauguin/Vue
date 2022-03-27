@@ -50,7 +50,7 @@ export const isNotNull = (/** @type {any} */
  * @param value
  */
 export const isMustache = value => {
-    return /{{(.+?)}}/gi.test(value) || /\${(.+?)}/gi.test(value);
+    return /{{([\s\S]*?)}}/gi.test(value) || /\${([\s\S]*?)}/gi.test(value);
 }
 
 export const isRef = target => target instanceof ref

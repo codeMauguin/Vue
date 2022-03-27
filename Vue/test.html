@@ -1,63 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>Title</title>
 </head>
 <body>
-<div id="app">
-    <p :class="div">{{state}}</p>
-    s{{ isShow?true:false }}s
-    <div :ref="(el)=>item.el=el" @class="div" @for="(item,index) in array">
-        <div :key="item.id" :ref="test" @for="(item,index) in item">
-            <p class="p">{{item}}-{{index}}ss</p>
-        </div>
-    </div>
-    <div @for="(item,name,index) in hobby">
-        <p>{{item}}-${name}-${index}</p>
-        <button @click="add(,id)">测试</button>
-    </div>
-    <button @click="add(id)">添加</button>
-    <div @class="div" @if="isShow?false:true">wo是True</div>
-    <div @else-if="isShow?false:false">wo是else-if</div>
-    <div @else-if="isShow?true:false">wo是else-2-if</div>
-    <div @else>wo是False</div>
-</div>
+<div id="app"></div>
 </body>
 <script type="module">
     import {Vue} from "./Vue2.0.js";
     import {reactive, toRef} from "../proxy";
     
-    console.log(document.querySelector('#app').outerHTML)
-    
     function add() {
         data.array.reverse();
-        data.isShow=!data.isShow
-        console.log(data.array[0])
-        console.log(a)
+        data.isShow = !data.isShow;
+        console.log(data.array[0]);
+        console.log(a);
     }
     
     const data = reactive({
                               id: 1,
                               div: "p",
-                              state: toRef("ready"), isShow: false, array: [
-            [{id: 1}],
-            [{id: 3},
-                {id: 4},
-                {id: 9}],
-            [{id: 6},
-                {id: 7},
-                {id: 8}],
-        ]
-                              , hobby: {game: "游戏", name: "PUBG", age: "22"}
-                              , add
-                          })
+                              state: toRef("ready"),
+                              isShow: false,
+                              array: [
+                                  [1, {id: 1}],
+                                  [2, {id: 3}, {id: 4}, {id: 9}],
+                                  [3, {id: 6}, {id: 7}, {id: 8}],
+                              ],
+                              hobby: {game: "游戏", name: "PUBG", age: "22"},
+                              add,
+                          });
     const a = new Vue({
                           setup() {
                               return data;
-                          }
-                      }).mount('#app');
-    //data.state.value = "onMounted"
-    console.log(a)
+                          },
+                          template: `<p :class="div">{{state}}</p>
+      s{{ isShow?true:false }}s
+      <div
+        :key="item[0]"
+        :ref="(el)=>item.el=el"
+        @class="div"
+        @for="(item,index) in array"
+      >
+        <div :ref="test" @for="(item,index) in item">
+            <!--{{<}} -->
+          <p class="p">{{item.id <index }}-{{index}}ss</p>
+        </div>
+      </div>
+      <div :key="index" @for="(item,name,index) in hobby">
+        <p>{{item}}-\${name}-\${index}</p>
+        <button @click="add(id)">测试</button>
+      </div>
+      <button @click="add(id)">添加</button>
+      <div @class="div" @if="isShow?false:true">wo是True</div>
+      <div @else-if="isShow?false:false">wo是else-if</div>
+      <div @else-if="isShow?true:false">wo是else-2-if</div>
+      <div @else>wo是False</div>`,
+                      }).mount("#app");
+    console.log(a);
 </script>
 </html>

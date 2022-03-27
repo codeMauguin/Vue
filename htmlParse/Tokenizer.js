@@ -1,19 +1,23 @@
-const Spec = [/* Match annotation tag*/
-    [/(?<body>^<!--(?<data>[\s\S]*?)-->)/,
-     "COMMENT"],
-    [/(?<body>^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)(([^<>"'\/=]+)(?:\s*(=)\s*(?:"[^"]*"+|'[^']*'+|[^\s<>\/"']+))?)*\/?>)/i,
-     "ELEMENT-SELF"],
+const Spec = [
+    /* Match annotation tag*/ [/(?<body>^<!--(?<data>[\s\S]*?)-->)/, "COMMENT"],
+    [
+        /(?<body>^<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)(([^<>"'\/=]+)(?:\s*(=)\s*(?:"[^"]*"+|'[^']*'+|[^\s<>\/"']+))?)*\/?>)/i,
+        "ELEMENT-SELF",
+    ],
     /* Match start label */
-    [/(?<body>^<\w+(([^<>"'\/=]+)(?:\s*(=)\s*(?:"[^"]*"+|'[^']*'+|[^\s<>\/"']+))?)*\/?>)/,
-     "ELEMENT"],
-    [/(?<body>^>)/,
-     'TAG-END'],
+    [
+        /(?<body>^<\w+(([^<>"'\/=]+)(?:\s*(=)\s*(?:"[^"]*"+|'[^']*'+|[^\s<>\/"']+))?)*\/?>)/,
+        "ELEMENT",
+    ],
+    [/(?<body>^>)/, "TAG-END"],
     /* Match closed label */
-    [/(?<body>^<\/[^>]*>)/,
-     "END"],
-    /* <xxx<div></div> | <axsdxx </div>*/
-    [/(?<body>[\s\S]*?)((<\w+(([^<>"'\/=]+)(?:\s*(=)\s*(?:"[^"]*"+|'[^']*'+|[^\s<>\/"']+))?)*\/?>)|(<\/\w+>)|(<!--([\s\S]*?)-->))/,
-     "TEXT-NODE"],];
+    [/(?<body>^<\/[^>]*>)/, "END"],
+    /* <xxx<div></div> | < </div>*/
+    [/(?<body>^{{(?<data>[\s\S]*?)}})/, "TEXT-NODE"],
+    [/(?<body>^\${(?<data>[\s\S]*?)})/, "TEXT-NODE"],
+    [/(?<body>[\s\S]*?)(?=<\/\w+|<!--|<\w+|{{|\${)/, "TEXT-NODE"],
+];
+
 
 export class Tokenizer {
     _string;
@@ -60,10 +64,15 @@ export class Tokenizer {
                                      string);
             if (value === null) continue;
             return {
-                type: tokenType, value,
+                type: tokenType,
+                value,
             };
         }
-        throw new SyntaxError(`Unexpected token: ${string}`);
+        this.cursor += string.length;
+        return {
+            type: "TEXT-NODE",
+            value: {groups: {body: string}},
+        };
     }
 
     hasMoreTokens() {

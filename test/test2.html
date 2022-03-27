@@ -16,10 +16,10 @@
         <div :style="dataStyle" class="data-container">
             <div :style="sliderActive" class="slider-active"></div>
             <div
+                    :key="item.index"
                     :ref="(el)=>item.el=el"
                     @click="Page(item,Page)"
                     class="slider block"
-                    key="item.index"
                     v-for="(item, index) in pages"
             >
                 <span>{{item.index}}</span>
@@ -38,7 +38,7 @@
     let a = new Vue({
                         setup() {
                             const pages = Vue.reactive([]);
-                            const pageSum = 5;
+                            const pageSum = 6;
                             const pageSize = 5;
                             const spaceLength = 20;
                             let page = 1;

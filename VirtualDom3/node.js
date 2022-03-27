@@ -1,21 +1,19 @@
 import {isMustache} from "../util";
 import {comment, TNode, VNode} from "./index.js";
 
-export function _t_(text,
-                    isStatic = !isMustache(text)) {
+export function _t_([text,
+                    isStatic]) {
     return TNode(text,
                  isStatic);
 }
 
 export function _v_(tagName,
                     {props = undefined, attributes = undefined} = {},
-                    children,
-                    type = "ELEMENT") {
+                    children) {
     return VNode(tagName,
                  attributes,
                  props,
-                 children,
-                 type);
+                 children);
 }
 
 export function _c_(data) {

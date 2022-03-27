@@ -16,12 +16,8 @@ function ƒ(target) {
                                  return true;
                              } else {
                                  if (!(target instanceof ref)) {
-                                     target["__ob__"]?.(target,
-                                                        value,
-                                                        () =>
-                                                            Reflect.deleteProperty(target,
-                                                                                   "__ob__"),
-                                     ); //执行观察 this
+                                     target["__ob__"]?.notify?.(value,
+                                                                target[key]); //执行观察 this
                                  }
                                  if (value instanceof Node) {
                                      return Reflect.set(target,

@@ -2,13 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d0b0f5f3-d444-4af1-943b-f0cbfe8fbaf8" name="变更" comment="">
+      <change afterPath="$PROJECT_DIR$/test/vue-test.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Mustache/mustache.js" beforeDir="false" afterPath="$PROJECT_DIR$/Mustache/mustache.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/compile.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/compile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/node.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/node.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VirtualDom3/update.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/update.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VirtualDom3/vnode.js" beforeDir="false" afterPath="$PROJECT_DIR$/VirtualDom3/vnode.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Vue/Vue2.0.js" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/Vue2.0.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vue/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/test.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlParse/Parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Parser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/htmlParse/Tokenizer.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Tokenizer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxy/createProxy.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/createProxy.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxy/ref.js" beforeDir="false" afterPath="$PROJECT_DIR$/proxy/ref.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/test2.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/test2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/Type.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/Type.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/watcher/Dept.js" beforeDir="false" afterPath="$PROJECT_DIR$/watcher/Dept.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/watcher/watch.js" beforeDir="false" afterPath="$PROJECT_DIR$/watcher/watch.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,8 +28,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="JavaScript File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -62,7 +72,7 @@
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="rearrange.code.on.save" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.web.browsers" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
     <property name="typescript.add.unambiguous.imports.on.the.fly" value="true" />
     <property name="vue.rearranger.settings.migration" value="true" />
@@ -71,7 +81,7 @@
     <option name="increaseLineSpacing" value="true" />
     <option name="showWarnings" value="true" />
   </component>
-  <component name="RunManager" selected="JavaScript 调试.test2.html">
+  <component name="RunManager" selected="JavaScript 调试.test.html (2)">
     <configuration name="test2.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Vue/test/test2.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
@@ -89,8 +99,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JavaScript 调试.test2.html" />
         <item itemvalue="JavaScript 调试.test.html (2)" />
+        <item itemvalue="JavaScript 调试.test2.html" />
         <item itemvalue="Node.js.1.js (1)" />
         <item itemvalue="Node.js.1.js" />
         <item itemvalue="JavaScript 调试.test.html (1)" />
@@ -140,7 +150,13 @@
       <workItem from="1648211362028" duration="2050000" />
       <workItem from="1648250995474" duration="1800000" />
       <workItem from="1648254450234" duration="2146000" />
-      <workItem from="1648257136722" duration="5380000" />
+      <workItem from="1648257136722" duration="5422000" />
+      <workItem from="1648274543083" duration="1603000" />
+      <workItem from="1648286719956" duration="4294000" />
+      <workItem from="1648308792390" duration="2555000" />
+      <workItem from="1648348203085" duration="1079000" />
+      <workItem from="1648350197666" duration="2683000" />
+      <workItem from="1648361659516" duration="864000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1647491454741</created>
@@ -247,7 +263,14 @@
       <option name="project" value="LOCAL" />
       <updated>1648260437839</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="准备增加watch">
+      <created>1648262536983</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1648262536983</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -292,44 +315,38 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/test/ts.js</url>
           <line>6553</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/test/ts.js</url>
           <line>8094</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/test/ts.js</url>
           <line>10897</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/test/ts.js</url>
           <line>18931</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/test/ts.js</url>
-          <line>14505</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/test/ts.js</url>
           <line>14591</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/test/ts.js</url>
           <line>15246</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/Mustache/mustache.js</url>
+          <line>6</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -344,6 +361,7 @@
     <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Vue$test2_html.dat" NAME="test2.html 覆盖结果" MODIFIED="1648287073557" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="WipCoverageRunner" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/Vue_1$test_html.dat" NAME="test.html 覆盖结果" MODIFIED="1647679076677" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="WipCoverageRunner" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/Vue$test_html__1_.dat" NAME="test.html (1) 覆盖结果" MODIFIED="1647769551114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="WipCoverageRunner" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
