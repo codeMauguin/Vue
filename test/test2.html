@@ -35,7 +35,7 @@
 <script type="module">
     import {Vue} from "../Vue/Vue2.0.js";
     
-    let a = new Vue({
+    let a = Vue.createApp({
                         setup() {
                             const pages = Vue.reactive([]);
                             const pageSum = 6;
@@ -158,7 +158,6 @@
                             };
                         },
                         created() {
-            
                             console.log(1)
                         },
                         data() {

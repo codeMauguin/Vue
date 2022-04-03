@@ -3,14 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="d0b0f5f3-d444-4af1-943b-f0cbfe8fbaf8" name="变更" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Vue/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/test.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/htmlParse/Parser.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Parser.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/htmlParse/Parser2.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Parser2.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/htmlParse/Tokenizer.js" beforeDir="false" afterPath="$PROJECT_DIR$/htmlParse/Tokenizer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/1.js" beforeDir="false" afterPath="$PROJECT_DIR$/test/1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vue/Vue2.0.js" beforeDir="false" afterPath="$PROJECT_DIR$/Vue/Vue2.0.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/test2.html" beforeDir="false" afterPath="$PROJECT_DIR$/test/test2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/Type.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/Type.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/util/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +58,7 @@
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="rearrange.code.on.save" value="true" />
-    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.web.browsers" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
     <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
     <property name="typescript.add.unambiguous.imports.on.the.fly" value="true" />
     <property name="vue.rearranger.settings.migration" value="true" />
@@ -352,7 +346,6 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/htmlParse/Parser.js</url>
           <line>191</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="38" />
         </line-breakpoint>
       </breakpoints>
@@ -368,8 +361,8 @@
     <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Vue$test2_html.dat" NAME="test2.html 覆盖结果" MODIFIED="1648287073557" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="WipCoverageRunner" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/Vue_1$test_html.dat" NAME="test.html 覆盖结果" MODIFIED="1647679076677" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="WipCoverageRunner" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/Vue$test2_html.dat" NAME="test2.html 覆盖结果" MODIFIED="1648287073557" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="WipCoverageRunner" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/Vue$test_html__1_.dat" NAME="test.html (1) 覆盖结果" MODIFIED="1647769551114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="WipCoverageRunner" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
